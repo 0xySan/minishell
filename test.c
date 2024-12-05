@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/05 18:49:37 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/05 20:03:40 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,98 +25,74 @@ void	sigquit_handler(int sig)
 	exit(0);
 }
 
-void	get_relative_path(t_path *pwd)
+char	*fake_substr(char *s, unsigned int start, size_t len)
 {
 	char	*r_value;
-	int		m_len;
+	size_t	i;
+	size_t	s_len;
 
-	m_len = 0;
-	if (strncmp(pwd->tpath, "/home/etaquet/", 15))
-		m_len = ft_strlen(ft_substr(pwd->tpath, 13, strlen(pwd->tpath))) + 4;
-	else
-	{
-		pwd->rpath = pwd->tpath;
-		return ;
-	}
-	if (m_len < 1)
-		return ;
-	r_value = malloc(m_len * sizeof(char));
-	r_value[0] = '~';
-	ft_strcat(r_value, ft_substr(pwd->tpath, 13, strlen(pwd->tpath)));
-	ft_strcpy(pwd->rpath, r_value);
-	free(r_value);
-}
-
-int	get_last_char_pos(char *str, char car)
-{
-	int	i;
-
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (malloc(1));
+	if (len > s_len - start)
+		len = s_len - start;
+	r_value = malloc(sizeof(char) * (len + 1));
+	if (!r_value)
+		return (NULL);
 	i = 0;
-	while (str[i])
+	while (i < len && s[start + i])
+	{
+		r_value[i] = s[start + i];
 		i++;
-	while (str[i] != car)
-		i--;
-	return (i);
-}
-
-void	get_new_relative_path(t_path *pwd, char *path)
-{
-	if (!ft_strncmp(".", path, 2))
-		return ;
-	if (!ft_strncmp("..", path, 3))
-	{
-		pwd->rpath = ft_substr(pwd->rpath, 0, get_last_char_pos(pwd->rpath, '/'));
-		return ;
 	}
-	ft_strcat(pwd->rpath, "/");
-	ft_strcat(pwd->rpath, path);
+	r_value[i] = '\0';
+	return (r_value);
 }
 
-void	get_new_true_path(t_path *pwd, char *path)
+char	*get_relative_path(char *pwd)
 {
-	if (!ft_strncmp(".", path, 2))
-		return ;
-	if (!ft_strncmp("..", path, 3))
-	{
-		// if (ft_strncmp(pwd->tpath, "/home\0", ft_strlen(pwd->tpath)));
-		// 	printf("%s\n", pwd->tpath);
-		pwd->tpath = ft_substr(pwd->tpath, 0, get_last_char_pos(pwd->tpath, '/'));
-		return ;
-	}
-	ft_strcat(pwd->tpath, "/");
-	ft_strcat(pwd->tpath, path);
+    char	*home;
+    size_t	home_len;
+    size_t	pwd_len;
+
+    home = getenv("HOME");
+    if (!home)
+        return (ft_strdup(pwd));
+    home_len = ft_strlen(home);
+    pwd_len = ft_strlen(pwd);
+    if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
+        return (ft_strdup(pwd));
+    return (ft_strjoin("~", pwd + home_len));
 }
 
-int	check_if_accessible(t_path *pwd, char *path)
+int	check_if_accessible(char *cwd, char *path)
 {
 	char	*nw_path;
 	int		accessible;
 
-	nw_path = malloc(ft_strlen(pwd->tpath) + ft_strlen(path) + 1);
-	ft_strcpy(nw_path, pwd->tpath);
+	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 3);
+	ft_strcpy(nw_path, cwd);
 	ft_strcat(nw_path, "/");
 	ft_strcat(nw_path, path);
 	accessible = access(nw_path, F_OK);
 	if (accessible != -1)
-	{
 		chdir(nw_path);
-		get_new_relative_path(pwd, path);
-		get_new_true_path(pwd, path);
-	}
 	free(nw_path);
 	return (accessible);
 }
 
-int	read_lines(t_path *pwd, char **env)
+int	read_lines(char *cwd, char **env)
 {
 	char	*input;
 	char	*w_path;
+	char	*r_path;
 
-	w_path = malloc(sizeof(pwd->rpath) + 2);
-	ft_strcpy(w_path, pwd->rpath);
-	ft_strcat(w_path, ": ");
-	input = readline(w_path);
-	free(w_path);
+	r_path = get_relative_path(cwd);
+	printf("\e[1m\x1B[31m");
+	ft_strcat(r_path, ": \e[0m");
+	input = readline(r_path);
 	if (input == NULL)
 	{
 		printf("Exiting 21sh...\n");
@@ -125,7 +101,7 @@ int	read_lines(t_path *pwd, char **env)
 	}
 	if (input)
 	{
-		if (check_if_accessible(pwd, input) == -1)
+		if (check_if_accessible(cwd, input) == -1)
 		{
 			free(input);
 			execve("/bin/ls", ft_split("/bin/ls", ' '), env);
@@ -139,25 +115,19 @@ int	main(int argc, char **argv, char **env)
 {
 	t_path	path;
 	char	cwd[PATH_MAX];
-	char	*nw_path;
 
-	path.tpath = malloc(sizeof(char) * PATH_MAX);
-	path.rpath = malloc(sizeof(char) * PATH_MAX);
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd() error");
-		exit(1);
-	}
-	path.tpath = cwd;
-	get_relative_path(&path);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);
 	while (1)
 	{
-		if (read_lines(&path, env))
+		if (getcwd(cwd, sizeof(cwd)) == NULL)
+		{
+			perror("getcwd() error");
+			exit(1);
+		}
+		if (read_lines(cwd, env))
 			break ;
 	}
-	free(path.rpath);
 	return (0);
 }
 
