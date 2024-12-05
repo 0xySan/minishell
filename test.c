@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/05 20:03:40 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/05 20:22:50 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	sigint_handler(int sig)
 {
-	printf("\n");
+	printf("\e[1m\x1B[31m\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -86,26 +86,27 @@ int	check_if_accessible(char *cwd, char *path)
 int	read_lines(char *cwd, char **env)
 {
 	char	*input;
-	char	*w_path;
 	char	*r_path;
+	char	**cmd;
 
 	r_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
-	ft_strcat(r_path, ": \e[0m");
+	ft_strcat(r_path, ": \e[m");
 	input = readline(r_path);
 	if (input == NULL)
-	{
-		printf("Exiting 21sh...\n");
-		free(input);
-		return (1);
-	}
+		return (printf("Exiting 21sh...\n"), free(input), 1);
 	if (input)
 	{
-		if (check_if_accessible(cwd, input) == -1)
+		cmd = ft_split(input, ' ');
+		if (!ft_strncmp(cmd[0], "cd", 3))
 		{
-			free(input);
-			execve("/bin/ls", ft_split("/bin/ls", ' '), env);
+			if (!cmd[1])
+				chdir(getenv("HOME"));
+			else
+				check_if_accessible(cwd, cmd[1]);
 		}
+		else
+			execve(ft_strjoin("/bin/", cmd[0]), cmd, env);
 	}
 	free(input);
 	return (0);
