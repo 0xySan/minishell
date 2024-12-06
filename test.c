@@ -6,11 +6,11 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 18:32:38 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 19:00:09 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// to use it : gcc -o test test.c -lreadline -lhistory libft/libft.a
+/// to use it : gcc -o test test.c -lreadline -lhistory libft/libft.a
 
 #include "test.h"
 
