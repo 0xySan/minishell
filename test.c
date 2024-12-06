@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 15:28:09 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 15:33:00 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,12 @@ void	child_process(char **cmd, char **envp, t_pidstruct	*pid)
 	if (pid->pid[0] == -1)
 		perror("Error: Fork failed.\n");
 	if (pid->pid[0] == 0)
-		execve(ft_strjoin("/bin/", cmd[0]), cmd, envp);
+	{
+		if (access(ft_strjoin("/bin/", cmd[0]), X_OK) != -1)
+			execve(ft_strjoin("/bin/", cmd[0]), cmd, envp);
+		else
+			perror("21sh");
+	}
 }
 
 int	read_lines(char *cwd, char **env)
