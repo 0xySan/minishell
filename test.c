@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 16:17:00 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 17:07:57 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int	read_lines(char *cwd, char **env)
 		return (printf("Exiting 21sh...\n"), free(input), free(r_path), exit(0), 1);
 	if (input)
 	{
-		// add_history(input);
+		add_history(input);
 		cmd = ft_split(input, ' ');
 		if (!ft_cd(cwd, input, cmd))
 		{
@@ -171,7 +171,7 @@ int	main(int argc, char **argv, char **env)
 		if (read_lines(cwd, env))
 			break ;
 	}
-	// rl_clear_history();
+	rl_clear_history();
 	return (0);
 }
 
