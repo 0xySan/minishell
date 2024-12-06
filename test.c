@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 14:47:45 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 15:28:09 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,26 +110,39 @@ int	ft_cd(char *cwd, char *path, char **cmd)
 	return (0);
 }
 
+void	child_process(char **cmd, char **envp, t_pidstruct	*pid)
+{
+	pid->pid[0] = fork();
+	if (pid->pid[0] == -1)
+		perror("Error: Fork failed.\n");
+	if (pid->pid[0] == 0)
+		execve(ft_strjoin("/bin/", cmd[0]), cmd, envp);
+}
+
 int	read_lines(char *cwd, char **env)
 {
-	char	*input;
-	char	*r_path;
-	char	**cmd;
+	char		*input;
+	char		*r_path;
+	char		**cmd;
+	t_pidstruct	pid;
 
+	pid.pid = malloc(sizeof(pid_t) * 20);
 	signal(SIGQUIT, sigquit_handler);
 	r_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
 	ft_strcat(r_path, ": \e[m");
 	input = readline(r_path);
 	if (input == 0 || !strncmp(input, "exit", ft_strlen(input)))
-		return (printf("Exiting 21sh...\n"), free(input), 1);
+		return (printf("Exiting 21sh...\n"), free(input), exit(0), 1);
 	if (input)
 	{
 		add_history(input);
 		cmd = ft_split(input, ' ');
 		if (!ft_cd(cwd, input, cmd))
-			execve(ft_strjoin("/bin/", cmd[0]), cmd, env);
+			child_process(cmd, env, &pid);
 	}
+	waitpid(pid.pid[0], NULL, 0);
+	free(pid.pid);
 	free(input);
 	free(r_path);
 	return (0);

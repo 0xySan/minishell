@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/05 18:04:02 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 15:23:13 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,18 @@
 # include <unistd.h>
 # include <linux/limits.h>
 # include "libft/libft.h"
+# include <sys/wait.h>
+# include <fcntl.h>
 
 typedef struct s_path
 {
 	char	*rpath;
 	char	*tpath;
 }	t_path;
+
+typedef struct s_pidstruct
+{
+	pid_t	*pid;
+}	t_pidstruct;
 
 #endif
