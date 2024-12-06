@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 22:44:09 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 23:33:45 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "test.h"
 
-void	print_graffiti()
+void	print_graffiti(void)
 {
 	printf("\x1B[35m    __                    __         __   \x1B[33m___  __");
 	printf("______ \x1B[36m __  __   __\n\x1B[35m   / /   ____  ____ _____/ /");
@@ -63,7 +63,7 @@ void	free_args(char **args)
 		free(args);
 }
 
-char	**getpath()
+char	**getpath(void)
 {
 	char	**envpath;
 	int		i;
@@ -74,6 +74,18 @@ char	**getpath()
 	if (envpath)
 		return (envpath);
 	return (NULL);
+}
+
+char    *get_cpath(char *args, char *envpath)
+{
+	char	*cpath;
+
+	cpath = malloc(sizeof(char) * (ft_strlen(envpath) + ft_strlen(args) + 2));
+	if (!cpath)
+		return (NULL);
+	ft_strcpy(cpath, envpath);
+	ft_strcat(cpath, "/");
+	ft_strcat(cpath, args);
 }
 
 char	*get_cmd_path(char *arg)
@@ -90,12 +102,7 @@ char	*get_cmd_path(char *arg)
 		return (NULL);
 	while (mp[i])
 	{
-		cpath = malloc(sizeof(char) * (ft_strlen(mp[i]) + ft_strlen(arg) + 2));
-		if (!cpath)
-			return (NULL);
-		ft_strcpy(cpath, mp[i]);
-		ft_strcat(cpath, "/");
-		ft_strcat(cpath, arg);
+		cpath = get_cpath(arg, mp[i]);
 		if (access(cpath, X_OK) != -1)
 			return (free_args(mp), cpath);
 		free(cpath);
@@ -218,6 +225,7 @@ void	child_process(char **cmd, char **envp, t_pidstruct	*pid)
 		else
 			perror("21sh");
 	}
+	free(actual_cmd);
 }
 
 void    execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
@@ -227,7 +235,7 @@ void    execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
 
 	cmd = ft_split(input, ' ');
 	if (ft_cd(cwd, input, cmd))
-	    return ;
+		return (free_args(cmd));
 	cmd_path = get_cmd_path(cmd[0]);
 	if (access(cmd_path, X_OK) != -1)
 	{
@@ -236,23 +244,26 @@ void    execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
 		free(cmd_path);
 	}
 	else
-	    perror("21sh");
+		perror("21sh");
 	free_args(cmd);
 }
 
 int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 {
 	char	*input;
+	char	*tmp_path;
 	char	*r_path;
 
-	pid->pid = malloc(sizeof(pid_t) * 1);
+	pid->pid = malloc(sizeof(pid_t));
 	signal(SIGQUIT, sigquit_handler);
-	r_path = get_relative_path(cwd);
+	tmp_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
-	r_path = ft_strjoin(r_path, ": \e[m");
+	r_path = ft_strjoin(tmp_path, ": \e[m");
+	free(tmp_path);
 	input = readline(r_path);
 	if (input == 0 || !strncmp(input, "exit", ft_strlen(input)))
-		return (printf("Exiting 21sh...\n"), free(input), free(r_path), exit(0), 1);
+		return (printf("Exiting 21sh...\n"), free(input),
+			free(r_path), free(pid->pid), 1);
 	if (input)
 	{
 		add_history(input);
@@ -269,6 +280,8 @@ int	main(int argc, char **argv, char **env)
 	t_path		path;
 	char		cwd[PATH_MAX];
 	t_pidstruct	pid;
+	(void)argc;
+	(void)argv;
 
 	signal(SIGINT, sigint_handler);
 	print_graffiti();

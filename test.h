@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 16:13:18 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 23:25:45 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 # include "libft/libft.h"
 # include <sys/wait.h>
 # include <fcntl.h>
- #include <errno.h>
+# include <errno.h>
+
+# define BUFFER_SIZE 1024
 
 typedef struct s_path
 {
