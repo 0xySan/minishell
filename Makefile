@@ -1,22 +1,27 @@
-NAME = minishell
-EXECUTABLE = $PWD/$(NAME)
+NAME		=	minishell
+EXECUTABLE	=	$PWD/$(NAME)
 
-SRCS = main.c sighandler.c ft_cd.c exec_input.c exec_utils.c
-NUMB2 = 0
-NUMB3 = 0
-PERCENT = 0
-RED = $(shell tput bold setaf 1)
-GREEN = $(shell tput setaf 2)
-PURPLE = $(shell tput setaf 5)
-BLUE = $(shell tput setaf 6)
-LIGHTBLUE = $(shell tput -Txterm setaf 4)
-BOLD = $(shell tput bold)
-RESET = $(shell tput -Txterm sgr0)
-OBJS = $(SRCS:.c=.o)
-NB = $(shell echo $(SRCS) | wc -w)
+RED			=	$(shell tput bold setaf 1)
+GREEN		=	$(shell tput setaf 2)
+PURPLE		=	$(shell tput setaf 5)
+BLUE		=	$(shell tput setaf 6)
+LIGHTBLUE	=	$(shell tput -Txterm setaf 4)
+BOLD		=	$(shell tput bold)
+RESET		=	$(shell tput -Txterm sgr0)
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -lreadline
+CC			=	cc
+CFLAGS		=	-Wall -Wextra -Werror -lreadline
+
+include Files.mk
+
+SRCS		= 	$(addsuffix .c,$(addprefix $(SRC_DIR)/,$(FILES)))
+OBJS		= 	$(addsuffix .o,$(addprefix $(OBJ_DIR)/,$(FILES)))
+OBJ_DIR		= 	obj
+
+NB			=	$(shell echo $(SRCS) | wc -w)
+NUMB2		=	0
+NUMB3		=	0
+PERCENT		=	0
 
 all: $(NAME)
 	@if [ $(shell echo $(NUMB3)) -eq 0 ]; then echo "$(BOLD)$(RED)Nothing to be made."; fi
@@ -29,18 +34,18 @@ $(NAME): $(OBJS)
 	@echo "$(BOLD)$(PURPLE)Finished the compilation of the Makefile$(RESET)"
 	@$(eval NUMB3=$(shell echo $$(($(NUMB3)+1))))
 
-%.o: %.c
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(@D)
 	$(eval NUMB2=$(shell echo $$(($(NUMB2)+1))))
-	$(eval PERCENT=$(shell echo $$(( $(NUMB2) * 100 / $(NB) ))))
+	$(eval PERCENT=$(shell awk "BEGIN { printf(\"%.1f\", $(NUMB2) * 100 / $(NB)) }"))
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@if [ $(shell uname -a | grep arch | wc -l) -gt 0 ]; then echo -e "$(BOLD)$(PURPLE)[Percent : "$(PERCENT).0%"] $(BOLD)$(GREEN) \t~Compiling $< : $@$(RESET)"; else echo "$(BOLD)$(PURPLE)[Percent : "$(PERCENT).0%"] $(BOLD)$(GREEN) \t~Compiling $< : $@$(RESET)"; fi
-	
+	@if [ $(shell uname -a | grep arch | wc -l) -gt 0 ]; then echo -e "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $< : $(shell echo $@ | cut -d'/' -f 2)$(RESET)"; else echo "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $< : $(shell echo $@ | cut -d'/' -f 2)$(RESET)"; fi
 
 clean:
 	@make --no-print-directory -s clean -C libft
 	@echo "$(BOLD)$(BLUE)Finished cleaning libft$(RESET)"
-	@if [ $(shell ls | find -name "*.o" | wc -l) -gt 0 ]; then echo "$(BOLD)$(RED)Removed all objs$(RESET)"; else echo "$(BOLD)$(PURPLE)All objs were already removed.$(RESET)"; fi
-	@rm -f $(OBJS)
+	@if [ $(shell find -name "*.o" | wc -l) -gt 0 ]; then echo "$(BOLD)$(RED)Removed all objs$(RESET)"; else echo "$(BOLD)$(PURPLE)All objs were already removed.$(RESET)"; fi
+	@rm -rf $(OBJ_DIR)
 	@echo "$(BOLD)$(BLUE)Finished cleaning all$(RESET)"
 
 fclean: clean

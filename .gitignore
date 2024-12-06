@@ -1,3 +1,4 @@
 *.o
+obj
 libft/libft.a
 minishell
