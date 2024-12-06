@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 01:36:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 14:32:49 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// to use it : gcc -o test test.c -lreadline -lhistory libft/libft.a
 
 #include "test.h"
 
@@ -22,49 +24,25 @@ void	sigint_handler(int sig)
 
 void	sigquit_handler(int sig)
 {
-	exit(0);
-}
-
-char	*fake_substr(char *s, unsigned int start, size_t len)
-{
-	char	*r_value;
-	size_t	i;
-	size_t	s_len;
-
-	if (!s)
-		return (NULL);
-	s_len = ft_strlen(s);
-	if (start >= s_len)
-		return (malloc(1));
-	if (len > s_len - start)
-		len = s_len - start;
-	r_value = malloc(sizeof(char) * (len + 1));
-	if (!r_value)
-		return (NULL);
-	i = 0;
-	while (i < len && s[start + i])
-	{
-		r_value[i] = s[start + i];
-		i++;
-	}
-	r_value[i] = '\0';
-	return (r_value);
+	printf("\e[1m\x1B[31m");
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 char	*get_relative_path(char *pwd)
 {
-    char	*home;
-    size_t	home_len;
-    size_t	pwd_len;
+	char	*home;
+	size_t	home_len;
+	size_t	pwd_len;
 
-    home = getenv("HOME");
-    if (!home)
-        return (ft_strdup(pwd));
-    home_len = ft_strlen(home);
-    pwd_len = ft_strlen(pwd);
-    if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
-        return (ft_strdup(pwd));
-    return (ft_strjoin("~", pwd + home_len));
+	home = getenv("HOME");
+	if (!home)
+		return (ft_strdup(pwd));
+	home_len = ft_strlen(home);
+	pwd_len = ft_strlen(pwd);
+	if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
+		return (ft_strdup(pwd));
+	return (ft_strjoin("~", pwd + home_len));
 }
 
 int	check_if_accessible(char *cwd, char *path)
@@ -77,7 +55,7 @@ int	check_if_accessible(char *cwd, char *path)
 		chdir(path);
 		return (1);
 	}
-	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 3);
+	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 2);
 	ft_strcpy(nw_path, cwd);
 	ft_strcat(nw_path, "/");
 	ft_strcat(nw_path, path);
@@ -88,35 +66,42 @@ int	check_if_accessible(char *cwd, char *path)
 	return (accessible);
 }
 
+int	ft_cd(char *cwd, char *path, char **cmd)
+{
+	if (!ft_strncmp(cmd[0], "cd", 3))
+	{
+		if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
+			chdir(getenv("HOME"));
+		else
+			if (check_if_accessible(cwd, cmd[1]) == -1)
+				printf("cd: no such file or directory: %s\n", cmd[1]);
+		return (1);
+	}
+	return (0);
+}
+
 int	read_lines(char *cwd, char **env)
 {
 	char	*input;
 	char	*r_path;
 	char	**cmd;
 
+	signal(SIGQUIT, sigquit_handler);
 	r_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
 	ft_strcat(r_path, ": \e[m");
 	input = readline(r_path);
-	if (input == NULL)
+	if (input == 0 || !strncmp(input, "exit", ft_strlen(input)))
 		return (printf("Exiting 21sh...\n"), free(input), 1);
 	if (input)
 	{
+		add_history(input);
 		cmd = ft_split(input, ' ');
-		if (!ft_strncmp(cmd[0], "cd", 3))
-		{
-			if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
-				chdir(getenv("HOME"));
-			else
-			{
-				if (check_if_accessible(cwd, cmd[1]) == -1)
-					printf("cd: no such file or directory: %s\n", cmd[1]);
-			}
-		}
-		else
+		if (!ft_cd(cwd, input, cmd))
 			execve(ft_strjoin("/bin/", cmd[0]), cmd, env);
 	}
 	free(input);
+	free(r_path);
 	return (0);
 }
 
@@ -126,7 +111,6 @@ int	main(int argc, char **argv, char **env)
 	char	cwd[PATH_MAX];
 
 	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, sigquit_handler);
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
