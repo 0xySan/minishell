@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 17:07:57 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 18:32:38 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,9 @@ int	ft_cd(char *cwd, char *path, char **cmd)
 			chdir(home);
 		else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
 		{
-			if (check_if_raccessible(cwd, cmd[1]) == -1)
+			if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
+				chdir(home);
+			else if (check_if_raccessible(cwd, cmd[1]) == -1)
 				perror("cd");
 		}
 		else
@@ -124,14 +126,13 @@ void	child_process(char **cmd, char **envp, t_pidstruct	*pid)
 	}
 }
 
-int	read_lines(char *cwd, char **env)
+int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 {
-	char		*input;
-	char		*r_path;
-	char		**cmd;
-	t_pidstruct	pid;
+	char	*input;
+	char	*r_path;
+	char	**cmd;
 
-	pid.pid = malloc(sizeof(pid_t) * 20);
+	pid->pid = malloc(sizeof(pid_t) * 20);
 	signal(SIGQUIT, sigquit_handler);
 	r_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
@@ -145,11 +146,11 @@ int	read_lines(char *cwd, char **env)
 		cmd = ft_split(input, ' ');
 		if (!ft_cd(cwd, input, cmd))
 		{
-			child_process(cmd, env, &pid);
-			waitpid(pid.pid[0], NULL, 0);
+			child_process(cmd, env, pid);
+			waitpid(pid->pid[0], NULL, 0);
 		}
 	}
-	free(pid.pid);
+	free(pid->pid);
 	free(input);
 	free(r_path);
 	return (0);
@@ -157,8 +158,9 @@ int	read_lines(char *cwd, char **env)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_path	path;
-	char	cwd[PATH_MAX];
+	t_path		path;
+	char		cwd[PATH_MAX];
+	t_pidstruct	pid;
 
 	signal(SIGINT, sigint_handler);
 	while (1)
@@ -168,7 +170,7 @@ int	main(int argc, char **argv, char **env)
 			perror("getcwd() error");
 			exit(1);
 		}
-		if (read_lines(cwd, env))
+		if (read_lines(cwd, env, &pid))
 			break ;
 	}
 	rl_clear_history();
