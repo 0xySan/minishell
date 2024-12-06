@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 23:46:26 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 23:54:18 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,91 +24,6 @@ void	print_graffiti(void)
 	printf("/____/_//____/\x1B[36m/_/ /_/  (_)   \n\n");
 }
 
-int	check_if_only_space(char *str)
-{
-	int	i;
-	int	v;
-
-	i = 0;
-	v = 0;
-	while (str[i])
-	{
-		if (str[i] == ' ')
-			i++;
-		else
-		{
-			v++;
-			i++;
-		}
-	}
-	return (v);
-}
-
-void	free_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	if (!args)
-		return ;
-	while (args[i])
-	{
-		if (args[i])
-			free(args[i]);
-		i++;
-	}
-	if (args)
-		free(args);
-}
-
-char	**getpath(void)
-{
-	char	**envpath;
-
-	envpath = NULL;
-	envpath = ft_split(getenv("PATH"), ':');
-	if (envpath)
-		return (envpath);
-	return (NULL);
-}
-
-char    *get_cpath(char *args, char *envpath)
-{
-	char	*cpath;
-
-	cpath = malloc(sizeof(char) * (ft_strlen(envpath) + ft_strlen(args) + 2));
-	if (!cpath)
-		return (NULL);
-	ft_strcpy(cpath, envpath);
-	ft_strcat(cpath, "/");
-	ft_strcat(cpath, args);
-	return (cpath);
-}
-
-char	*get_cmd_path(char *arg)
-{
-	char	*cpath;
-	char	**mp;
-	int		i;
-
-	i = 0;
-	if (access(arg, X_OK) != -1)
-		return (arg);
-	mp = getpath();
-	if (!mp)
-		return (NULL);
-	while (mp[i])
-	{
-		cpath = get_cpath(arg, mp[i]);
-		if (access(cpath, X_OK) != -1)
-			return (free_args(mp), cpath);
-		free(cpath);
-		i++;
-	}
-	free_args(mp);
-	return (NULL);
-}
-
 char	*get_relative_path(char *pwd)
 {
 	char	*home;
@@ -123,44 +38,6 @@ char	*get_relative_path(char *pwd)
 	if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
 		return (ft_strdup(pwd));
 	return (ft_strjoin("~", pwd + home_len));
-}
-
-void	child_process(char **cmd, char **envp, t_pidstruct	*pid)
-{
-	char	*actual_cmd;
-
-	actual_cmd = get_cmd_path(cmd[0]);
-	pid->pid[0] = fork();
-	if (pid->pid[0] == -1)
-		perror("Error: Fork failed.\n");
-	if (pid->pid[0] == 0)
-	{
-		if (access(actual_cmd, X_OK) != -1)
-			execve(actual_cmd, cmd, envp);
-		else
-			perror("21sh");
-	}
-	free(actual_cmd);
-}
-
-void    execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
-{
-	char	**cmd;
-	char    *cmd_path;
-
-	cmd = ft_split(input, ' ');
-	if (ft_cd(cwd, cmd))
-		return (free_args(cmd));
-	cmd_path = get_cmd_path(cmd[0]);
-	if (access(cmd_path, X_OK) != -1)
-	{
-		child_process(cmd, env, pid);
-		waitpid(pid->pid[0], NULL, 0);
-		free(cmd_path);
-	}
-	else
-		perror("21sh");
-	free_args(cmd);
 }
 
 int	read_lines(char *cwd, char **env, t_pidstruct *pid)
@@ -194,9 +71,9 @@ int	main(int argc, char **argv, char **env)
 {
 	char		cwd[PATH_MAX];
 	t_pidstruct	pid;
+
 	(void)argc;
 	(void)argv;
-
 	signal(SIGINT, sigint_handler);
 	print_graffiti();
 	while (1)
@@ -212,4 +89,3 @@ int	main(int argc, char **argv, char **env)
 	rl_clear_history();
 	return (0);
 }
-

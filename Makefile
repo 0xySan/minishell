@@ -1,7 +1,7 @@
 NAME = minishell
 EXECUTABLE = $PWD/$(NAME)
 
-SRCS = main.c sighandler.c
+SRCS = main.c sighandler.c ft_cd.c exec_input.c exec_utils.c
 NUMB2 = 0
 NUMB3 = 0
 PERCENT = 0
