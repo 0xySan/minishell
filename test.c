@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 15:33:00 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 16:06:41 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	check_if_accessible(char *cwd, char *path)
 		chdir(path);
 		return (1);
 	}
-	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 2);
+	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 10000);
 	ft_strcpy(nw_path, cwd);
 	ft_strcat(nw_path, "/");
 	ft_strcat(nw_path, path);
@@ -74,7 +74,7 @@ int	check_if_raccessible(char *cwd, char *path)
 	char	*tmp;
 
 	home = getenv("HOME");
-	nw_path = malloc(ft_strlen(home) + ft_strlen(path));
+	nw_path = malloc(ft_strlen(home) + ft_strlen(path) + 10000);
 	ft_strcpy(nw_path, home);
 	ft_strcat(nw_path, "/");
 	tmp = ft_substr(path, 2, ft_strlen(path));
@@ -135,7 +135,7 @@ int	read_lines(char *cwd, char **env)
 	signal(SIGQUIT, sigquit_handler);
 	r_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
-	ft_strcat(r_path, ": \e[m");
+	r_path = ft_strjoin(r_path, ": \e[m");
 	input = readline(r_path);
 	if (input == 0 || !strncmp(input, "exit", ft_strlen(input)))
 		return (printf("Exiting 21sh...\n"), free(input), exit(0), 1);
@@ -169,6 +169,7 @@ int	main(int argc, char **argv, char **env)
 		if (read_lines(cwd, env))
 			break ;
 	}
+	rl_clear_history();
 	return (0);
 }
 
