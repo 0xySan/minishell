@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 23:33:45 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 23:46:26 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/// to use it : gcc -o test test.c -lreadline -lhistory libft/libft.a
-
-#include "test.h"
+#include "minishell.h"
 
 void	print_graffiti(void)
 {
@@ -66,9 +64,7 @@ void	free_args(char **args)
 char	**getpath(void)
 {
 	char	**envpath;
-	int		i;
 
-	i = -1;
 	envpath = NULL;
 	envpath = ft_split(getenv("PATH"), ':');
 	if (envpath)
@@ -86,6 +82,7 @@ char    *get_cpath(char *args, char *envpath)
 	ft_strcpy(cpath, envpath);
 	ft_strcat(cpath, "/");
 	ft_strcat(cpath, args);
+	return (cpath);
 }
 
 char	*get_cmd_path(char *arg)
@@ -112,21 +109,6 @@ char	*get_cmd_path(char *arg)
 	return (NULL);
 }
 
-void	sigint_handler(int sig)
-{
-	printf("\e[1m\x1B[31m\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-void	sigquit_handler(int sig)
-{
-	printf("\e[1m\x1B[31m");
-	rl_on_new_line();
-	rl_redisplay();
-}
-
 char	*get_relative_path(char *pwd)
 {
 	char	*home;
@@ -141,73 +123,6 @@ char	*get_relative_path(char *pwd)
 	if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
 		return (ft_strdup(pwd));
 	return (ft_strjoin("~", pwd + home_len));
-}
-
-int	check_if_accessible(char *cwd, char *path)
-{
-	char	*nw_path;
-	int		accessible;
-
-	if (access(path, F_OK) != -1)
-	{
-		chdir(path);
-		return (1);
-	}
-	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 10000);
-	ft_strcpy(nw_path, cwd);
-	ft_strcat(nw_path, "/");
-	ft_strcat(nw_path, path);
-	accessible = access(nw_path, F_OK);
-	if (accessible != -1)
-		chdir(nw_path);
-	free(nw_path);
-	return (accessible);
-}
-
-int	check_if_raccessible(char *cwd, char *path)
-{
-	char	*nw_path;
-	int		accessible;
-	char	*home;
-	char	*tmp;
-
-	home = getenv("HOME");
-	nw_path = malloc(ft_strlen(home) + ft_strlen(path) + 10000);
-	ft_strcpy(nw_path, home);
-	ft_strcat(nw_path, "/");
-	tmp = ft_substr(path, 2, ft_strlen(path));
-	ft_strcat(nw_path, tmp);
-	accessible = access(nw_path, F_OK);
-	if (accessible != -1)
-		chdir(nw_path);
-	free(nw_path);
-	if (tmp)
-		free(tmp);
-	return (accessible);
-}
-
-int	ft_cd(char *cwd, char *path, char **cmd)
-{
-	char	*home;
-
-	home = getenv("HOME");
-	if (!ft_strncmp(cmd[0], "cd", 3))
-	{
-		if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
-			chdir(home);
-		else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
-		{
-			if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
-				chdir(home);
-			else if (check_if_raccessible(cwd, cmd[1]) == -1)
-				perror("cd");
-		}
-		else
-			if (check_if_accessible(cwd, cmd[1]) == -1)
-				perror("cd");
-		return (1);
-	}
-	return (0);
 }
 
 void	child_process(char **cmd, char **envp, t_pidstruct	*pid)
@@ -234,7 +149,7 @@ void    execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
 	char    *cmd_path;
 
 	cmd = ft_split(input, ' ');
-	if (ft_cd(cwd, input, cmd))
+	if (ft_cd(cwd, cmd))
 		return (free_args(cmd));
 	cmd_path = get_cmd_path(cmd[0]);
 	if (access(cmd_path, X_OK) != -1)
@@ -277,7 +192,6 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_path		path;
 	char		cwd[PATH_MAX];
 	t_pidstruct	pid;
 	(void)argc;

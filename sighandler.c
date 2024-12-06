@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   sighandler.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/12 15:02:02 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 23:47:23 by etaquet          ###   ########.fr       */
+/*   Created: 2024/12/06 23:44:57 by etaquet           #+#    #+#             */
+/*   Updated: 2024/12/06 23:45:09 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-size_t	ft_strlen(const char *str)
+void	sigint_handler(int sig)
 {
-	size_t	val;
+	(void)sig;
+	printf("\e[1m\x1B[31m\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
-	if (!str)
-		return (0);
-	val = 0;
-	while (str[val])
-		val++;
-	return (val);
+void	sigquit_handler(int sig)
+{
+	(void)sig;
+	printf("\e[1m\x1B[31m");
+	rl_on_new_line();
+	rl_redisplay();
 }

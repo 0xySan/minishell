@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.h                                             :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 23:25:45 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 23:47:01 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TEST_H
-# define TEST_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -25,17 +25,15 @@
 # include <fcntl.h>
 # include <errno.h>
 
-# define BUFFER_SIZE 1024
-
-typedef struct s_path
-{
-	char	*rpath;
-	char	*tpath;
-}	t_path;
-
 typedef struct s_pidstruct
 {
 	pid_t	*pid;
 }	t_pidstruct;
+
+void	sigint_handler(int sig);
+void	sigquit_handler(int sig);
+int		check_if_accessible(char *cwd, char *path);
+int		check_if_raccessible(char *path);
+int		ft_cd(char *cwd, char **cmd);
 
 #endif
