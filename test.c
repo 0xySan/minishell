@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 16:06:41 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 16:17:00 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,15 +138,17 @@ int	read_lines(char *cwd, char **env)
 	r_path = ft_strjoin(r_path, ": \e[m");
 	input = readline(r_path);
 	if (input == 0 || !strncmp(input, "exit", ft_strlen(input)))
-		return (printf("Exiting 21sh...\n"), free(input), exit(0), 1);
+		return (printf("Exiting 21sh...\n"), free(input), free(r_path), exit(0), 1);
 	if (input)
 	{
-		add_history(input);
+		// add_history(input);
 		cmd = ft_split(input, ' ');
 		if (!ft_cd(cwd, input, cmd))
+		{
 			child_process(cmd, env, &pid);
+			waitpid(pid.pid[0], NULL, 0);
+		}
 	}
-	waitpid(pid.pid[0], NULL, 0);
 	free(pid.pid);
 	free(input);
 	free(r_path);
@@ -169,7 +171,7 @@ int	main(int argc, char **argv, char **env)
 		if (read_lines(cwd, env))
 			break ;
 	}
-	rl_clear_history();
+	// rl_clear_history();
 	return (0);
 }
 
