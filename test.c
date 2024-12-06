@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/05 20:22:50 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/06 01:36:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ int	check_if_accessible(char *cwd, char *path)
 	char	*nw_path;
 	int		accessible;
 
+	if (access(path, F_OK) != -1)
+	{
+		chdir(path);
+		return (1);
+	}
 	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 3);
 	ft_strcpy(nw_path, cwd);
 	ft_strcat(nw_path, "/");
@@ -100,10 +105,13 @@ int	read_lines(char *cwd, char **env)
 		cmd = ft_split(input, ' ');
 		if (!ft_strncmp(cmd[0], "cd", 3))
 		{
-			if (!cmd[1])
+			if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 				chdir(getenv("HOME"));
 			else
-				check_if_accessible(cwd, cmd[1]);
+			{
+				if (check_if_accessible(cwd, cmd[1]) == -1)
+					printf("cd: no such file or directory: %s\n", cmd[1]);
+			}
 		}
 		else
 			execve(ft_strjoin("/bin/", cmd[0]), cmd, env);
