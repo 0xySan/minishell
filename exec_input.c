@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 11:54:10 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/07 13:34:24 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ char	*get_cmd_path(char *arg)
 	return (NULL);
 }
 
-void	child_process(char **cmd, char *actual_cmd, char **envp, t_pidstruct	*pid)
+void	child_process(char **cmd, char *actual_cmd, char **envp,
+			t_pidstruct *pid)
 {
 	pid->pid[0] = fork();
 	if (pid->pid[0] == -1)
@@ -73,14 +74,12 @@ void	execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
 		return (free_args(cmd));
 	cmd_path = get_cmd_path(cmd[0]);
 	if (!cmd_path)
-		return (perror("21sh"));
-	if (access(cmd_path, X_OK) != -1)
 	{
-		child_process(cmd, cmd_path, env, pid);
-		waitpid(pid->pid[0], NULL, 0);
+		printf("21sh: Invalid command: %s\n", cmd[0]);
+		return (free_args(cmd));
 	}
-	else
-		perror("21sh");
+	child_process(cmd, cmd_path, env, pid);
+	waitpid(pid->pid[0], NULL, 0);
 	free(cmd_path);
 	free_args(cmd);
 }

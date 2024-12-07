@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 11:52:07 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/07 12:44:59 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void	print_graffiti(void)
 {
 	printf("\x1B[35m    __                    __         __   \x1B[33m___  __");
-	printf("______ \x1B[36m __  __   __\n\x1B[35m   / /   ____  ____ _____/ /");
-	printf("__  ____/ /  \x1B[33m|__ \\<  / ___/\x1B[36m / / / /  / /\n");
+	printf("_ \x1B[36m_____ __  __   __\n\x1B[35m   / /   ____  ____ _____/ /");
+	printf("__  ____/ /  \x1B[33m|__ \\<  /\x1B[36m/ ___// / / /  / /\n");
 	printf("\x1B[35m  / /   / __ \\/ __ `/ __  / _ \\/ __  /   \x1B[33m__/ //");
-	printf(" /\\__ \\\x1B[36m / /_/ /  / / \n\x1B[35m / /___/ /_/ / /_/ / /_/");
-	printf(" /  __/ /_/ /   \x1B[33m/ __// /___/ /\x1B[36m/ __  /  /_/  \n");
+	printf(" / \x1B[36m\\__ \\/ /_/ /  / / \n\x1B[35m / /___/ /_/ / /_/ / /_/");
+	printf(" /  __/ /_/ /   \x1B[33m/ __// / \x1B[36m___/ / __  /  /_/  \n");
 	printf("\x1B[35m/_____/\\____/\\__,_/\\__,_/\\___/\\__,_/   \x1B[33m");
-	printf("/____/_//____/\x1B[36m/_/ /_/  (_)   \n\n");
+	printf("/____/_/ \x1B[36m/____/_/ /_/  (_)   \n\n");
 }
 
 char	*get_relative_path(char *pwd)
@@ -45,7 +45,6 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	char	*input;
 	char	*tmp_path;
 	char	*r_path;
-	(void)env;
 
 	pid->pid = malloc(sizeof(pid_t));
 	signal(SIGQUIT, sigquit_handler);
@@ -54,7 +53,8 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	r_path = ft_strjoin(tmp_path, ": \e[m");
 	free(tmp_path);
 	input = readline(r_path);
-	if (input == 0 || (!strncmp(input, "exit", ft_strlen(input)) && ft_strlen(input) == 4))
+	if (input == 0 || (!strncmp(input, "exit", ft_strlen(input))
+			&& ft_strlen(input) == 4))
 		return (printf("Exiting 21sh...\n"), free(input),
 			free(r_path), free(pid->pid), 1);
 	if (input && check_if_only_space(input))

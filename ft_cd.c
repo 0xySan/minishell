@@ -6,53 +6,67 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 11:40:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/07 13:37:29 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_if_accessible(char *cwd, char *path)
+void	copy_then_cat(char *dest, char *fstr, char *sstr)
 {
-	char	*nw_path;
-	int		accessible;
-
-	if (access(path, F_OK) != -1)
-	{
-		chdir(path);
-		return (1);
-	}
-	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 10000);
-	ft_strcpy(nw_path, cwd);
-	ft_strcat(nw_path, "/");
-	ft_strcat(nw_path, path);
-	accessible = access(nw_path, F_OK);
-	if (accessible != -1)
-		chdir(nw_path);
-	free(nw_path);
-	return (accessible);
+	ft_strcpy(dest, fstr);
+	ft_strcat(dest, sstr);
 }
 
-int	check_if_raccessible(char *path)
+void	check_if_accessible(char *cwd, char *path)
+{
+	char		*nw_path;
+	struct stat	statbuf;
+
+	stat(path, &statbuf);
+	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
+	{
+		chdir(path);
+		return ;
+	}
+	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 2);
+	copy_then_cat(nw_path, cwd, "/");
+	ft_strcat(nw_path, path);
+	stat(nw_path, &statbuf);
+	if (access(nw_path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
+	{
+		chdir(nw_path);
+		free(nw_path);
+		return ;
+	}
+	if (access(nw_path, F_OK) != -1 || access(path, F_OK) != -1)
+		printf("cd: not a directory: %s\n", path);
+	else
+		printf("cd: no such file or directory: %s\n", path);
+	free(nw_path);
+}
+
+void	check_if_raccessible(char *path)
 {
 	char	*nw_path;
-	int		accessible;
 	char	*home;
 	char	*tmp;
+	struct stat	statbuf;
 
 	home = getenv("HOME");
-	nw_path = malloc(ft_strlen(home) + ft_strlen(path) + 10000);
-	ft_strcpy(nw_path, home);
-	ft_strcat(nw_path, "/");
-	tmp = ft_substr(path, 2, ft_strlen(path));
-	ft_strcat(nw_path, tmp);
-	accessible = access(nw_path, F_OK);
-	if (accessible != -1)
+	nw_path = malloc(ft_strlen(home) + ft_strlen(path));
+	tmp = ft_substr(path, 1, ft_strlen(path));
+	copy_then_cat(nw_path, home, tmp);
+	stat(nw_path, &statbuf);
+	if (access(nw_path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
 		chdir(nw_path);
+	else if (access(nw_path, F_OK) != -1)
+		printf("cd: not a directory: %s\n", path);
+	else
+		printf("cd: no such file or directory: %s\n", path);
 	free(nw_path);
 	if (tmp)
 		free(tmp);
-	return (accessible);
 }
 
 int	ft_cd(char *cwd, char **cmd)
@@ -60,19 +74,17 @@ int	ft_cd(char *cwd, char **cmd)
 	char	*home;
 
 	if (ft_strncmp(cmd[0], "cd", 3))
-        return (0);
-    home = getenv("HOME");
+		return (0);
+	home = getenv("HOME");
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 		chdir(home);
 	else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
 	{
 		if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
-			chdir(home);
-		else if (check_if_raccessible(cmd[1]) == -1)
-			perror("cd");
+			return (chdir(home), 1);
+		check_if_raccessible(cmd[1]);
 	}
 	else
-		if (check_if_accessible(cwd, cmd[1]) == -1)
-			perror("cd");
+		check_if_accessible(cwd, cmd[1]);
 	return (1);
 }

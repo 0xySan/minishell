@@ -1,2 +1,2 @@
 # minishell
-My minishell for the 42 Cursus
+My minishell ( 21SH ) for the 42 Cursus
