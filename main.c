@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 23:54:18 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/07 11:52:07 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	char	*input;
 	char	*tmp_path;
 	char	*r_path;
+	(void)env;
 
 	pid->pid = malloc(sizeof(pid_t));
 	signal(SIGQUIT, sigquit_handler);
@@ -53,10 +54,10 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	r_path = ft_strjoin(tmp_path, ": \e[m");
 	free(tmp_path);
 	input = readline(r_path);
-	if (input == 0 || !strncmp(input, "exit", ft_strlen(input)))
+	if (input == 0 || (!strncmp(input, "exit", ft_strlen(input)) && ft_strlen(input) == 4))
 		return (printf("Exiting 21sh...\n"), free(input),
 			free(r_path), free(pid->pid), 1);
-	if (input)
+	if (input && check_if_only_space(input))
 	{
 		add_history(input);
 		execute_input(cwd, env, pid, input);

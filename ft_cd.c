@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/06 23:50:09 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/07 11:40:36 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,20 @@ int	ft_cd(char *cwd, char **cmd)
 {
 	char	*home;
 
-	home = getenv("HOME");
-	if (!ft_strncmp(cmd[0], "cd", 3))
+	if (ft_strncmp(cmd[0], "cd", 3))
+        return (0);
+    home = getenv("HOME");
+	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
+		chdir(home);
+	else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
 	{
-		if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
+		if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
 			chdir(home);
-		else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
-		{
-			if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
-				chdir(home);
-			else if (check_if_raccessible(cmd[1]) == -1)
-				perror("cd");
-		}
-		else
-			if (check_if_accessible(cwd, cmd[1]) == -1)
-				perror("cd");
-		return (1);
+		else if (check_if_raccessible(cmd[1]) == -1)
+			perror("cd");
 	}
-	return (0);
+	else
+		if (check_if_accessible(cwd, cmd[1]) == -1)
+			perror("cd");
+	return (1);
 }
