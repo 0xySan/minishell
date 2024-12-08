@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 12:44:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/08 15:59:40 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		execute_input(cwd, env, pid, input);
+		execute_input(env, pid, input);
 		free(input);
 	}
 	free(pid->pid);

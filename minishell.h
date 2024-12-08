@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 13:27:54 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/08 15:59:30 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ typedef struct s_pidstruct
 
 void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
-void	check_if_accessible(char *cwd, char *path);
+void	check_if_accessible(char *path);
 void	check_if_raccessible(char *path);
-int		ft_cd(char *cwd, char **cmd);
-void	execute_input(char *cwd, char **env, t_pidstruct *pid, char *input);
+int		ft_cd(char **cmd);
+void	execute_input(char **env, t_pidstruct *pid, char *input);
 void	child_process(char **cmd, char *actual_cmd, char **envp,
 			t_pidstruct *pid);
 char	*get_cmd_path(char *arg);
@@ -44,5 +44,7 @@ char	*get_cpath(char *args, char *envpath);
 int		check_if_only_space(char *str);
 void	free_args(char **args);
 char	**getpath(void);
+int		count_args(char **args);
+void	copy_then_cat(char *dest, char *fstr, char *sstr);
 
 #endif

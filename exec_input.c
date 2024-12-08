@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 13:34:24 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/08 15:59:24 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ void	child_process(char **cmd, char *actual_cmd, char **envp,
 	}
 }
 
-void	execute_input(char *cwd, char **env, t_pidstruct *pid, char *input)
+void	execute_input(char **env, t_pidstruct *pid, char *input)
 {
 	char	**cmd;
 	char	*cmd_path;
 
 	cmd = ft_split(input, ' ');
-	if (ft_cd(cwd, cmd))
+	if (ft_cd(cmd))
 		return (free_args(cmd));
 	cmd_path = get_cmd_path(cmd[0]);
 	if (!cmd_path)
