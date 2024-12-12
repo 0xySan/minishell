@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/08 15:59:40 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/12 13:59:58 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern char **environ;
 
 void	print_graffiti(void)
 {
@@ -68,13 +70,11 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **env)
+int	main(void)
 {
 	char		cwd[PATH_MAX];
 	t_pidstruct	pid;
 
-	(void)argc;
-	(void)argv;
 	signal(SIGINT, sigint_handler);
 	print_graffiti();
 	while (1)
@@ -84,7 +84,7 @@ int	main(int argc, char **argv, char **env)
 			perror("getcwd() error");
 			exit(1);
 		}
-		if (read_lines(cwd, env, &pid))
+		if (read_lines(cwd, environ, &pid))
 			break ;
 	}
 	rl_clear_history();

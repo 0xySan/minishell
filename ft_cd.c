@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/08 16:16:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/12 14:01:00 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ void	check_if_accessible(char *path)
 
 	cwd = getenv("PWD");
 	stat(path, &statbuf);
-	printf("%s\n", cwd);
 	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
 	{
-		printf("%s\n", path);
 		chdir(path);
 		return ;
 	}
@@ -75,6 +73,8 @@ int	ft_cd(char **cmd)
 	home = getenv("HOME");
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 		chdir(home);
+	else if (!cmd[1] || (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1))
+		chdir(getenv("OLDPWD"));
 	else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
 	{
 		if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
