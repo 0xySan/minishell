@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 19:44:34 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/16 19:50:24 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	char	*r_path;
 
 	pid->pid = malloc(sizeof(pid_t));
-	signal(SIGQUIT, sigquit_handler);
 	tmp_path = get_relative_path(cwd);
 	printf("\e[1m\x1B[31m");
 	r_path = ft_strjoin(tmp_path, ": \e[m");
@@ -73,7 +72,10 @@ int	main(int argc, char **argv, char **env)
 	char		cwd[PATH_MAX];
 	t_pidstruct	pid;
 
+	(void)argc;
+	(void)argv;
 	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigquit_handler);
 	print_graffiti();
 	while (1)
 	{
