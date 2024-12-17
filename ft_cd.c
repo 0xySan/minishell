@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 02:27:22 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 15:55:02 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ void	check_if_raccessible(char *path, char **env)
 	char		*tmp;
 	struct stat	statbuf;
 
-	home = getenv("HOME");
+	home = ft_getenv(env, "HOME");
+	if (!home)
+		home = getenv("HOME");
 	nw_path = malloc(ft_strlen(home) + ft_strlen(path));
 	tmp = ft_substr(path, 1, ft_strlen(path));
 	copy_then_cat(nw_path, home, tmp);
@@ -82,6 +84,8 @@ int	ft_cd(char **cmd, char **env)
 	if (count_args(cmd) > 2)
 		return (printf("cd: too many arguments\n"), 1);
 	home = ft_getenv(env, "HOME");
+	if (!home)
+		home = getenv("HOME");
 	oldpwd = ft_getenv(env, "OLDPWD");
 	current_pwd = ft_getenv(env, "PWD");
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
