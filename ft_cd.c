@@ -6,26 +6,20 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 21:55:30 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 02:27:22 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <unistd.h>
 
-void	check_if_accessible(char *path)
+void	check_if_accessible(char *path, char **env)
 {
 	char		*nw_path;
 	struct stat	statbuf;
 	char		*cwd;
 
-	cwd = getenv("PWD");
-	stat(path, &statbuf);
-	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
-	{
-		chdir(path);
-		return ;
-	}
+	cwd = ft_getenv(env, "PWD");
 	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 2);
 	copy_then_cat(nw_path, cwd, "/");
 	ft_strcat(nw_path, path);
@@ -39,7 +33,7 @@ void	check_if_accessible(char *path)
 	free(nw_path);
 }
 
-void	check_if_raccessible(char *path)
+void	check_if_raccessible(char *path, char **env)
 {
 	char		*nw_path;
 	char		*home;
@@ -62,28 +56,46 @@ void	check_if_raccessible(char *path)
 		free(tmp);
 }
 
+char	*ft_get_current_dir(void)
+{
+	char	*cwd;
+
+	cwd = malloc(1024);
+	if (!cwd)
+		return (NULL);
+	if (getcwd(cwd, 1024) == NULL)
+	{
+		free(cwd);
+		return (NULL);
+	}
+	return (cwd);
+}
+
 int	ft_cd(char **cmd, char **env)
 {
 	char	*home;
+	char	*oldpwd;
+	char	*current_pwd;
 
 	if (ft_strncmp(cmd[0], "cd", 3))
 		return (0);
 	if (count_args(cmd) > 2)
 		return (printf("cd: too many arguments\n"), 1);
-	home = getenv("HOME");
-	ft_change_env(env, "OLDPWD", ft_getenv(env, "PWD"));
-	printf("%s\n", ft_getenv(env, "OLDPWD"));
+	home = ft_getenv(env, "HOME");
+	oldpwd = ft_getenv(env, "OLDPWD");
+	current_pwd = ft_getenv(env, "PWD");
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 		chdir(home);
-	else if (!cmd[1] || (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1))
-		chdir(getenv("OLDPWD"));
-	else if (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1)
-	{
-		if (!ft_strncmp(cmd[1], "~/", 2) && (ft_strlen(cmd[1]) == 2))
-			return (chdir(home), 1);
-		check_if_raccessible(cmd[1]);
-	}
+	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
+		chdir(oldpwd);
 	else
-		check_if_accessible(cmd[1]);
+		chdir(cmd[1]);
+	ft_change_env(env, "OLDPWD", current_pwd);
+	current_pwd = ft_get_current_dir();
+	if (current_pwd)
+	{
+		ft_change_env(env, "PWD", current_pwd);
+		free(current_pwd);
+	}
 	return (1);
 }

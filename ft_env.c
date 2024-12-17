@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 01:13:57 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 02:12:57 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**dup_all_env(char **env)
 	new_env = malloc((count_args(env) + 1) * sizeof(char *));
 	if (!new_env)
 		return (NULL);
-	while(env[i])
+	while (env[i])
 	{
 		new_env[i] = ft_strdup(env[i]);
 		i++;
@@ -32,21 +32,24 @@ char	**dup_all_env(char **env)
 
 void	ft_change_env(char **env, char *old_env, char *new_env)
 {
-	int	i;
+	int		i;
 	char	*start;
 	char	*test;
 
 	i = 0;
-	while(env[i])
+	test = malloc(ft_strlen(old_env) + 2);
+	copy_then_cat(test, old_env, "=");
+	while (env[i])
 	{
-		if (ft_strstr(env[i], old_env))
-			break;
+		if (ft_strstr(env[i], test))
+			break ;
 		i++;
 	}
 	if (!env[i])
-		return ;
+		return (free(test));
 	start = ft_substr(env[i], 0, ft_strlen(old_env) + 1);
 	free(env[i]);
+	free(test);
 	env[i] = dup_then_cat(start, new_env);
 }
 
@@ -59,12 +62,16 @@ void	ft_export(char **env, char *old_env, char *new_env)
 char	*ft_getenv(char **env, char *search_env)
 {
 	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	while (env[i])
 	{
 		if (ft_strstr(env[i], search_env))
-			return (ft_strchr(env[i], '='));
+		{
+			return (ft_strchr(env[i], '=') + 1);
+		}
 		i++;
 	}
 	return (NULL);
