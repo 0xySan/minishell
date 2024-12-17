@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 02:12:57 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 02:40:43 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ char	**dup_all_env(char **env)
 		new_env[i] = ft_strdup(env[i]);
 		i++;
 	}
+	new_env[i] = NULL;
 	return (new_env);
 }
 
@@ -49,8 +50,10 @@ void	ft_change_env(char **env, char *old_env, char *new_env)
 		return (free(test));
 	start = ft_substr(env[i], 0, ft_strlen(old_env) + 1);
 	free(env[i]);
-	free(test);
+	env[i] = NULL;
 	env[i] = dup_then_cat(start, new_env);
+	free(start);
+	free(test);
 }
 
 void	ft_export(char **env, char *old_env, char *new_env)
@@ -75,4 +78,17 @@ char	*ft_getenv(char **env, char *search_env)
 		i++;
 	}
 	return (NULL);
+}
+
+void	ft_free_env(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		free(env[i]);
+		i++;
+	}
+	free(env);
 }

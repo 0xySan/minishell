@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 20:29:14 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 02:35:51 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ int	main(int argc, char **argv, char **env)
 			break ;
 	}
 	rl_clear_history();
+	ft_free_env(env);
 	return (0);
 }
