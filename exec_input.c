@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/08 15:59:24 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/16 20:33:30 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	execute_input(char **env, t_pidstruct *pid, char *input)
 	char	*cmd_path;
 
 	cmd = ft_split(input, ' ');
-	if (ft_cd(cmd))
+	if (ft_cd(cmd, env))
 		return (free_args(cmd));
 	cmd_path = get_cmd_path(cmd[0]);
 	if (!cmd_path)

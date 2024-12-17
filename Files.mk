@@ -3,4 +3,5 @@ FILES		=	main \
 				exec_utils \
 				sighandler \
 				ft_cd \
-				utils
+				utils \
+				ft_env

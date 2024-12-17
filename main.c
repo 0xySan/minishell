@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 19:50:24 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/16 20:29:14 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	env = dup_all_env(env);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);
 	print_graffiti();

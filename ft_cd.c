@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/12 14:01:00 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/16 21:55:30 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	check_if_raccessible(char *path)
 		free(tmp);
 }
 
-int	ft_cd(char **cmd)
+int	ft_cd(char **cmd, char **env)
 {
 	char	*home;
 
@@ -71,6 +71,8 @@ int	ft_cd(char **cmd)
 	if (count_args(cmd) > 2)
 		return (printf("cd: too many arguments\n"), 1);
 	home = getenv("HOME");
+	ft_change_env(env, "OLDPWD", ft_getenv(env, "PWD"));
+	printf("%s\n", ft_getenv(env, "OLDPWD"));
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 		chdir(home);
 	else if (!cmd[1] || (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1))

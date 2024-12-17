@@ -10,7 +10,7 @@ BOLD		=	$(shell tput bold)
 RESET		=	$(shell tput -Txterm sgr0)
 
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -lreadline
+CFLAGS		=	-lreadline
 
 include Files.mk
 
