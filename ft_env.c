@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 02:40:43 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 15:38:31 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,6 @@ void	ft_change_env(char **env, char *old_env, char *new_env)
 	free(test);
 }
 
-void	ft_export(char **env, char *old_env, char *new_env)
-{
-	// search if old_env exists, if it does, re-alloc *env and dup the new_env
-	// if it doesn't exist re-alloc **env and add 1 to add new_env
-}
-
 char	*ft_getenv(char **env, char *search_env)
 {
 	int	i;
@@ -78,6 +72,12 @@ char	*ft_getenv(char **env, char *search_env)
 		i++;
 	}
 	return (NULL);
+}
+
+void	ft_export(char **env, char *old_env, char *new_env)
+{
+	// search if old_env exists, if it does, re-alloc *env and dup the new_env
+	// if it doesn't exist re-alloc **env and add 1 to add new_env
 }
 
 void	ft_free_env(char **env)
