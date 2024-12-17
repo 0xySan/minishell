@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 15:38:31 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 16:08:22 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ void	ft_export(char **env, char *old_env, char *new_env)
 {
 	// search if old_env exists, if it does, re-alloc *env and dup the new_env
 	// if it doesn't exist re-alloc **env and add 1 to add new_env
+}
+
+void	ft_unset(char **env, char *rev_env)
+{
+	// find if rev_env is in env, if it is, remove that line, free it, and move up all the others.
 }
 
 void	ft_free_env(char **env)
