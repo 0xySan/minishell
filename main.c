@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 02:35:51 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/17 02:44:02 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void	print_graffiti(void)
 	printf("/____/_/ \x1B[36m/____/_/ /_/  (_)   \n\n");
 }
 
-char	*get_relative_path(char *pwd)
+char	*get_relative_path(char *pwd, char **env)
 {
 	char	*home;
 	size_t	home_len;
 	size_t	pwd_len;
 
-	home = getenv("HOME");
+	home = ft_getenv(env, "HOME");
 	if (!home)
 		return (ft_strdup(pwd));
 	home_len = ft_strlen(home);
@@ -47,7 +47,7 @@ int	read_lines(char *cwd, char **env, t_pidstruct *pid)
 	char	*r_path;
 
 	pid->pid = malloc(sizeof(pid_t));
-	tmp_path = get_relative_path(cwd);
+	tmp_path = get_relative_path(cwd, env);
 	printf("\e[1m\x1B[31m");
 	r_path = ft_strjoin(tmp_path, ": \e[m");
 	free(tmp_path);
