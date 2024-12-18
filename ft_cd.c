@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/18 23:34:25 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/18 23:45:21 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ void	check_if_accessible(char *path, char **env)
 	struct stat	statbuf;
 	char		*cwd;
 
+	stat(path, &statbuf);
+	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
+	{
+		chdir(path);
+		return ;
+	}
 	cwd = ft_getenv(env, "PWD");
 	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 2);
 	copy_then_cat(nw_path, cwd, "/");
