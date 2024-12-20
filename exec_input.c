@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 20:33:30 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/20 19:21:29 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,58 @@ void	child_process(char **cmd, char *actual_cmd, char **envp,
 	}
 }
 
+char	*export_util_func(char *word)
+{
+	int		i;
+	int		j;
+	char	*r_value;
+
+	i = 0;
+	j = 0;
+	while(word[i] && word[i] != '=')
+		i++;
+	r_value = malloc((i + 1) * sizeof(char));
+	if (!r_value)
+		return (NULL);
+	while(j < i)
+	{
+		r_value[j] = word[j];
+		j++;
+	}
+	r_value[j] = '\0';
+	return (r_value);
+}
+
 void	execute_input(char **env, t_pidstruct *pid, char *input)
 {
 	char	**cmd;
 	char	*cmd_path;
+	char	*test;
 
 	cmd = ft_split(input, ' ');
 	if (ft_cd(cmd, env))
 		return (free_args(cmd));
+	if (!ft_strncmp(cmd[0], "export", 7))
+	{
+		if (!ft_strchr(cmd[1], '='))
+			return ;
+		test = export_util_func(cmd[1]);
+		ft_export(env, test, ft_strrchr(cmd[1], '=') + 1);
+		free_args(cmd);
+		free(test);
+		return ;
+	}
 	cmd_path = get_cmd_path(cmd[0]);
 	if (!cmd_path)
 	{
+		ft_change_env(env, "_", cmd[count_args(cmd) - 1]);
 		printf("21sh: Invalid command: %s\n", cmd[0]);
 		return (free_args(cmd));
 	}
+	if (count_args(cmd) == 1)
+		ft_change_env(env, "_", cmd_path);
+	else
+		ft_change_env(env, "_", cmd[count_args(cmd) - 1]);
 	child_process(cmd, cmd_path, env, pid);
 	waitpid(pid->pid[0], NULL, 0);
 	free(cmd_path);

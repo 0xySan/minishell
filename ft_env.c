@@ -6,20 +6,20 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/17 16:08:22 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/20 19:19:34 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "minishell.h"
 
-char	**dup_all_env(char **env)
+char	**dup_all_env(char **env, int size)
 {
 	char	**new_env;
 	int		i;
 
 	i = 0;
-	new_env = malloc((count_args(env) + 1) * sizeof(char *));
+	new_env = malloc((count_args(env) + 1 + size) * sizeof(char *));
 	if (!new_env)
 		return (NULL);
 	while (env[i])
@@ -31,6 +31,26 @@ char	**dup_all_env(char **env)
 	return (new_env);
 }
 
+char	**dup_all_env_and_free(char **env, int size)
+{
+	char	**new_env;
+	int		i;
+
+	i = 0;
+	new_env = malloc((count_args(env) + 1 + size) * sizeof(char *));
+	if (!new_env)
+		return (NULL);
+	while (env[i])
+	{
+		new_env[i] = ft_strdup(env[i]);
+		free(env[i]);
+		i++;
+	}
+	free(env);
+	new_env[i] = NULL;
+	return (new_env);
+}
+
 void	ft_change_env(char **env, char *old_env, char *new_env)
 {
 	int		i;
@@ -38,11 +58,11 @@ void	ft_change_env(char **env, char *old_env, char *new_env)
 	char	*test;
 
 	i = 0;
-	test = malloc(ft_strlen(old_env) + 2);
+	test = malloc((ft_strlen(old_env) + 2) * sizeof(char));
 	copy_then_cat(test, old_env, "=");
 	while (env[i])
 	{
-		if (ft_strstr(env[i], test))
+		if (!ft_strncmp(env[i], test, ft_strlen(test)))
 			break ;
 		i++;
 	}
@@ -59,25 +79,31 @@ void	ft_change_env(char **env, char *old_env, char *new_env)
 char	*ft_getenv(char **env, char *search_env)
 {
 	int	i;
-	int	j;
+	char	*test;
 
 	i = 0;
-	j = 0;
+	test = malloc((ft_strlen(search_env) + 2) * sizeof(char));
+	copy_then_cat(test, search_env, "=");
 	while (env[i])
 	{
-		if (ft_strstr(env[i], search_env))
-		{
-			return (ft_strchr(env[i], '=') + 1);
-		}
+		if (!ft_strncmp(env[i], test, ft_strlen(test)))
+			return (free(test), ft_strchr(env[i], '=') + 1);
 		i++;
 	}
-	return (NULL);
+	return (free(test), NULL);
 }
 
 void	ft_export(char **env, char *old_env, char *new_env)
 {
-	// search if old_env exists, if it does, re-alloc *env and dup the new_env
-	// if it doesn't exist re-alloc **env and add 1 to add new_env
+	int	i;
+
+	if (ft_getenv(env, old_env))
+		return (ft_change_env(env, old_env, new_env));
+	i = count_args(env);
+	env[i] = malloc(1 * (ft_strlen(old_env) + ft_strlen(new_env) + 2));
+	copy_then_cat(env[i], old_env, "=");
+	ft_strcat(env[i], new_env);
+	env[i + 1] = NULL;
 }
 
 void	ft_unset(char **env, char *rev_env)

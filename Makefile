@@ -38,7 +38,7 @@ $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(@D)
 	$(eval NUMB2=$(shell echo $$(($(NUMB2)+1))))
 	$(eval PERCENT=$(shell awk "BEGIN { printf(\"%.1f\", $(NUMB2) * 100 / $(NB)) }"))
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) -c $< -o $@
 	@if [ $(shell uname -a | grep arch | wc -l) -gt 0 ]; then echo -e "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $< : $(shell echo $@ | cut -d'/' -f 2)$(RESET)"; else echo "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $< : $(shell echo $@ | cut -d'/' -f 2)$(RESET)"; fi
 
 clean:
