@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/20 19:19:34 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/21 15:14:46 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	ft_change_env(char **env, char *old_env, char *new_env)
 
 char	*ft_getenv(char **env, char *search_env)
 {
-	int	i;
+	int		i;
 	char	*test;
 
 	i = 0;
@@ -108,7 +108,29 @@ void	ft_export(char **env, char *old_env, char *new_env)
 
 void	ft_unset(char **env, char *rev_env)
 {
-	// find if rev_env is in env, if it is, remove that line, free it, and move up all the others.
+	int		i;
+	char	*test;
+
+	if (!ft_getenv(env, rev_env))
+		return ;
+	i = 0;
+	test = malloc((ft_strlen(rev_env) + 2) * sizeof(char));
+	copy_then_cat(test, rev_env, "=");
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], test, ft_strlen(test)))
+			break ;
+		i++;
+	}
+	if (!env[i])
+		return (free(test));
+	while (env[i + 1])
+	{
+		free(env[i]);
+		env[i] = ft_strdup(env[i + 1]);
+		i++;
+	}
+	env[i] = NULL;
 }
 
 void	ft_free_env(char **env)

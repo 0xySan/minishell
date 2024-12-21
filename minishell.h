@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/20 19:16:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/21 15:09:27 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ char	*dup_then_cat(char *src, char *sec_src);
 char	*ft_getenv(char **env, char *search_env);
 void	ft_free_env(char **env);
 void	ft_export(char **env, char *old_env, char *new_env);
+void	ft_unset(char **env, char *rev_env);
 
 #endif

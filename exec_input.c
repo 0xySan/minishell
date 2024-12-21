@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/20 19:21:29 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/21 15:13:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,12 @@ void	execute_input(char **env, t_pidstruct *pid, char *input)
 		ft_export(env, test, ft_strrchr(cmd[1], '=') + 1);
 		free_args(cmd);
 		free(test);
+		return ;
+	}
+	if (!ft_strncmp(cmd[0], "unset", 6))
+	{
+		ft_unset(env, cmd[1]);
+		free_args(cmd);
 		return ;
 	}
 	cmd_path = get_cmd_path(cmd[0]);
