@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/18 23:45:21 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/26 17:01:18 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,17 @@ char	*ft_get_current_dir(void)
 	return (cwd);
 }
 
-int	ft_cd(char **cmd, char **env)
+void	ft_change_dir(char **cmd, char **env)
 {
-	char	*home;
 	char	*oldpwd;
-	char	*current_pwd;
+	char	*home;
 
-	if (ft_strncmp(cmd[0], "cd", 3))
-		return (0);
-	if (count_args(cmd) > 2)
-		return (printf("cd: too many arguments\n"), 1);
 	home = ft_getenv(env, "HOME");
 	if (!home)
 		home = getenv("HOME");
 	oldpwd = ft_getenv(env, "OLDPWD");
-	current_pwd = ft_getenv(env, "PWD");
+	if (!oldpwd)
+		oldpwd = ft_getenv(env, "PWD");
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 		chdir(home);
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
@@ -102,6 +98,18 @@ int	ft_cd(char **cmd, char **env)
 		check_if_raccessible(cmd[1], env);
 	else
 		check_if_accessible(cmd[1], env);
+}
+
+int	ft_cd(char **cmd, char **env)
+{
+	char	*current_pwd;
+
+	if (ft_strncmp(cmd[0], "cd", 3))
+		return (0);
+	if (count_args(cmd) > 2)
+		return (printf("cd: too many arguments\n"), 1);
+	current_pwd = ft_getenv(env, "PWD");
+	ft_change_dir(cmd, env);
 	ft_change_env(env, "OLDPWD", current_pwd);
 	current_pwd = ft_get_current_dir();
 	if (current_pwd)
