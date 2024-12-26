@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/20 19:17:00 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/26 16:50:45 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ char	*get_relative_path(char *pwd, char **env)
 	return (ft_strjoin("~", pwd + home_len));
 }
 
-int	read_lines(char *cwd, char **env, t_pidstruct *pid)
+int	read_lines(char *cwd, char ***env, t_pidstruct *pid)
 {
 	char	*input;
 	char	*tmp_path;
 	char	*r_path;
 
 	pid->pid = malloc(sizeof(pid_t));
-	tmp_path = get_relative_path(cwd, env);
+	tmp_path = get_relative_path(cwd, *env);
 	printf("\e[1m\x1B[31m");
 	r_path = ft_strjoin(tmp_path, ": \e[m");
 	free(tmp_path);
@@ -85,7 +85,7 @@ int	main(int argc, char **argv, char **env)
 			perror("getcwd() error");
 			exit(1);
 		}
-		if (read_lines(cwd, env, &pid))
+		if (read_lines(cwd, &env, &pid))
 			break ;
 	}
 	rl_clear_history();

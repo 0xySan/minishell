@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/21 15:09:27 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/26 16:40:11 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	sigquit_handler(int sig);
 void	check_if_accessible(char *path, char **env);
 void	check_if_raccessible(char *path, char **env);
 int		ft_cd(char **cmd, char **env);
-void	execute_input(char **env, t_pidstruct *pid, char *input);
+void	execute_input(char ***env, t_pidstruct *pid, char *input);
 void	child_process(char **cmd, char *actual_cmd, char **envp,
 			t_pidstruct *pid);
 char	*get_cmd_path(char *arg);
@@ -51,7 +51,8 @@ char	**dup_all_env(char **env, int size);
 char	*dup_then_cat(char *src, char *sec_src);
 char	*ft_getenv(char **env, char *search_env);
 void	ft_free_env(char **env);
-void	ft_export(char **env, char *old_env, char *new_env);
+void	ft_export(char ***env, char *old_env, char *new_env);
 void	ft_unset(char **env, char *rev_env);
+void	ft_show_env(char **env);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/21 15:13:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/26 16:56:11 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,12 @@ char	*export_util_func(char *word)
 
 	i = 0;
 	j = 0;
-	while(word[i] && word[i] != '=')
+	while (word[i] && word[i] != '=')
 		i++;
 	r_value = malloc((i + 1) * sizeof(char));
 	if (!r_value)
 		return (NULL);
-	while(j < i)
+	while (j < i)
 	{
 		r_value[j] = word[j];
 		j++;
@@ -86,14 +86,14 @@ char	*export_util_func(char *word)
 	return (r_value);
 }
 
-void	execute_input(char **env, t_pidstruct *pid, char *input)
+void	execute_input(char ***env, t_pidstruct *pid, char *input)
 {
 	char	**cmd;
 	char	*cmd_path;
 	char	*test;
 
 	cmd = ft_split(input, ' ');
-	if (ft_cd(cmd, env))
+	if (ft_cd(cmd, *env))
 		return (free_args(cmd));
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
@@ -107,22 +107,22 @@ void	execute_input(char **env, t_pidstruct *pid, char *input)
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
-		ft_unset(env, cmd[1]);
+		ft_unset(*env, cmd[1]);
 		free_args(cmd);
 		return ;
 	}
 	cmd_path = get_cmd_path(cmd[0]);
 	if (!cmd_path)
 	{
-		ft_change_env(env, "_", cmd[count_args(cmd) - 1]);
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 		printf("21sh: Invalid command: %s\n", cmd[0]);
 		return (free_args(cmd));
 	}
 	if (count_args(cmd) == 1)
-		ft_change_env(env, "_", cmd_path);
+		ft_change_env(*env, "_", cmd_path);
 	else
-		ft_change_env(env, "_", cmd[count_args(cmd) - 1]);
-	child_process(cmd, cmd_path, env, pid);
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
+	child_process(cmd, cmd_path, *env, pid);
 	waitpid(pid->pid[0], NULL, 0);
 	free(cmd_path);
 	free_args(cmd);

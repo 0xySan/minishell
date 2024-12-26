@@ -6,12 +6,13 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/21 15:14:46 by etaquet          ###   ########.fr       */
+/*   Updated: 2024/12/26 16:55:37 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "minishell.h"
+#include <string.h>
 
 char	**dup_all_env(char **env, int size)
 {
@@ -93,17 +94,40 @@ char	*ft_getenv(char **env, char *search_env)
 	return (free(test), NULL);
 }
 
-void	ft_export(char **env, char *old_env, char *new_env)
+char	**realloc_tab(char ***env)
+{
+	char	**n_tab;
+
+	n_tab = malloc((count_args(*env) + 2) * sizeof(char *));
+	memcpy(n_tab, *env, (count_args(*env) + 1) * sizeof(char *));
+	free(*env);
+	return (n_tab);
+}
+
+void	ft_show_env(char **env)
 {
 	int	i;
 
-	if (ft_getenv(env, old_env))
-		return (ft_change_env(env, old_env, new_env));
-	i = count_args(env);
-	env[i] = malloc(1 * (ft_strlen(old_env) + ft_strlen(new_env) + 2));
-	copy_then_cat(env[i], old_env, "=");
-	ft_strcat(env[i], new_env);
-	env[i + 1] = NULL;
+	i = 0;
+	while (env[i])
+	{
+		dprintf(1, "%s\n", env[i]);
+		i++;
+	}
+}
+
+void	ft_export(char ***env, char *old_env, char *new_env)
+{
+	int	i;
+
+	if (ft_getenv(*env, old_env))
+		return (ft_change_env(*env, old_env, new_env));
+	i = count_args(*env);
+	*env = realloc_tab(env);
+	(*env)[i] = malloc(1 * (ft_strlen(old_env) + ft_strlen(new_env) + 2));
+	copy_then_cat((*env)[i], old_env, "=");
+	ft_strcat((*env)[i], new_env);
+	(*env)[i + 1] = NULL;
 }
 
 void	ft_unset(char **env, char *rev_env)
