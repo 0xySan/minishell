@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/26 16:40:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/01 17:40:26 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		ft_cd(char **cmd, char **env);
 void	execute_input(char ***env, t_pidstruct *pid, char *input);
 void	child_process(char **cmd, char *actual_cmd, char **envp,
 			t_pidstruct *pid);
-char	*get_cmd_path(char *arg);
+char	*get_cmd_path(char *arg, char *path);
 char	*get_cpath(char *args, char *envpath);
 int		check_if_only_space(char *str);
 void	free_args(char **args);

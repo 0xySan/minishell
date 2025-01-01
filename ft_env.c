@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/26 16:55:37 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/01 17:41:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	ft_show_env(char **env)
 	i = 0;
 	while (env[i])
 	{
-		dprintf(1, "%s\n", env[i]);
+		printf("%s\n", env[i]);
 		i++;
 	}
 }

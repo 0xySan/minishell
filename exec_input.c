@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/26 16:56:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/01 17:42:08 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_cpath(char *args, char *envpath)
 	return (cpath);
 }
 
-char	*get_cmd_path(char *arg)
+char	*get_cmd_path(char *arg, char *path)
 {
 	char	*cpath;
 	char	**mp;
@@ -34,7 +34,7 @@ char	*get_cmd_path(char *arg)
 	i = 0;
 	if (access(arg, X_OK) != -1)
 		return (ft_strdup(arg));
-	mp = getpath();
+	mp = ft_split(path, ':');
 	if (!mp)
 		return (NULL);
 	while (mp[i])
@@ -111,7 +111,12 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		free_args(cmd);
 		return ;
 	}
-	cmd_path = get_cmd_path(cmd[0]);
+	if (!ft_strncmp(cmd[0], "env", 4))
+	{
+		ft_show_env(*env);
+		return ;
+	}
+	cmd_path = get_cmd_path(cmd[0], ft_getenv(*env, "PATH"));
 	if (!cmd_path)
 	{
 		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
