@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/01 17:41:28 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/01 17:46:39 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,8 @@ void	ft_unset(char **env, char *rev_env)
 		env[i] = ft_strdup(env[i + 1]);
 		i++;
 	}
+	free(env[i]);
+	free(test);
 	env[i] = NULL;
 }
 
