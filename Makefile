@@ -21,6 +21,7 @@ OBJ_DIR		= 	obj
 NB			=	$(shell echo $(SRCS) | wc -w)
 NUMB2		=	0
 NUMB3		=	0
+NUMB4		=	0
 PERCENT		=	0
 
 all: $(NAME)
@@ -39,7 +40,8 @@ $(OBJ_DIR)/%.o: %.c
 	$(eval NUMB2=$(shell echo $$(($(NUMB2)+1))))
 	$(eval PERCENT=$(shell awk "BEGIN { printf(\"%.1f\", $(NUMB2) * 100 / $(NB)) }"))
 	@$(CC) -c $< -o $@
-	@if [ $(shell uname -a | grep arch | wc -l) -gt 0 ] || [ $(shell cat /etc/*-release | grep fedora | wc -l) -gt 0 ]; then echo -e "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $< : $(shell echo $@ | cut -d'/' -f 2)$(RESET)"; else echo "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $< : $(shell echo $@ | cut -d'/' -f 2)$(RESET)"; fi
+	@$(eval NUMB4=$(shell echo $@ / | tr -cd '/' | wc -c))
+	@if [ $(shell uname -a | grep arch | wc -l) -gt 0 ] || [ $(shell cat /etc/*-release | grep fedora | wc -l) -gt 0 ]; then echo -e "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $(shell echo $< | cut -d'/' -f 2) : $(shell echo $@ | cut -d'/' -f $(NUMB4))$(RESET)"; else echo "$(BOLD)$(PURPLE)[Percent : "$(PERCENT)%"] $(BOLD)$(GREEN) \t~Compiling $(shell echo $< | cut -d'/' -f 2) : $(shell echo $@ | cut -d'/' -f $(NUMB4))$(RESET)"; fi
 
 clean:
 	@make --no-print-directory -s clean -C libft
