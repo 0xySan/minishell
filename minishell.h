@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/01 17:40:26 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/02 16:59:11 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ void	ft_free_env(char **env);
 void	ft_export(char ***env, char *old_env, char *new_env);
 void	ft_unset(char **env, char *rev_env);
 void	ft_show_env(char **env);
+void	ft_echo(char **cmd);
 
 #endif

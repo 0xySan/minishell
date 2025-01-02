@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/01 17:42:08 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/02 16:59:36 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,13 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 
 	cmd = ft_split(input, ' ');
 	if (ft_cd(cmd, *env))
+	{
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 		return (free_args(cmd));
+	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 		if (!ft_strchr(cmd[1], '='))
 			return ;
 		test = export_util_func(cmd[1]);
@@ -107,12 +111,21 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 		ft_unset(*env, cmd[1]);
+		free_args(cmd);
+		return ;
+	}
+	if (!ft_strncmp(cmd[0], "echo", 5))
+	{
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
+		ft_echo(cmd);
 		free_args(cmd);
 		return ;
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
+		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 		ft_show_env(*env);
 		return ;
 	}
@@ -123,10 +136,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		printf("21sh: Invalid command: %s\n", cmd[0]);
 		return (free_args(cmd));
 	}
-	if (count_args(cmd) == 1)
-		ft_change_env(*env, "_", cmd_path);
-	else
-		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
+	ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 	child_process(cmd, cmd_path, *env, pid);
 	waitpid(pid->pid[0], NULL, 0);
 	free(cmd_path);
