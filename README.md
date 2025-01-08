@@ -1,3 +1,5 @@
+![coverage](https://img.shields.io/badge/coverage-40%25-yellow)
+
 # minishell
 My minishell ( 21SH ) for the 42 Cursus
 
