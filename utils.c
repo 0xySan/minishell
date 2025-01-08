@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 15:51:08 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 20:40:54 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/08 16:04:47 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,22 @@ int	count_args(char **args)
 	while (args[i])
 		i++;
 	return (i);
+}
+
+int	count_chars(char *str, char chars)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == chars)
+			j++;
+		i++;
+	}
+	return (j);
 }
 
 void	copy_then_cat(char *dest, char *fstr, char *sstr)

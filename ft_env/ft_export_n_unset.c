@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_n_unset.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/02 17:36:24 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/08 16:46:39 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,31 @@ char	**realloc_tab(char ***env)
 	return (n_tab);
 }
 
+void	ft_show_export(char **env)
+{
+	int		n;
+	char	**sorted;
+	int		i;
+
+	n = count_args(env);
+	sorted = malloc(sizeof(char *) * (n + 1));
+	copy_array(sorted, env);
+	sort_strings(sorted);
+	i = 0;
+	while (sorted[i])
+	{
+		printf("export %s\n", sorted[i]);
+		i++;
+	}
+	free(sorted);
+}
+
 void	ft_export(char ***env, char *old_env, char *new_env)
 {
 	int	i;
 
+	if (!old_env && !new_env)
+		return (ft_show_export(*env));
 	if (ft_getenv(*env, old_env))
 		return (ft_change_env(*env, old_env, new_env));
 	i = count_args(*env);

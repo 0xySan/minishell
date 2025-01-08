@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/02 17:32:26 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/08 16:45:49 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*get_cmd_path(char *arg, char *path);
 char	*get_cpath(char *args, char *envpath);
 int		check_if_only_space(char *str);
 void	free_args(char **args);
-char	**getpath(void);
+int		count_chars(char *str, char chars);
 int		count_args(char **args);
 void	copy_then_cat(char *dest, char *fstr, char *sstr);
 void	ft_change_env(char **env, char *old_env, char *new_env);
@@ -55,5 +55,7 @@ void	ft_export(char ***env, char *old_env, char *new_env);
 void	ft_unset(char **env, char *rev_env);
 void	ft_show_env(char **env);
 void	ft_echo(char **cmd);
+void	sort_strings(char **array);
+void	copy_array(char **dest, char **src);
 
 #endif

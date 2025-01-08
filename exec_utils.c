@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:52:06 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/07 11:31:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/08 16:03:25 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,4 @@ void	free_args(char **args)
 	}
 	if (args)
 		free(args);
-}
-
-char	**getpath(void)
-{
-	char	**envpath;
-
-	envpath = NULL;
-	envpath = ft_split(getenv("PATH"), ':');
-	if (envpath)
-		return (envpath);
-	return (NULL);
 }
