@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/08 16:18:31 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/13 02:18:37 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 {
 	char	**cmd;
 	char	*cmd_path;
-	char	*test;
+	char	*export_util;
 
 	cmd = ft_split(input, ' ');
 	if (ft_cd(cmd, *env))
@@ -110,11 +110,11 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		{
 			if (!ft_strchr(cmd[1], '='))
 				return (ft_change_env(*env, "_", cmd[count_args(cmd) - 1]));
-			test = export_util_func(cmd[1]);
-			ft_export(env, test, ft_strrchr(cmd[1], '=') + 1);
+			export_util = export_util_func(cmd[1]);
+			ft_export(env, export_util, ft_strrchr(cmd[1], '=') + 1);
 			ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 			free_args(cmd);
-			free(test);
+			free(export_util);
 		}
 		return ;
 	}
@@ -123,6 +123,11 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 		ft_unset(*env, cmd[1]);
 		free_args(cmd);
+		return ;
+	}
+	if (!ft_strncmp(cmd[0], "pwd", 4))
+	{
+		printf("%s\n", ft_getenv(*env, "PWD"));
 		return ;
 	}
 	if (!ft_strncmp(cmd[0], "echo", 5))
