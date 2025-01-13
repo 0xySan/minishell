@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/13 02:20:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/13 04:29:23 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	check_if_raccessible(char *path, char **env)
 
 	home = ft_getenv(env, "HOME");
 	if (!home)
-		home = getenv("HOME");
+		home = ft_getenv(env, "PWD");
 	nw_path = malloc(ft_strlen(home) + ft_strlen(path));
 	tmp = ft_substr(path, 1, ft_strlen(path));
 	copy_then_cat(nw_path, home, tmp);
@@ -85,7 +85,7 @@ void	ft_change_dir(char **cmd, char **env)
 
 	home = ft_getenv(env, "HOME");
 	if (!home)
-		home = ".";
+		home = ft_getenv(env, "PWD");
 	oldpwd = ft_getenv(env, "OLDPWD");
 	if (!oldpwd)
 		oldpwd = ft_getenv(env, "PWD");
