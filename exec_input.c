@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/13 02:18:37 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/14 01:20:46 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 char	*get_cpath(char *args, char *envpath)
 {
@@ -32,7 +33,7 @@ char	*get_cmd_path(char *arg, char *path)
 	int		i;
 
 	i = 0;
-	if (access(arg, X_OK) != -1 && count_chars(arg, '/') >= 1)
+	if (access(arg, F_OK) != -1 && count_chars(arg, '/') >= 1)
 		return (ft_strdup(arg));
 	mp = ft_split(path, ':');
 	if (!mp)
@@ -40,7 +41,7 @@ char	*get_cmd_path(char *arg, char *path)
 	while (mp[i])
 	{
 		cpath = get_cpath(arg, mp[i]);
-		if (access(cpath, X_OK) != -1 && !ft_strstr(cpath, "//"))
+		if (access(cpath, F_OK) != -1 && !ft_strstr(cpath, "//"))
 			return (free_args(mp), cpath);
 		free(cpath);
 		i++;
