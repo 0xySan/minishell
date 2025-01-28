@@ -1,48 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/02 16:56:24 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/28 16:13:15 by etaquet          ###   ########.fr       */
+/*   Created: 2025/01/28 16:15:16 by etaquet           #+#    #+#             */
+/*   Updated: 2025/01/28 16:16:53 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	check_if_only_char(char *str, int start, char car)
+
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	int	i;
+	size_t	i;
 
-	i = start;
-	while (str[i] == car)
-		i++;
-	if (str[i] == '\0')
-		return (1);
-	return (0);
-}
-
-void	ft_echo(char **cmd)
-{
-	int	i;
-	int	n;
-
-	i = 1;
-	n = 0;
-	if ((cmd[i][0] == '-') && check_if_only_char(cmd[i], 1, 'n'))
+	i = 0;
+	while (i < n && src[i] != '\0')
 	{
-		i++;
-		n++;
-	}
-	while (cmd[i] && cmd[i + 1])
-	{
-		printf("%s ", cmd[i]);
+		dest[i] = src[i];
 		i++;
 	}
-	if (cmd[i])
-		printf("%s", cmd[i]);
-	if (!n)
-		printf("\n");
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }

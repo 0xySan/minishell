@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/14 01:20:46 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/28 16:17:26 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <unistd.h>
 
 char	*get_cpath(char *args, char *envpath)
 {
@@ -33,7 +32,7 @@ char	*get_cmd_path(char *arg, char *path)
 	int		i;
 
 	i = 0;
-	if (access(arg, F_OK) != -1 && count_chars(arg, '/') >= 1)
+	if (access(arg, X_OK) != -1 && count_chars(arg, '/') >= 1)
 		return (ft_strdup(arg));
 	mp = ft_split(path, ':');
 	if (!mp)
@@ -41,7 +40,7 @@ char	*get_cmd_path(char *arg, char *path)
 	while (mp[i])
 	{
 		cpath = get_cpath(arg, mp[i]);
-		if (access(cpath, F_OK) != -1 && !ft_strstr(cpath, "//"))
+		if (access(cpath, X_OK) != -1 && !ft_strstr(cpath, "//"))
 			return (free_args(mp), cpath);
 		free(cpath);
 		i++;
@@ -87,13 +86,83 @@ char	*export_util_func(char *word)
 	return (r_value);
 }
 
+char	*preprocess_input(const char *input, char **env)
+{
+	char	*result;
+	size_t	i;
+	size_t	j;
+	int		in_single_quote;
+	int		in_double_quote;
+
+	result = malloc(ft_strlen(input) * 2 + 1);
+	if (!result)
+		return (NULL);
+	j = 0;
+	i = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' && !in_double_quote)
+		{
+			in_single_quote = !in_single_quote;
+			i++;
+			continue ;
+		}
+		else if (input[i] == '"' && !in_single_quote)
+		{
+			in_double_quote = !in_double_quote;
+			i++;
+			continue ;
+		}
+		else if (input[i] == '$' && !in_single_quote)
+		{
+			size_t var_start = ++i;
+			while (input[i] && (ft_isalnum(input[i]) || input[i] == '_'))
+				i++;
+			size_t var_len = i - var_start;
+			if (var_len > 0)
+			{
+				char var_name[var_len + 1];
+				ft_strncpy(var_name, &input[var_start], var_len);
+				var_name[var_len] = '\0';
+				char *var_value = ft_getenv(env, var_name);
+				if (var_value)
+				{
+					size_t value_len = ft_strlen(var_value);
+					ft_strncpy(&result[j], var_value, value_len);
+					j += value_len;
+				}
+			}
+			continue;
+		}
+		else
+			result[j++] = input[i++];
+	}
+	result[j] = '\0';
+	if (in_single_quote || in_double_quote)
+	{
+		free(result);
+		return (NULL);
+	}
+	return (result);
+}
+
 void	execute_input(char ***env, t_pidstruct *pid, char *input)
 {
 	char	**cmd;
 	char	*cmd_path;
 	char	*export_util;
-
-	cmd = ft_split(input, ' ');
+	char	*parsed_input;
+	
+	parsed_input = preprocess_input(input, *env);
+	if (!parsed_input)
+	{
+		printf("Error: Failed to parse input\n");
+		return ;
+	}
+	cmd = ft_split(parsed_input, ' ');
+	free(parsed_input);
 	if (ft_cd(cmd, *env))
 	{
 		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
