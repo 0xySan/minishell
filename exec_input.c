@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/28 16:17:26 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/28 16:21:03 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 	
 	parsed_input = preprocess_input(input, *env);
 	if (!parsed_input)
-	{
-		printf("Error: Failed to parse input\n");
 		return ;
-	}
 	cmd = ft_split(parsed_input, ' ');
 	free(parsed_input);
 	if (ft_cd(cmd, *env))
