@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/28 18:14:31 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/01/28 21:24:16 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 			if (!ft_strchr(cmd[1], '='))
 				return (ft_change_env(*env, "_", cmd[count_args(cmd) - 1]));
 			export_util = export_util_func(cmd[1]);
-			ft_export(env, export_util, ft_strrchr(cmd[1], '=') + 1);
+			ft_export(env, export_util, ft_strchr(cmd[1], '=') + 1);
 			ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
 			free_args(cmd);
 			free(export_util);
