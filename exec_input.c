@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/28 16:21:03 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/28 18:14:31 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*preprocess_input(const char *input, char **env)
 	int		in_single_quote;
 	int		in_double_quote;
 
-	result = malloc(ft_strlen(input) * 2 + 1);
+	result = malloc(ft_strlen(input) * 16666 + 1);
 	if (!result)
 		return (NULL);
 	j = 0;
@@ -154,7 +154,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 	char	*cmd_path;
 	char	*export_util;
 	char	*parsed_input;
-	
+
 	parsed_input = preprocess_input(input, *env);
 	if (!parsed_input)
 		return ;

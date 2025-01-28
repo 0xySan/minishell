@@ -1,0 +1,9 @@
+- gerer le $?
+renvoyer le bon message d'erreur  :
+
+gerer aussi si il est dans le message
+
+exemple :
+echo AAAAAAA$?aaaaaa
+AAAAAAA1aaaaaa
+

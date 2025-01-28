@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:56:24 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/28 16:13:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/01/28 20:23:52 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	check_if_only_char(char *str, int start, char car)
 {
 	int	i;
 
+	if (!str)
+		return (0);
 	i = start;
 	while (str[i] == car)
 		i++;
@@ -30,17 +32,11 @@ void	ft_echo(char **cmd)
 	int	n;
 
 	i = 1;
-	n = 0;
-	if ((cmd[i][0] == '-') && check_if_only_char(cmd[i], 1, 'n'))
-	{
+	n = (cmd[i] && cmd[i][0] == '-' && check_if_only_char(cmd[i], 1, 'n'));
+	if (n)
 		i++;
-		n++;
-	}
 	while (cmd[i] && cmd[i + 1])
-	{
-		printf("%s ", cmd[i]);
-		i++;
-	}
+		printf("%s ", cmd[i++]);
 	if (cmd[i])
 		printf("%s", cmd[i]);
 	if (!n)
