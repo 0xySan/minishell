@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/08 16:45:49 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/03 19:07:13 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ typedef struct s_pidstruct
 {
 	pid_t	*pid;
 }	t_pidstruct;
+
+typedef struct s_cmd
+{
+	char **args;
+	int input_fd;
+	int output_fd;
+} t_cmd;
 
 void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
@@ -57,5 +64,8 @@ void	ft_show_env(char **env);
 void	ft_echo(char **cmd);
 void	sort_strings(char **array);
 void	copy_array(char **dest, char **src);
+void	ft_parse_pipeline(char **tokens, int num_tokens);
+void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
+void	ft_execute(t_cmd *cmd);
 
 #endif

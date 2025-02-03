@@ -8,13 +8,6 @@
 #include <readline/history.h>
 #include "minishell.h"
 
-typedef struct s_cmd
-{
-	char **args;
-	int input_fd;
-	int output_fd;
-} t_cmd;
-
 void ft_execute(t_cmd *cmd)
 {
 	if (cmd->input_fd != STDIN_FILENO)
@@ -89,16 +82,17 @@ void ft_parse_pipeline(char **tokens, int num_tokens)
 	int cmd_count = 0;
 	int i = 0;
 
-	while (i < num_tokens) {
-		if (ft_strcmp(tokens[i], "|") == 0) {
+	while (i < num_tokens)
+	{
+		if (ft_strcmp(tokens[i], "|") == 0)
 			cmd_count++;
-		}
 		i++;
 	}
 	cmd_count++;
 
 	t_cmd *cmds = malloc(cmd_count * sizeof(t_cmd));
-	if (!cmds) {
+	if (!cmds)
+	{
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
@@ -175,6 +169,10 @@ void ft_parse_pipeline(char **tokens, int num_tokens)
 			close(pipe_fds[1]);
 			prev_pipe_read = pipe_fds[0];
 		}
+		if (cmds[j].input_fd != STDIN_FILENO)
+			close(cmds[j].input_fd);
+		if (cmds[j].output_fd != STDOUT_FILENO)
+			close(cmds[j].output_fd);
 	}
 
 	for (int j = 0; j < cmd_count; j++)
@@ -183,26 +181,4 @@ void ft_parse_pipeline(char **tokens, int num_tokens)
 	for (int j = 0; j < cmd_count; j++)
 		free(cmds[j].args);
 	free(cmds);
-}
-
-int main() {
-	char *line;
-	while ((line = readline("minishell> ")) != NULL)
-	{
-		if (strlen(line) > 0)
-		{
-			add_history(line);
-
-			char **tokens = ft_split(line, ' ');
-			int num_tokens = count_args(tokens);
-
-			ft_parse_pipeline(tokens, num_tokens);
-
-			for (int i = 0; i < num_tokens; i++)
-				free(tokens[i]);
-			free(tokens);
-		}
-		free(line);
-	}
-	return 0;
 }

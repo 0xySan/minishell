@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/28 21:24:16 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/03 20:49:19 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,14 +151,15 @@ char	*preprocess_input(const char *input, char **env)
 void	execute_input(char ***env, t_pidstruct *pid, char *input)
 {
 	char	**cmd;
-	char	*cmd_path;
 	char	*export_util;
 	char	*parsed_input;
+	int		cmd_count;
 
 	parsed_input = preprocess_input(input, *env);
 	if (!parsed_input)
 		return ;
 	cmd = ft_split(parsed_input, ' ');
+	cmd_count = count_args(cmd);
 	free(parsed_input);
 	if (ft_cd(cmd, *env))
 	{
@@ -210,16 +211,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		ft_show_env(*env);
 		return ;
 	}
-	cmd_path = get_cmd_path(cmd[0], ft_getenv(*env, "PATH"));
-	if (!cmd_path)
-	{
-		ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
-		printf("21sh: Invalid command: %s\n", cmd[0]);
-		return (free_args(cmd));
-	}
 	ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
-	child_process(cmd, cmd_path, *env, pid);
-	waitpid(pid->pid[0], NULL, 0);
-	free(cmd_path);
+	ft_parse_pipeline(cmd, cmd_count);
 	free_args(cmd);
 }
