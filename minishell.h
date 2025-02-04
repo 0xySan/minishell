@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/03 19:07:13 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/04 17:21:03 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,20 @@ typedef struct s_cmd
 	char **args;
 	int input_fd;
 	int output_fd;
-} t_cmd;
+}	t_cmd;
+
+typedef struct s_split_context
+{
+	char	**result;
+	int		*total_count;
+	int		*capacity;
+}	t_split_context;
+
+typedef struct s_split {
+    char    **result;
+    int     *count;
+    int     *capacity;
+}   t_split;
 
 void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
@@ -67,5 +80,8 @@ void	copy_array(char **dest, char **src);
 void	ft_parse_pipeline(char **tokens, int num_tokens);
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
 void	ft_execute(t_cmd *cmd);
+char**	split_array(char** input, const char* delim, int* total_count);
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+char	**split_string(const char *str, const char *delim, int *count);
 
 #endif

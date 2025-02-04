@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/03 20:49:19 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/04 17:26:54 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ char	*preprocess_input(const char *input, char **env)
 
 void	execute_input(char ***env, t_pidstruct *pid, char *input)
 {
+	char	**cmds;
 	char	**cmd;
 	char	*export_util;
 	char	*parsed_input;
@@ -158,8 +159,10 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 	parsed_input = preprocess_input(input, *env);
 	if (!parsed_input)
 		return ;
-	cmd = ft_split(parsed_input, ' ');
-	cmd_count = count_args(cmd);
+	cmds = ft_split(parsed_input, ' ');
+	cmd_count = 0;
+	cmd = split_array(cmds, "|<>", &cmd_count);
+	free_args(cmds);
 	free(parsed_input);
 	if (ft_cd(cmd, *env))
 	{
