@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 00:50:31 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/05 03:35:59 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,14 @@ typedef struct s_token_info
 	int	capacity;
 }	t_token_info;
 
+typedef struct s_pipeline_ctx
+{
+	t_cmd	*cmds;
+	int		count;
+	char	**env;
+	int		prev_pipe;
+}	t_pipeline_ctx;
+
 void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
 void	check_if_accessible(char *path, char **env);
@@ -72,9 +80,18 @@ void	ft_show_env(char **env);
 void	ft_echo(char **cmd);
 void	sort_strings(char **array);
 void	copy_array(char **dest, char **src);
-void	ft_parse_pipeline(char **tokens, int num_tokens);
+void	ft_parse_pipeline(char **tokens, int num_tokens, char **env);
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
-void	ft_execute(t_cmd *cmd);
+void	ft_execute(t_cmd *cmd, char **env);
 char	**split_array(char **arr, const char *delimSet);
+int		ft_count_args(char **tokens, int num_tokens, int start);
+int		ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens, int start);
+void	setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
+void	cleanup_fds(t_cmd *cmd);
+void	execute_command(t_pipeline_ctx *ctx, int index);
+t_cmd	*ft_parse_commands(char **tokens, int num_tokens);
+int		ft_process_one_command(char **tokens, int num_tokens, int start,
+			t_cmd *cmd);
+int		ft_count_commands(char **tokens, int num_tokens);
 
 #endif

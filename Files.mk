@@ -10,5 +10,7 @@ FILES		=	main \
 				ft_env/ft_export_n_unset \
 				ft_env/ft_sort_array \
 				ft_echo \
-				test \
-				more_utils
+				cmds_handler \
+				more_utils \
+				fds_handler \
+				pipes_handler

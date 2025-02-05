@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 00:59:07 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/05 02:19:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,6 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		return ;
 	}
 	ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
-	ft_parse_pipeline(cmd, cmd_count);
+	ft_parse_pipeline(cmd, cmd_count, *env);
 	free_args(cmd);
 }
