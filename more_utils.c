@@ -6,129 +6,143 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 16:44:34 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/04 17:21:47 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/05 00:50:02 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
+static char	*alloc_token(const char *start, int len)
 {
-	void	*new_ptr;
+	char	*token;
 
-	if (new_size == 0)
-	{
-		free(ptr);
+	token = malloc(sizeof(char) * (len + 1));
+	if (!token)
 		return (NULL);
-	}
-	if (!ptr)
-		return (malloc(new_size));
-	new_ptr = malloc(new_size);
-	if (!new_ptr)
-		return (NULL);
-	if (old_size < new_size)
-		ft_memcpy(new_ptr, ptr, old_size);
-	else
-		ft_memcpy(new_ptr, ptr, new_size);
-	free(ptr);
-	return (new_ptr);
+	strncpy(token, start, len);
+	token[len] = '\0';
+	return (token);
 }
 
-char	**split_string(const char *str, const char *delim, int *count)
+static int	add_token(char ***tokens, char *token, int *count, int *capacity)
 {
-	const char	*start;
-	const char	*end;
-	int			capacity;
-	char		**result;
-	int			len;
+	char	**tmp;
 
-	capacity = 10;
-	result = malloc(capacity * sizeof(char *));
-	*count = 0;
-	start = str;
-	while (*start)
+	(*tokens)[*count] = token;
+	(*count)++;
+	if (*count >= *capacity)
 	{
-		end = start;
-		while (*end && !ft_strchr(delim, *end))
-			end++;
-		if (start != end)
-		{
-			if (*count >= capacity)
-			{
-				capacity *= 2;
-				result = ft_realloc(result, capacity, sizeof(char *));
-			}
-			len = end - start;
-			result[*count] = malloc(len + 1);
-			ft_strncpy(result[*count], start, len);
-			result[*count][len] = '\0';
-			(*count)++;
-		}
-		if (*end)
-		{
-			if (*count >= capacity)
-			{
-				capacity *= 2;
-				result = ft_realloc(result, capacity, sizeof(char *));
-			}
-			result[*count] = malloc(2);
-			result[*count][0] = *end;
-			result[*count][1] = '\0';
-			(*count)++;
-			end++;
-		}
-		start = end;
+		*capacity *= 2;
+		tmp = realloc(*tokens, sizeof(char *) * (*capacity));
+		if (!tmp)
+			return (0);
+		*tokens = tmp;
 	}
-	return (result);
+	return (1);
 }
 
-char	**resize_result(char **result, int *capacity)
+static void	free_tokens(char **tokens, int count)
 {
-	*capacity *= 2;
-	return (ft_realloc(result, *capacity, sizeof(char *)));
-}
+	int	i;
 
-void	process_input_string(char *input_str, const char *delim,
-		t_split_context *context)
-{
-	int		count;
-	char	**split;
-	int		j;
-
-	count = 0;
-	split = split_string(input_str, delim, &count);
-	j = 0;
-	while (j < count)
-	{
-		if (*context->total_count >= *context->capacity)
-			context->result = resize_result(context->result, context->capacity);
-		context->result[*context->total_count] = split[j];
-		(*context->total_count)++;
-		j++;
-	}
-	free(split);
-}
-
-char	**split_array(char **input, const char *delim, int *total_count)
-{
-	int				capacity;
-	char			**result;
-	int				i;
-	t_split_context	context;
-
-	capacity = 10;
-	result = malloc(capacity * sizeof(char *));
-	if (!result)
-		return (NULL);
-	*total_count = 0;
 	i = 0;
-	context.result = result;
-	context.total_count = total_count;
-	context.capacity = &capacity;
-	while (input[i] != NULL)
+	while (i < count)
 	{
-		process_input_string(input[i], delim, &context);
+		free(tokens[i]);
 		i++;
 	}
+	free(tokens);
+}
+
+static char	*get_token(const char **p, const char *delimSet)
+{
+	const char	*start;
+	int			len;
+	bool		is_delim;
+	char		*token;
+
+	is_delim = (strchr(delimSet, **p) != NULL);
+	start = *p;
+	while (**p && ((strchr(delimSet, **p) != NULL) == is_delim))
+		(*p)++;
+	len = *p - start;
+	token = alloc_token(start, len);
+	return (token);
+}
+
+char	**split_string(const char *str, const char *delimSet, int *out_size)
+{
+	int				capacity;
+	int				count;
+	char			**tokens;
+	const char		*p;
+	char			*token;
+
+	capacity = 10;
+	count = 0;
+	tokens = malloc(sizeof(char *) * capacity);
+	if (!tokens)
+		return (NULL);
+	p = str;
+	while (*p)
+	{
+		token = get_token(&p, delimSet);
+		if (!token)
+			return (free_tokens(tokens, count), NULL);
+		if (!add_token(&tokens, token, &count, &capacity))
+			return (free(token), free_tokens(tokens, count), NULL);
+	}
+	tokens[count] = NULL;
+	*out_size = count;
+	return (tokens);
+}
+
+static int	realloc_and_add_tokens(char ***res, t_token_info *info,
+				char **split, int split_size)
+{
+	char	**tmp;
+	int		i;
+
+	if (info->total + split_size >= info->capacity)
+	{
+		info->capacity = (info->total + split_size) * 2;
+		tmp = realloc(*res, sizeof(char *) * (info->capacity));
+		if (!tmp)
+			return (0);
+		*res = tmp;
+	}
+	i = 0;
+	while (i < split_size)
+	{
+		(*res)[info->total] = split[i];
+		info->total++;
+		i++;
+	}
+	return (1);
+}
+
+char	**split_array(char **arr, const char *delimSet)
+{
+	int				split_size;
+	char			**result;
+	char			**split_result;
+	t_token_info	info;
+
+	info.total = 0;
+	info.capacity = 10;
+	result = malloc(sizeof(char *) * info.capacity);
+	if (!result)
+		return (NULL);
+	while (*arr)
+	{
+		split_result = split_string(*arr, delimSet, &split_size);
+		if (!split_result)
+			return (free_tokens(result, info.total), NULL);
+		if (!realloc_and_add_tokens(&result, &info, split_result, split_size))
+			return (free(split_result), free_tokens(result, info.total), NULL);
+		free(split_result);
+		arr++;
+	}
+	result[info.total] = NULL;
 	return (result);
 }

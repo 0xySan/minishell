@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/04 17:26:54 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/05 00:59:07 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,8 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 	if (!parsed_input)
 		return ;
 	cmds = ft_split(parsed_input, ' ');
-	cmd_count = 0;
-	cmd = split_array(cmds, "|<>", &cmd_count);
+	cmd = split_array(cmds, "<|>");
+	cmd_count = count_args(cmd);
 	free_args(cmds);
 	free(parsed_input);
 	if (ft_cd(cmd, *env))
