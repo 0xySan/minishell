@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 02:56:20 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/06 01:36:01 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static int	open_file(char *path, int flags, int mode)
 	if (fd < 0)
 	{
 		perror("open");
-		exit(EXIT_FAILURE);
+		exit(127);
+		// have to move the exit after the pipe and make sure that nothing works before another pipe
 	}
 	return (fd);
 }
