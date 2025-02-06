@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 03:34:27 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/06 02:12:26 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	ft_execute(t_cmd *cmd, char **env)
 		close(cmd->output_fd);
 	}
 	actural_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
-	execvp(cmd->args[0], cmd->args);
-	perror("execvp");
+	execve(actural_cmd, cmd->args, env);
+	perror("execve");
 	exit(EXIT_FAILURE);
 }
 
