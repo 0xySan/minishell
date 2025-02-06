@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 03:35:16 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/06 02:16:09 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env)
 	i = -1;
 	while (++i < ctx.count)
 		wait(NULL);
+	i = 0;
 	while (i < count)
 		free(cmds[i++].args);
 	free(cmds);
