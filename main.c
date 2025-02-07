@@ -6,11 +6,13 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 21:43:33 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/07 22:08:02 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+int g_exit_status = 0;
+
 
 void	print_graffiti(void)
 {
