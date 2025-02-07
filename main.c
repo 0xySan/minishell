@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/26 16:50:45 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/07 21:43:33 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	read_lines(char *cwd, char ***env, t_pidstruct *pid)
 
 	pid->pid = malloc(sizeof(pid_t));
 	tmp_path = get_relative_path(cwd, *env);
-	printf("\e[1m\x1B[31m");
+	printf("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m");
 	r_path = ft_strjoin(tmp_path, ": \e[m");
 	free(tmp_path);
 	input = readline(r_path);
@@ -74,6 +74,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	printf("\033[H\033[J");
 	env = dup_all_env(env, 100000);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);

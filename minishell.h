@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 03:35:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/07 21:41:26 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_cmd
 	char	**args;
 	int		input_fd;
 	int		output_fd;
+	pid_t	pid;
 }	t_cmd;
 
 typedef struct s_token_info

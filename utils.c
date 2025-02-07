@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 15:51:08 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/08 16:04:47 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/07 21:45:06 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,14 @@ char	*dup_then_cat(char *src, char *sec_src)
 	dest[start] = '\0';
 	ft_strcat(dest, sec_src);
 	return (dest);
+}
+
+void	wait_for_children(t_pipeline_ctx *ctx)
+{
+	int	i;
+	int	status;
+
+	i = 0;
+	while (i < ctx->count)
+		waitpid(ctx->cmds[i++].pid, &status, 0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/06 02:16:09 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/07 21:45:02 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens, int start)
 
 void	setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2])
 {
-	if (pipe(pipe_fds) < 0)
+	if (pipe(pipe_fds) == -1)
 	{
 		perror("pipe");
 		exit(EXIT_FAILURE);
