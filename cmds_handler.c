@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 22:53:00 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/07 23:21:34 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ extern int	g_exit_status;
 
 void	ft_execute(t_cmd *cmd, char **env)
 {
-	char	*actual_cmd;
-	pid_t	pid;
-	int		status;
+	char	*actural_cmd;
 
 	if (cmd->input_fd != STDIN_FILENO)
 	{
@@ -30,31 +28,11 @@ void	ft_execute(t_cmd *cmd, char **env)
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close(cmd->output_fd);
 	}
-	actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
-	pid = fork();
-	if (pid == 0)
-	{
-		if (execve(actual_cmd, cmd->args, env) == -1)
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-	}
-	else if (pid > 0)
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			g_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			g_exit_status = 128 + WTERMSIG(status);
-	}
-	else
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
+	actural_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
+	execve(actural_cmd, cmd->args, env);
+	perror("execve");
+	exit(EXIT_FAILURE);
 }
-
 int	ft_count_commands(char **tokens, int num_tokens)
 {
 	int	i;
@@ -70,8 +48,8 @@ int	ft_count_commands(char **tokens, int num_tokens)
 	}
 	return (count);
 }
-
-int	ft_process_one_command(char **tokens, int num_tokens, int start, t_cmd *cmd)
+int	ft_process_one_command(char **tokens, int num_tokens, int start,
+		t_cmd *cmd)
 {
 	int	arg_count;
 	int	i;
@@ -88,7 +66,6 @@ int	ft_process_one_command(char **tokens, int num_tokens, int start, t_cmd *cmd)
 		i++;
 	return (i);
 }
-
 t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 {
 	t_cmd	*cmds;
@@ -114,7 +91,6 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 	}
 	return (cmds);
 }
-
 void	execute_command(t_pipeline_ctx *ctx, int index)
 {
 	int		pipe_fds[2];
