@@ -6,17 +6,15 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 23:21:34 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/08 00:12:52 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	g_exit_status;
-
 void	ft_execute(t_cmd *cmd, char **env)
 {
-	char	*actural_cmd;
+	char	*actual_cmd;
 
 	if (cmd->input_fd != STDIN_FILENO)
 	{
@@ -28,10 +26,10 @@ void	ft_execute(t_cmd *cmd, char **env)
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close(cmd->output_fd);
 	}
-	actural_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
-	execve(actural_cmd, cmd->args, env);
-	perror("execve");
-	exit(EXIT_FAILURE);
+	actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
+	execve(actual_cmd, cmd->args, env);
+	printf("21sh: command not found: %s\n", cmd->args[0]);
+	exit(127);
 }
 int	ft_count_commands(char **tokens, int num_tokens)
 {
@@ -57,10 +55,7 @@ int	ft_process_one_command(char **tokens, int num_tokens, int start,
 	arg_count = ft_count_args(tokens, num_tokens, start);
 	cmd->args = malloc((arg_count + 1) * sizeof(char *));
 	if (!cmd->args)
-	{
-		perror("malloc");
 		exit(EXIT_FAILURE);
-	}
 	i = ft_fill_args(cmd, tokens, num_tokens, start);
 	if (i < num_tokens && ft_strcmp(tokens[i], "|") == 0)
 		i++;

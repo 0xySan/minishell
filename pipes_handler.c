@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 21:45:02 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/08 00:24:17 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	cleanup_fds(t_cmd *cmd)
 		close(cmd->output_fd);
 }
 
-void	ft_parse_pipeline(char **tokens, int num_tokens, char **env)
+void	ft_parse_pipeline(char **tokens, int num_tokens, char **env, int *exit_status)
 {
 	t_cmd			*cmds;
 	int				count;
@@ -97,7 +97,7 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env)
 		execute_command(&ctx, i++);
 	i = -1;
 	while (++i < ctx.count)
-		wait(NULL);
+		waitpid(-1, exit_status, 0);
 	i = 0;
 	while (i < count)
 		free(cmds[i++].args);

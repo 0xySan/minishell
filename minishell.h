@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 22:07:47 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/08 00:12:42 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
-
-
-typedef struct s_pidstruct
-{
-	pid_t	*pid;
-}			t_pidstruct;
 
 typedef struct s_cmd
 {
@@ -61,9 +55,7 @@ void		sigquit_handler(int sig);
 void		check_if_accessible(char *path, char **env);
 void		check_if_raccessible(char *path, char **env);
 int			ft_cd(char **cmd, char **env);
-void		execute_input(char ***env, t_pidstruct *pid, char *input);
-void		child_process(char **cmd, char *actual_cmd, char **envp,
-				t_pidstruct *pid);
+void		execute_input(char ***env, char *input, int *exit_status);
 char		*get_cmd_path(char *arg, char *path);
 char		*get_cpath(char *args, char *envpath);
 int			check_if_only_space(char *str);
@@ -72,7 +64,7 @@ int			count_chars(char *str, char chars);
 int			count_args(char **args);
 void		copy_then_cat(char *dest, char *fstr, char *sstr);
 void		ft_change_env(char **env, char *old_env, char *new_env);
-char		**dup_all_env(char **env, int size);
+char		**dup_all_env(char **env);
 char		*dup_then_cat(char *src, char *sec_src);
 char		*ft_getenv(char **env, char *search_env);
 void		ft_free_env(char **env);
@@ -82,7 +74,7 @@ void		ft_show_env(char **env);
 void		ft_echo(char **cmd);
 void		sort_strings(char **array);
 void		copy_array(char **dest, char **src);
-void		ft_parse_pipeline(char **tokens, int num_tokens, char **env);
+void		ft_parse_pipeline(char **tokens, int num_tokens, char **env, int *exit_status);
 void		ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
 void		ft_execute(t_cmd *cmd, char **env);
 char		**split_array(char **arr, const char *delimSet);

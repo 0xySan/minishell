@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/05 02:19:28 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/08 00:14:44 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,6 @@ char	*get_cmd_path(char *arg, char *path)
 	return (NULL);
 }
 
-void	child_process(char **cmd, char *actual_cmd, char **envp,
-			t_pidstruct *pid)
-{
-	pid->pid[0] = fork();
-	if (pid->pid[0] == -1)
-		perror("Error: Fork failed.\n");
-	if (pid->pid[0] == 0)
-	{
-		if (access(actual_cmd, X_OK) != -1)
-			execve(actual_cmd, cmd, envp);
-		else
-			perror("21sh");
-	}
-}
-
 char	*export_util_func(char *word)
 {
 	int		i;
@@ -86,7 +71,7 @@ char	*export_util_func(char *word)
 	return (r_value);
 }
 
-char	*preprocess_input(const char *input, char **env)
+char	*preprocess_input(const char *input, char **env, int *exit_status)
 {
 	char	*result;
 	size_t	i;
@@ -119,9 +104,13 @@ char	*preprocess_input(const char *input, char **env)
 		{
 			size_t var_start = ++i;
 			while (input[i] && (ft_isalnum(input[i]) || input[i] == '_'))
+			{
+				if (input[i] == '?')
+					i++;
 				i++;
+			}
 			size_t var_len = i - var_start;
-			if (var_len > 0)
+			if (var_len > 0 || input[i] == '?')
 			{
 				char var_name[var_len + 1];
 				ft_strncpy(var_name, &input[var_start], var_len);
@@ -131,6 +120,13 @@ char	*preprocess_input(const char *input, char **env)
 				{
 					size_t value_len = ft_strlen(var_value);
 					ft_strncpy(&result[j], var_value, value_len);
+					j += value_len;
+				}
+				else if (input[i] == '?')
+				{
+					int status = WEXITSTATUS(*exit_status);
+					size_t value_len = ft_strlen(ft_itoa(status)) + 1;
+					ft_strncpy(&result[j], ft_itoa(status), value_len);
 					j += value_len;
 				}
 			}
@@ -148,7 +144,7 @@ char	*preprocess_input(const char *input, char **env)
 	return (result);
 }
 
-void	execute_input(char ***env, t_pidstruct *pid, char *input)
+void	execute_input(char ***env, char *input, int *exit_status)
 {
 	char	**cmds;
 	char	**cmd;
@@ -156,7 +152,7 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 	char	*parsed_input;
 	int		cmd_count;
 
-	parsed_input = preprocess_input(input, *env);
+	parsed_input = preprocess_input(input, *env, exit_status);
 	if (!parsed_input)
 		return ;
 	cmds = ft_split(parsed_input, ' ');
@@ -215,6 +211,6 @@ void	execute_input(char ***env, t_pidstruct *pid, char *input)
 		return ;
 	}
 	ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
-	ft_parse_pipeline(cmd, cmd_count, *env);
+	ft_parse_pipeline(cmd, cmd_count, *env, exit_status);
 	free_args(cmd);
 }

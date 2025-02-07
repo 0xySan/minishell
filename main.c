@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 22:08:02 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/08 00:16:11 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-int g_exit_status = 0;
-
 
 void	print_graffiti(void)
 {
@@ -42,13 +40,12 @@ char	*get_relative_path(char *pwd, char **env)
 	return (ft_strjoin("~", pwd + home_len));
 }
 
-int	read_lines(char *cwd, char ***env, t_pidstruct *pid)
+int	read_lines(char *cwd, char ***env, int *exit_status)
 {
 	char	*input;
 	char	*tmp_path;
 	char	*r_path;
 
-	pid->pid = malloc(sizeof(pid_t));
 	tmp_path = get_relative_path(cwd, *env);
 	printf("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m");
 	r_path = ft_strjoin(tmp_path, ": \e[m");
@@ -56,39 +53,35 @@ int	read_lines(char *cwd, char ***env, t_pidstruct *pid)
 	input = readline(r_path);
 	if (input == 0 || (!strncmp(input, "exit", ft_strlen(input))
 			&& ft_strlen(input) == 4))
-		return (printf("Exiting 21sh...\n"), free(input),
-			free(r_path), free(pid->pid), 1);
+		return (printf("Exiting 21sh...\n"), free(input), free(r_path), 1);
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		execute_input(env, pid, input);
+		execute_input(env, input, exit_status);
 		free(input);
 	}
-	free(pid->pid);
 	free(r_path);
 	return (0);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	char		cwd[PATH_MAX];
-	t_pidstruct	pid;
+	char	cwd[PATH_MAX];
+	int		exit_status;
 
 	(void)argc;
 	(void)argv;
+	exit_status = 0;
 	printf("\033[H\033[J");
-	env = dup_all_env(env, 100000);
+	env = dup_all_env(env);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);
 	print_graffiti();
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
-		{
-			perror("getcwd() error");
 			exit(1);
-		}
-		if (read_lines(cwd, &env, &pid))
+		if (read_lines(cwd, &env, &exit_status))
 			break ;
 	}
 	rl_clear_history();

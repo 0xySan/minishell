@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fds_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/06 01:36:01 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/07 23:38:34 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,7 @@ static int	open_file(char *path, int flags, int mode)
 
 	fd = open(path, flags, mode);
 	if (fd < 0)
-	{
-		perror("open");
-		exit(127);
-		// have to move the exit after the pipe and make sure that nothing works before another pipe
-	}
+		fd = open("/dev/null", flags, mode);
 	return (fd);
 }
 
