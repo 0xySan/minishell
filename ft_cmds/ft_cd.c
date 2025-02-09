@@ -6,11 +6,11 @@
 /*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 21:45:11 by oxy              ###   ########.fr       */
+/*   Updated: 2025/02/09 22:38:45 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	check_if_accessible(char *path, char **env)
 {

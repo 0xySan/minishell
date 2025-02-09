@@ -6,11 +6,11 @@
 /*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:56:24 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 20:44:46 by oxy              ###   ########.fr       */
+/*   Updated: 2025/02/09 22:38:41 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	check_if_only_char(char *str, int start, char car)
 {
