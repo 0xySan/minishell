@@ -6,7 +6,7 @@
 /*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:02:37 by oxy               #+#    #+#             */
-/*   Updated: 2025/02/09 22:15:55 by oxy              ###   ########.fr       */
+/*   Updated: 2025/02/09 22:29:25 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,6 @@ static void	process_input_char(t_parser *p, char **env, int *exit_status)
 		handle_variable(p, env, exit_status);
 		p->i--;
 	}
-	else
-		p->result[p->j++] = p->input[p->i];
 	p->i++;
 }
 
