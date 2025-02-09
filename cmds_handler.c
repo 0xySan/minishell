@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/08 00:12:52 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 21:46:23 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@ void	ft_execute(t_cmd *cmd, char **env)
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close(cmd->output_fd);
 	}
+	if (execute_ft_cmds(cmd->args, &env))
+		exit(0);
 	actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
 	execve(actual_cmd, cmd->args, env);
-	printf("21sh: command not found: %s\n", cmd->args[0]);
+	perror("21sh");
 	exit(127);
 }
+
 int	ft_count_commands(char **tokens, int num_tokens)
 {
 	int	i;
@@ -46,6 +49,7 @@ int	ft_count_commands(char **tokens, int num_tokens)
 	}
 	return (count);
 }
+
 int	ft_process_one_command(char **tokens, int num_tokens, int start,
 		t_cmd *cmd)
 {
@@ -61,6 +65,7 @@ int	ft_process_one_command(char **tokens, int num_tokens, int start,
 		i++;
 	return (i);
 }
+
 t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 {
 	t_cmd	*cmds;
@@ -71,10 +76,7 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 	cmd_count = ft_count_commands(tokens, num_tokens);
 	cmds = malloc(cmd_count * sizeof(t_cmd));
 	if (!cmds)
-	{
-		perror("malloc");
 		exit(EXIT_FAILURE);
-	}
 	i = 0;
 	cmd_index = 0;
 	while (i < num_tokens && cmd_index < cmd_count)
@@ -86,6 +88,7 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 	}
 	return (cmds);
 }
+
 void	execute_command(t_pipeline_ctx *ctx, int index)
 {
 	int		pipe_fds[2];
@@ -101,10 +104,7 @@ void	execute_command(t_pipeline_ctx *ctx, int index)
 		ft_execute(&ctx->cmds[index], ctx->env);
 	}
 	else if (pid < 0)
-	{
-		perror("fork");
 		exit(EXIT_FAILURE);
-	}
 	if (index > 0)
 		close(ctx->prev_pipe);
 	if (index < ctx->count - 1)

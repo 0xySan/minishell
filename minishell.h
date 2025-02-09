@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/08 00:12:42 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 21:35:50 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,16 @@ typedef struct s_pipeline_ctx
 	int		prev_pipe;
 }			t_pipeline_ctx;
 
+typedef struct s_parser
+{
+	const char	*input;
+	size_t		i;
+	char		*result;
+	size_t		j;
+	int			in_single;
+	int			in_double;
+}				t_parser;
+
 void		sigint_handler(int sig);
 void		sigquit_handler(int sig);
 void		check_if_accessible(char *path, char **env);
@@ -74,7 +84,8 @@ void		ft_show_env(char **env);
 void		ft_echo(char **cmd);
 void		sort_strings(char **array);
 void		copy_array(char **dest, char **src);
-void		ft_parse_pipeline(char **tokens, int num_tokens, char **env, int *exit_status);
+void		ft_parse_pipeline(char **tokens, int num_tokens, char **env,
+				int *exit_status);
 void		ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
 void		ft_execute(t_cmd *cmd, char **env);
 char		**split_array(char **arr, const char *delimSet);
@@ -87,5 +98,6 @@ t_cmd		*ft_parse_commands(char **tokens, int num_tokens);
 int			ft_process_one_command(char **tokens, int num_tokens, int start,
 				t_cmd *cmd);
 int			ft_count_commands(char **tokens, int num_tokens);
+int			execute_ft_cmds(char **cmd, char ***env);
 
 #endif

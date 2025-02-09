@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/08 00:24:17 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 20:44:22 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ void	cleanup_fds(t_cmd *cmd)
 		close(cmd->output_fd);
 }
 
-void	ft_parse_pipeline(char **tokens, int num_tokens, char **env, int *exit_status)
+void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
+	int *exit_status)
 {
 	t_cmd			*cmds;
 	int				count;

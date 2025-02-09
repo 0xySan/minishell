@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_n_unset.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/08 16:46:39 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 21:33:15 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,7 @@ void	ft_show_export(char **env)
 	sort_strings(sorted);
 	i = 0;
 	while (sorted[i])
-	{
-		printf("export %s\n", sorted[i]);
-		i++;
-	}
+		printf("export %s\n", sorted[i++]);
 	free(sorted);
 }
 

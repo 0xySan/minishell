@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/13 04:29:23 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 21:45:11 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ void	check_if_accessible(char *path, char **env)
 	stat(nw_path, &statbuf);
 	if (access(nw_path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
 		return (chdir(nw_path), free(nw_path));
-	if (access(nw_path, F_OK) != -1 || access(path, F_OK) != -1)
-		printf("cd: not a directory: %s\n", path);
 	else
-		printf("cd: no such file or directory: %s\n", path);
+		perror("cd");
 	free(nw_path);
 }
 
@@ -54,10 +52,8 @@ void	check_if_raccessible(char *path, char **env)
 	stat(nw_path, &statbuf);
 	if (access(nw_path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
 		chdir(nw_path);
-	else if (access(nw_path, F_OK) != -1)
-		printf("cd: not a directory: %s\n", path);
 	else
-		printf("cd: no such file or directory: %s\n", path);
+		perror("cd");
 	free(nw_path);
 	if (tmp)
 		free(tmp);

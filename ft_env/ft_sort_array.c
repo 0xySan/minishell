@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sort_array.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42lehavre.fr>     +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 16:44:43 by etaquet           #+#    #+#             */
-/*   Updated: 2025/01/08 16:46:48 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 21:32:43 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	copy_array(char **dest, char **src)
 		dest[i] = src[i];
 		i++;
 	}
-	dest[i - 2] = NULL;
+	dest[i] = NULL;
 }
 
 void	swap(char **a, char **b)

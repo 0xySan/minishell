@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fds_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 23:38:34 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/09 20:26:17 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ static int	handle_here_doc(char *delimiter)
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 {
 	if (ft_strcmp(tokens[*i], "<") == 0)
+	{
 		cmd->input_fd = open_file(tokens[++(*i)], O_RDONLY, 0);
+		printf("tokens[*i] = %s\n", tokens[*i]);
+	}
 	else if (ft_strcmp(tokens[*i], ">") == 0)
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
