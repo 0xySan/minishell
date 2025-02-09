@@ -11,6 +11,8 @@ FILES		=	main \
 				ft_env/ft_sort_array \
 				ft_echo \
 				cmds_handler \
-				more_utils \
+				process_input/split_n_keep \
+				process_input/preprocess_input \
+				process_input/preprocess_count \
 				fds_handler \
 				pipes_handler

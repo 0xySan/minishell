@@ -6,7 +6,7 @@
 /*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 21:35:50 by oxy              ###   ########.fr       */
+/*   Updated: 2025/02/09 22:06:49 by oxy              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,7 @@ int			ft_process_one_command(char **tokens, int num_tokens, int start,
 				t_cmd *cmd);
 int			ft_count_commands(char **tokens, int num_tokens);
 int			execute_ft_cmds(char **cmd, char ***env);
+char		*preprocess_input(const char *input, char **env, int *exit_status);
+int			preprocess_count(const char *input, char **env, int *exit_status);
 
 #endif
