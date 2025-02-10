@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oxy <oxy@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:42:30 by oxy              ###   ########.fr       */
+/*   Updated: 2025/02/10 20:27:47 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
-# include <linux/limits.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -30,25 +30,25 @@
 
 typedef struct s_cmd
 {
-	char	**args;
-	int		input_fd;
-	int		output_fd;
-	pid_t	pid;
-}			t_cmd;
+	char		**args;
+	int			input_fd;
+	int			output_fd;
+	pid_t		pid;
+}				t_cmd;
 
 typedef struct s_token_info
 {
-	int		total;
-	int		capacity;
-}			t_token_info;
+	int			total;
+	int			capacity;
+}				t_token_info;
 
 typedef struct s_pipeline_ctx
 {
-	t_cmd	*cmds;
-	int		count;
-	char	**env;
-	int		prev_pipe;
-}			t_pipeline_ctx;
+	t_cmd		*cmds;
+	int			count;
+	char		**env;
+	int			prev_pipe;
+}				t_pipeline_ctx;
 
 typedef struct s_parser
 {
@@ -60,52 +60,92 @@ typedef struct s_parser
 	int			in_double;
 }				t_parser;
 
-void		sigint_handler(int sig);
-void		sigquit_handler(int sig);
-void		check_if_accessible(char *path, char **env);
-void		check_if_raccessible(char *path, char **env);
-int			ft_cd(char **cmd, char **env);
-void		execute_input(char ***env, char *input, int *exit_status);
-char		*get_cmd_path(char *arg, char *path);
-char		*get_cpath(char *args, char *envpath);
-int			check_if_only_space(char *str);
-void		free_args(char **args);
-int			count_chars(char *str, char chars);
-int			count_args(char **args);
-void		copy_then_cat(char *dest, char *fstr, char *sstr);
-void		ft_change_env(char **env, char *old_env, char *new_env);
-char		**dup_all_env(char **env);
-char		*dup_then_cat(char *src, char *sec_src);
-char		*ft_getenv(char **env, char *search_env);
-void		ft_free_env(char **env);
-void		ft_export(char ***env, char *old_env, char *new_env);
-void		ft_unset(char **env, char *rev_env);
-void		ft_show_env(char **env);
-void		ft_echo(char **cmd);
-void		sort_strings(char **array);
-void		copy_array(char **dest, char **src);
-void		ft_parse_pipeline(char **tokens, int num_tokens, char **env,
-				int *exit_status);
-void		ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
-void		ft_execute(t_cmd *cmd, char **env);
-char		**split_array(char **arr, const char *delimSet);
-int			ft_count_args(char **tokens, int num_tokens, int start);
-int			ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens, int start);
-void		setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
-void		cleanup_fds(t_cmd *cmd);
-void		execute_command(t_pipeline_ctx *ctx, int index);
-t_cmd		*ft_parse_commands(char **tokens, int num_tokens);
-int			ft_process_one_command(char **tokens, int num_tokens, int start,
-				t_cmd *cmd);
-int			ft_count_commands(char **tokens, int num_tokens);
-int			execute_ft_cmds(char **cmd, char ***env);
-char		*preprocess_input(const char *input, char **env, int *exit_status);
-int			preprocess_count(const char *input, char **env, int *exit_status);
-int			realloc_and_add_tokens(char ***res, t_token_info *info,
-				char **split, int split_size);
-char		*get_token(const char **p, const char *delimSet);
-void		free_tokens(char **tokens, int count);
-int			add_token(char ***tokens, char *token, int *count, int *capacity);
-char		*alloc_token(const char *start, int len);
+// ft_CMDS
+// ft_cd
+void			check_if_accessible(char *path, char **env);
+char			*ft_get_current_dir(void);
+void			ft_change_dir(char **cmd, char **env);
+int				ft_cd(char **cmd, char **env);
+// ft_echo
+int				check_if_only_char(char *str, int start, char car);
+void			ft_echo(char **cmd);
+// ft_ENV
+// dup_env
+char			**dup_all_env(char **env);
+// ft_change_env
+void			ft_change_env(char **env, char *old_env, char *new_env);
+// ft_env
+char			*ft_getenv(char **env, char *search_env);
+void			ft_show_env(char **env);
+void			ft_free_env(char **env);
+// ft_export_n_unset
+char			**realloc_tab(char ***env);
+void			ft_show_export(char **env);
+void			ft_export(char ***env, char *old_env, char *new_env);
+void			ft_unset(char **env, char *rev_env);
+// f_sort_array
+void			copy_array(char **dest, char **src);
+void			swap(char **a, char **b);
+void			sort_strings(char **array);
+// FT_PROCESS_INPUT
+// preprocess_count
+int				preprocess_count(const char *input, char **env,
+					int *exit_status);
+// preprocess_input
+char			*preprocess_input(const char *input, char **env,
+					int *exit_status);
+// split_n_keep
+char			**split_string(const char *str, const char *delimSet,
+					int *out_size);
+char			**split_array(char **arr, const char *delimSet);
+// tokens_utils
+char			*alloc_token(const char *start, int len);
+int				add_token(char ***tokens, char *token, int *count,
+					int *capacity);
+void			free_tokens(char **tokens, int count);
+char			*get_token(const char **p, const char *delimSet);
+int				realloc_and_add_tokens(char ***res, t_token_info *info,
+					char **split, int split_size);
+// cmds_handler
+void			ft_execute(t_cmd *cmd, char **env);
+int				ft_count_commands(char **tokens, int num_tokens);
+int				ft_process_one_command(char **tokens, int num_tokens, int start,
+					t_cmd *cmd);
+t_cmd			*ft_parse_commands(char **tokens, int num_tokens);
+void			execute_command(t_pipeline_ctx *ctx, int index);
+// exec_input
+char			*export_utils_func(char *word);
+int				execute_ft_cmds_export(char **cmd, char ***env);
+int				execute_ft_cmds(char **cmd, char ***env);
+void			execute_input(char ***env, char *input, int *exit_status);
+// exec_utils
+int				check_if_only_space(char *str);
+void			free_args(char **args);
+char			*get_cpath(char *args, char *envpath);
+char			*get_cmd_path(char *arg, char *path);
+// fds_handler
+void			ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
+// main
+void			print_graffiti(void);
+char			*get_relative_path(char *pwd, char **env);
+int				read_lines(char *cwd, char ***env, int *exit_status);
+int				main(int argc, char **argv, char **env);
+// pipes_handler
+int				ft_count_args(char **tokens, int num_tokens, int start);
+int				ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens,
+					int start);
+void			setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
+void			cleanup_fds(t_cmd *cmd);
+void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
+					int *exit_status);
+// sighandler
+void			sigint_handler(int sig);
+void			sigquit_handler(int sig);
+// utils
+int				count_args(char **args);
+int				count_chars(char *str, char chars);
+void			copy_then_cat(char *dest, char *fstr, char *sstr);
+char			*dup_then_cat(char *src, char *sec_src);
+void			wait_for_children(t_pipeline_ctx *ctx);
 
 #endif

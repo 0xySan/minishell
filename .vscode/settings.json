@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"array": "cpp",
+		"__tuple": "cpp",
+		"stop_token": "cpp",
+		"chrono": "cpp"
+	}
+}

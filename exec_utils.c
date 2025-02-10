@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:52:06 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:18:05 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,7 @@
 
 int	check_if_only_space(char *str)
 {
-	int	i;
-	int	v;
-
-	i = 0;
-	v = 0;
-	while (str[i])
-	{
-		if (str[i] == ' ')
-			i++;
-		else
-		{
-			v++;
-			i++;
-		}
-	}
-	return (v);
+	return (*str != '\0' && strchr(str, ' ') == NULL);
 }
 
 void	free_args(char **args)
