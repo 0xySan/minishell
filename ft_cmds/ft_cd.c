@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 19:54:54 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/10 20:59:08 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,9 @@ void	ft_change_dir(char **cmd, char **env)
 	char	*home;
 
 	home = ft_getenv(env, "HOME");
-	if (!home)
-		home = ft_getenv(env, "PWD");
 	oldpwd = ft_getenv(env, "OLDPWD");
-	if (!oldpwd)
-		oldpwd = ft_getenv(env, "PWD");
+	if (!cmd[1])
+		chdir(home);
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
 		chdir(oldpwd);

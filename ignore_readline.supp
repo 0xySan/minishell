@@ -1,0 +1,13 @@
+{
+	ignore_libreadline_leaks
+	Memcheck:Leak
+	match-leak-kinds: reachable
+	...
+	obj:*/libreadline.so.*
+}
+{
+	std
+	Memcheck:Leak
+	...
+	obj:*/usr/bin/*
+}
