@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:02:37 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 07:00:36 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ static void	process_input_char(t_parser *p, char **env, int *exit_status)
 		handle_variable(p, env, exit_status);
 		p->i--;
 	}
+	else if (p->input[p->i] == '~')
+		p->j += ft_strlen(ft_getenv(env, "HOME"));
 	p->i++;
 }
 

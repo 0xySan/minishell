@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 06:39:56 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 06:59:43 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,13 @@
 
 void	check_if_accessible(char *path, char **env)
 {
-	char		*nw_path;
 	struct stat	statbuf;
-	char		*cwd;
 
 	stat(path, &statbuf);
 	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
-	{
 		chdir(path);
-		return ;
-	}
-	cwd = ft_getenv(env, "PWD");
-	nw_path = malloc(ft_strlen(cwd) + ft_strlen(path) + 2);
-	copy_then_cat(nw_path, cwd, "/");
-	ft_strcat(nw_path, path);
-	stat(nw_path, &statbuf);
-	if (access(nw_path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
-		return (chdir(nw_path), free(nw_path));
 	else
 		perror("cd");
-	free(nw_path);
-}
-
-void	check_if_raccessible(char *path, char **env)
-{
-	char		*nw_path;
-	char		*home;
-	char		*tmp;
-	struct stat	statbuf;
-
-	home = ft_getenv(env, "HOME");
-	if (!home)
-		home = ft_getenv(env, "PWD");
-	nw_path = malloc(ft_strlen(home) + ft_strlen(path));
-	tmp = ft_substr(path, 1, ft_strlen(path));
-	copy_then_cat(nw_path, home, tmp);
-	stat(nw_path, &statbuf);
-	if (access(nw_path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
-		chdir(nw_path);
-	else
-		perror("cd");
-	free(nw_path);
-	if (tmp)
-		free(tmp);
 }
 
 char	*ft_get_current_dir(void)
@@ -85,15 +49,11 @@ void	ft_change_dir(char **cmd, char **env)
 	oldpwd = ft_getenv(env, "OLDPWD");
 	if (!oldpwd)
 		oldpwd = ft_getenv(env, "PWD");
-	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
-		chdir(home);
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
 		chdir(oldpwd);
 		printf("%s\n", oldpwd);
 	}
-	else if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1))
-		check_if_raccessible(cmd[1], env);
 	else
 		check_if_accessible(cmd[1], env);
 }
