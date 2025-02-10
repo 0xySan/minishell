@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:00:41 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:16 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 06:09:05 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static char	*handle_variable(t_parser *p, char **env, int *exit_status)
 	{
 		ft_strncpy(&p->result[p->j], var_value, ft_strlen(var_value));
 		p->j += ft_strlen(var_value);
-		p->i--;
 	}
 	else if (p->input[p->i] == '?')
 	{
@@ -62,6 +61,7 @@ static char	*handle_variable(t_parser *p, char **env, int *exit_status)
 			ft_strlen(itoa_result) + 1);
 		p->j += ft_strlen(itoa_result);
 		free(itoa_result);
+		p->i++;
 	}
 	return (p->result);
 }
@@ -76,6 +76,7 @@ static int	process_input_char(t_parser *p, char **env, int *exit_status)
 	{
 		if (handle_variable(p, env, exit_status) == NULL)
 			return (0);
+		p->i--;
 	}
 	else
 		p->result[p->j++] = p->input[p->i];

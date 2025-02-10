@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 10:30:42 by etaquet           #+#    #+#             */
-/*   Updated: 2024/11/04 10:31:12 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 06:35:06 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	ft_strcpy(char *dest, char *src)
 {
 	int	v;
 
+	if (!src)
+		return ;
 	v = -1;
 	while (src[++v])
 		dest[v] = src[v];

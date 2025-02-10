@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:57:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 06:39:56 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,10 @@ void	ft_change_dir(char **cmd, char **env)
 	if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) == 1))
 		chdir(home);
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
+	{
 		chdir(oldpwd);
+		printf("%s\n", oldpwd);
+	}
 	else if (!cmd[1] || (cmd[1][0] == '~' && ft_strlen(cmd[1]) > 1))
 		check_if_raccessible(cmd[1], env);
 	else
