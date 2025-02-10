@@ -3,15 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   dup_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:32:45 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 23:35:21 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:39:01 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * @brief Duplicate all the environment variables.
+ * @param env The environment variables.
+ * @return Duplicate of env.
+ */
 char	**dup_all_env(char **env)
 {
 	char	**new_env;

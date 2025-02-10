@@ -3,15 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 20:59:08 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:37:53 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * @brief Change to the directory if the path is accessible.
+ * @param path Directory path to check.
+ * @param env Environment variables.
+ */
 void	check_if_accessible(char *path, char **env)
 {
 	struct stat	statbuf;
@@ -23,6 +28,10 @@ void	check_if_accessible(char *path, char **env)
 		perror("cd");
 }
 
+/**
+ * @brief Retrieves the current working directory.
+ * @return Current working directory or NULL on error.
+ */
 char	*ft_get_current_dir(void)
 {
 	char	*cwd;
@@ -38,6 +47,11 @@ char	*ft_get_current_dir(void)
 	return (cwd);
 }
 
+/**
+ * @brief Changes the current working directory.
+ * @param cmd The array of command arguments.
+ * @param env The environment variables.
+ */
 void	ft_change_dir(char **cmd, char **env)
 {
 	char	*oldpwd;
@@ -56,6 +70,15 @@ void	ft_change_dir(char **cmd, char **env)
 		check_if_accessible(cmd[1], env);
 }
 
+/**
+ * @brief Handles the cd built-in command.
+ * @param cmd The array of arguments of the command.
+ * @param env The environment.
+ * @return 1 if the command is recognized and executed, 0 otherwise.
+ * Changes the current directory to the given path.
+ * If no path is given, changes to $HOME. If '-', changes to
+ * $OLDPWD and prints it.
+ */
 int	ft_cd(char **cmd, char **env)
 {
 	char	*current_pwd;

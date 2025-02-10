@@ -3,15 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sort_array.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 16:44:43 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:57:04 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:44:30 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * Copy src array to dest array.
+ * @param dest Array to copy to
+ * @param src Array to copy from
+ */
 void	copy_array(char **dest, char **src)
 {
 	int	i;
@@ -25,6 +30,11 @@ void	copy_array(char **dest, char **src)
 	dest[i] = NULL;
 }
 
+/**
+ * Swap the value of two pointers.
+ * @param a Pointer to swap
+ * @param b Pointer to swap
+ */
 void	swap(char **a, char **b)
 {
 	char	*temp;
@@ -34,6 +44,11 @@ void	swap(char **a, char **b)
 	*b = temp;
 }
 
+/**
+ * Sorts an array of strings in ascending order
+ * using selection sort algorithm.
+ * @param array Array of strings to sort.
+ */
 void	sort_strings(char **array)
 {
 	int	i;

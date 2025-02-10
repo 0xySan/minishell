@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   split_n_keep.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 16:44:34 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:20 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:50:23 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * @brief Split a string into tokens based on a delimiter set
+ * @param str the string to split
+ * @param delimSet the delimiter set
+ * @param out_size the output size of the array
+ * @return a dynamically allocated array of char* containing the tokens
+ */
 char	**split_string(const char *str, const char *delimSet, int *out_size)
 {
 	int				capacity;
@@ -39,6 +46,13 @@ char	**split_string(const char *str, const char *delimSet, int *out_size)
 	return (tokens);
 }
 
+
+/**
+ * @brief Split strings in an array by delimiters and merge results.
+ * @param arr The array of strings to split.
+ * @param delimSet The set of delimiter characters to split each string on.
+ * @return Array of char* containing all the resulting tokens.
+ */
 char	**split_array(char **arr, const char *delimSet)
 {
 	int				split_size;

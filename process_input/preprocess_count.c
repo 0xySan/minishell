@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   preprocess_count.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 22:02:37 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 07:00:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:47:28 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * Extracts the name of a variable from the input string.
+ * @param p Parser struct with input info.
+ * @param var_len Address to store the length of the variable name.
+ * @return The name of the variable or NULL if the variable is not valid.
+ */
 static char	*get_var_name(t_parser *p, size_t *var_len)
 {
 	size_t	start;
@@ -37,6 +43,13 @@ static char	*get_var_name(t_parser *p, size_t *var_len)
 	return (name);
 }
 
+/**
+ * Handles a variable in the input string.
+ * @param p Parser struct with input info.
+ * @param env Environment variables.
+ * @param exit_status Exit status of last command.
+ * Increments 'j' by length of variable or exit status if var is '?'.
+ */
 static void	handle_variable(t_parser *p, char **env, int *exit_status)
 {
 	size_t	var_len;
@@ -61,6 +74,13 @@ static void	handle_variable(t_parser *p, char **env, int *exit_status)
 	}
 }
 
+/**
+ * Process a character in the input string.
+ * @param p Parser struct with input info.
+ * @param env Environment variables.
+ * @param exit_status Exit status of last command.
+ * Toggles quote flags or processes variables.
+ */
 static void	process_input_char(t_parser *p, char **env, int *exit_status)
 {
 	if (p->input[p->i] == '\'' && p->in_double == 0)
@@ -77,6 +97,13 @@ static void	process_input_char(t_parser *p, char **env, int *exit_status)
 	p->i++;
 }
 
+/**
+ * Counts characters in a string after expanding variables.
+ * @param input The string to process.
+ * @param env The environment variables.
+ * @param exit_status The exit status of the last command.
+ * @return The number of characters in the processed string.
+ */
 int	preprocess_count(const char *input, char **env, int *exit_status)
 {
 	t_parser	p;

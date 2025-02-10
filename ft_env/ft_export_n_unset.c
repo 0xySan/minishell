@@ -3,25 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_n_unset.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:57:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:43:35 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**realloc_tab(char ***env)
-{
-	char	**n_tab;
-
-	n_tab = malloc((count_args(*env) + 2) * sizeof(char *));
-	memcpy(n_tab, *env, (count_args(*env) + 1) * sizeof(char *));
-	free(*env);
-	return (n_tab);
-}
-
+/**
+ * @brief Reallocates memory for a new environment variable.
+ * @param env The pointer to the environment variable array.
+ * @return The reallocated environment variable array.
+ */
 void	ft_show_export(char **env)
 {
 	int		n;
@@ -38,6 +33,12 @@ void	ft_show_export(char **env)
 	free(sorted);
 }
 
+/**
+ * @brief Adds/modifies an environment variable.
+ * @param env Pointer to the environment array.
+ * @param old_env Variable name to update/add.
+ * @param new_env New value for the variable.
+ */
 void	ft_export(char ***env, char *old_env, char *new_env)
 {
 	int	i;
@@ -54,6 +55,11 @@ void	ft_export(char ***env, char *old_env, char *new_env)
 	(*env)[i + 1] = NULL;
 }
 
+/**
+ * @brief Remove an environment variable from the environment array.
+ * @param env The environment variables.
+ * @param rev_env The name of the variable to remove.
+ */
 void	ft_unset(char **env, char *rev_env)
 {
 	int		i;

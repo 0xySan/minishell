@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:32 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:54:30 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Executes a command with redirection and built-in support.
+ * Handles redirection, tries to execute as built-in, then searches in PATH.
+ * If execution fails, prints an error message and exits with status 127.
+ * @param cmd t_cmd structure with command and arguments.
+ * @param env Environment variables array.
+ */
 void	ft_execute(t_cmd *cmd, char **env)
 {
 	char	*actual_cmd;
@@ -34,6 +41,13 @@ void	ft_execute(t_cmd *cmd, char **env)
 	exit(127);
 }
 
+/**
+ * @brief Counts the number of commands in the given tokens.
+ * Counts commands in tokens by counting "|" tokens.
+ * @param tokens Array of string tokens representing the commands and arguments.
+ * @param num_tokens Number of tokens in the tokens array.
+ * @return The number of commands in the tokens array.
+ */
 int	ft_count_commands(char **tokens, int num_tokens)
 {
 	int	i;
@@ -50,6 +64,16 @@ int	ft_count_commands(char **tokens, int num_tokens)
 	return (count);
 }
 
+/**
+ * @brief Process one command by filling the args field of the given t_cmd.
+ * Processes one command by filling the args field of the given t_cmd.
+ * @param tokens Array of string tokens representing the commands and arguments.
+ * @param num_tokens Number of tokens in the tokens array.
+ * @param start Starting index in the tokens array for the command.
+ * @param cmd Pointer to a t_cmd structure to be filled.
+ * @return The index of the next token after the command, or num_tokens if the
+ * command is the last one.
+ */
 int	ft_process_one_command(char **tokens, int num_tokens, int start,
 		t_cmd *cmd)
 {
@@ -66,6 +90,13 @@ int	ft_process_one_command(char **tokens, int num_tokens, int start,
 	return (i);
 }
 
+/**
+ * @brief Parses the given tokens into an array of command structures.
+ * Parses tokens into an array of command structures.
+ * @param tokens Array of string tokens representing the commands and arguments.
+ * @param num_tokens Number of tokens in the tokens array.
+ * @return Pointer to an array of t_cmd structures representing parsed commands.
+ */
 t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 {
 	t_cmd	*cmds;
@@ -89,6 +120,12 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 	return (cmds);
 }
 
+/**
+ * Execute a command in a pipeline context.
+ * Sets up pipes, forks, executes the command and handles FDs.
+ * @param ctx: Pipeline context.
+ * @param index: Index of the command to be executed.
+ */
 void	execute_command(t_pipeline_ctx *ctx, int index)
 {
 	int		pipe_fds[2];

@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   sighandler.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:44:57 by etaquet           #+#    #+#             */
-/*   Updated: 2024/12/16 19:47:35 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/11 00:05:14 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief SIGINT handler for readline.
+ * Called when SIGINT is received (e.g., Ctrl+C).
+ * Prints a newline, clears the current line,
+ * and updates the prompt.
+ * @param sig The ignored signal.
+ */
 void	sigint_handler(int sig)
 {
 	(void)sig;
@@ -21,6 +28,13 @@ void	sigint_handler(int sig)
 	rl_redisplay();
 }
 
+/**
+ * @brief SIGQUIT handler for readline.
+ * Called when SIGQUIT is received (e.g., Ctrl+\).
+ * Prints the prompt without
+ * clearing the current line.
+ * @param sig The ignored signal.
+ */
 void	sigquit_handler(int sig)
 {
 	(void)sig;

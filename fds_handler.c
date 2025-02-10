@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   fds_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:38 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/11 00:00:34 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Opens a file, or /dev/null on failure.
+ * @param path The path of the file to open.
+ * @param flags The flags used to open the file (e.g., O_RDONLY).
+ * @param mode The mode to use if a new file is created.
+ * @return File descriptor on success, or /dev/null on failure.
+ */
 static int	open_file(char *path, int flags, int mode)
 {
 	int	fd;
@@ -22,6 +29,11 @@ static int	open_file(char *path, int flags, int mode)
 	return (fd);
 }
 
+/**
+ * @brief Reads lines until 'delimiter' is entered, returning a pipe's read end.
+ * @param delimiter The string that signifies the end of input.
+ * @return File descriptor for the read end of the pipe containing the input.
+ */
 static int	handle_here_doc(char *delimiter)
 {
 	char	*line;
@@ -44,6 +56,12 @@ static int	handle_here_doc(char *delimiter)
 	return (pipe_fd[0]);
 }
 
+/**
+ * @brief Parses redirections in a command.
+ * @param cmd The command to which to assign the file descriptors.
+ * @param tokens The array of string tokens representing the command.
+ * @param i The index of the current token in the tokens array.
+ */
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 {
 	if (ft_strcmp(tokens[*i], "<") == 0)

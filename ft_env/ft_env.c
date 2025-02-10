@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:57:01 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:40:51 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * @brief Find value of given environment variable in given environment.
+ * @param env The environment variables.
+ * @param search_env The name of the variable to search for.
+ * @return Value of the variable, or NULL if not found.
+ */
 char	*ft_getenv(char **env, char *search_env)
 {
 	int		i;
@@ -36,6 +42,10 @@ char	*ft_getenv(char **env, char *search_env)
 	return (free(test), NULL);
 }
 
+/**
+ * @brief Prints all environment variables in given environment.
+ * @param env The environment variables.
+ */
 void	ft_show_env(char **env)
 {
 	int	i;
@@ -48,6 +58,10 @@ void	ft_show_env(char **env)
 	}
 }
 
+/**
+ * @brief Frees all memory associated with given environment.
+ * @param env The environment variables to free.
+ */
 void	ft_free_env(char **env)
 {
 	int	i;

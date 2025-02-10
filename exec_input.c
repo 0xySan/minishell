@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/09 22:56:34 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/10 23:57:14 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+ * Splits env var into key and value and returns the value.
+ * Returns NULL on allocation failure.
+ */
 char	*export_util_func(char *word)
 {
 	int		i;
@@ -34,6 +38,14 @@ char	*export_util_func(char *word)
 	return (r_value);
 }
 
+/**
+ * @brief Execute the export command.
+ * @param cmd The array of command arguments.
+ * @param env The environment variables.
+ * @return 1 if the command is recognized and executed, 0 otherwise.
+ * Handles the export command. Prints current environment if no args provided;
+ * adds variables to environment if args are given.
+ */
 int	execute_ft_cmds_export(char **cmd, char ***env)
 {
 	char	*export_util;
@@ -57,6 +69,12 @@ int	execute_ft_cmds_export(char **cmd, char ***env)
 	return (0);
 }
 
+/**
+ * @brief Execute a built-in command.
+ * @param cmd The array of command arguments.
+ * @param env The environment variables.
+ * @return 1 if the command is recognized and executed, 0 otherwise.
+ */
 int	execute_ft_cmds(char **cmd, char ***env)
 {
 	if (ft_cd(cmd, *env))
@@ -74,6 +92,13 @@ int	execute_ft_cmds(char **cmd, char ***env)
 	return (0);
 }
 
+/**
+ * Execute a single command line.
+ * @param env The environment variables.
+ * @param input The command line to execute.
+ * @param exit_status The exit status of the last command.
+ * Processes input, splits into commands, executes.
+ */
 void	execute_input(char ***env, char *input, int *exit_status)
 {
 	char	**cmds;

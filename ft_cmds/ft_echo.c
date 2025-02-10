@@ -6,12 +6,22 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:56:24 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:25:31 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/10 23:35:08 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/**
+ * Check if string contains only a character from a given start index.
+ *
+ * @param str The string to check.
+ * @param start The starting index of the string to check from.
+ * @param car The character to check for.
+ *
+ * @retval 1 String contains only the character from start.
+ * @retval 0 Otherwise.
+ */
 int	check_if_only_char(char *str, int start, char car)
 {
 	int	i;
@@ -26,6 +36,15 @@ int	check_if_only_char(char *str, int start, char car)
 	return (0);
 }
 
+/**
+ * ft_echo: Execute the echo command.
+ *
+ * Prints arguments separated by spaces. If "-n" is the first argument,
+ * does not print a newline at the end.
+ *
+ * @param cmd: A 2D array of strings, where the first element is the command name
+ * "echo", and the rest of the elements are the command arguments.
+ */
 void	ft_echo(char **cmd)
 {
 	int	i;
