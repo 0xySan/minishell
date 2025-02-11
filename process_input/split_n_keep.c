@@ -6,7 +6,7 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 16:44:34 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:50:23 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/11 18:36:22 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ char	**split_string(const char *str, const char *delimSet, int *out_size)
 	*out_size = count;
 	return (tokens);
 }
-
 
 /**
  * @brief Split strings in an array by delimiters and merge results.
