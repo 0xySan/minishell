@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_n_unset.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:43:35 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/11 02:22:40 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,16 @@
  * @param env The pointer to the environment variable array.
  * @return The reallocated environment variable array.
  */
+char	**realloc_tab(char ***env)
+{
+	char	**n_tab;
+
+	n_tab = malloc((count_args(*env) + 2) * sizeof(char *));
+	memcpy(n_tab, *env, (count_args(*env) + 1) * sizeof(char *));
+	free(*env);
+	return (n_tab);
+}
+
 void	ft_show_export(char **env)
 {
 	int		n;
