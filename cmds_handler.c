@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:54:30 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/15 05:58:03 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_execute(t_cmd *cmd, char **env)
 {
 	char	*actual_cmd;
 
+	actual_cmd = NULL;
 	if (cmd->input_fd != STDIN_FILENO)
 	{
 		dup2(cmd->input_fd, STDIN_FILENO);
@@ -33,10 +34,15 @@ void	ft_execute(t_cmd *cmd, char **env)
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close(cmd->output_fd);
 	}
-	if (execute_ft_cmds(cmd->args, &env))
-		exit(0);
-	actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
-	execve(actual_cmd, cmd->args, env);
+	if (cmd->args && cmd->args[0])
+	{
+		if (execute_ft_cmds(cmd->args, &env))
+			exit(0);
+		else
+			actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
+	}
+	if (actual_cmd)
+		execve(actual_cmd, cmd->args, env);
 	perror("21sh");
 	exit(127);
 }

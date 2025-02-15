@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 11:45:26 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/07 22:15:12 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/15 05:57:08 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			*ft_itoa(int num);
 int				ft_toupper(int c);
 int				ft_tolower(int c);
+void			*ft_realloc(void *ptr, size_t size);
 
 #endif

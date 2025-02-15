@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 20:55:12 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/15 06:39:03 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,37 @@ typedef struct s_parser
 	int			in_double;
 }				t_parser;
 
+typedef struct s_buffer
+{
+	char	*str;
+	size_t	len;
+	size_t	capacity;
+	char	**env;
+}				t_buffer;
+
+typedef struct s_buf
+{
+	char	*buf;
+	int		len;
+	int		cap;
+}				t_buf;
+
+typedef struct s_tokens
+{
+	char	**arr;
+	int		count;
+	int		cap;
+	char	**env;
+	int		*exit_status;
+}				t_tokens;
+
+typedef struct s_state
+{
+	const char	*input;
+	int			i;
+	int			quote;
+}				t_state;
+
 // ft_CMDS
 // ft_cd
 void			check_if_accessible(char *path, char **env);
@@ -88,12 +119,21 @@ void			copy_array(char **dest, char **src);
 void			swap(char **a, char **b);
 void			sort_strings(char **array);
 // FT_PROCESS_INPUT
-// preprocess_count
-int				preprocess_count(const char *input, char **env,
-					int *exit_status);
+// handles
+int				handle_double_quote(t_state *s);
+int				handle_single_quote(t_state *s);
+int				handle_space(t_state *s, t_buf *t, t_tokens *tok);
+int				handle_error(t_state *s, t_buf *t, t_tokens *tok);
+int				handle_dollar(t_state *s, t_buf *t, t_tokens *tok);
 // preprocess_input
-char			*preprocess_input(const char *input, char **env,
-					int *exit_status);
+void			insert_var_value(char *value, t_buf *t, t_tokens *tok);
+void			expand_var(t_state *s, t_buf *t, t_tokens *tok);
+void			process_char(t_state *s, t_buf *t, t_tokens *tok);
+char			**parse_input(const char *input, char **env, int *exit_status);
+// prepocess_utils
+void			append_char(t_buf *t, char c);
+void			append_str(t_buf *t, const char *s);
+void			plus_token(t_tokens *tok, char *token);
 // split_n_keep
 char			**split_string(const char *str, const char *delimSet,
 					int *out_size);
@@ -114,7 +154,6 @@ int				ft_process_one_command(char **tokens, int num_tokens, int start,
 t_cmd			*ft_parse_commands(char **tokens, int num_tokens);
 void			execute_command(t_pipeline_ctx *ctx, int index);
 // exec_input
-char			*export_utils_func(char *word);
 int				execute_ft_cmds_export(char **cmd, char ***env);
 int				execute_ft_cmds(char **cmd, char ***env);
 void			execute_input(char ***env, char *input, int *exit_status);

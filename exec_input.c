@@ -3,19 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:57:14 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/15 06:19:44 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Splits env var into key and value and returns the value.
- * Returns NULL on allocation failure.
- */
 char	*export_util_func(char *word)
 {
 	int		i;
@@ -49,24 +45,24 @@ char	*export_util_func(char *word)
 int	execute_ft_cmds_export(char **cmd, char ***env)
 {
 	char	*export_util;
+	int		i;
+	char	*test;
 
-	if (!ft_strncmp(cmd[0], "export", 7))
+	i = 1;
+	if (ft_strncmp(cmd[0], "export", 7))
+		return (0);
+	if (!cmd[i])
+		return (ft_export(env, NULL, NULL), 1);
+	while (cmd[i])
 	{
-		if (!cmd[1])
-		{
-			ft_export(env, NULL, NULL);
-		}
-		else
-		{
-			if (!ft_strchr(cmd[1], '='))
-				return (ft_change_env(*env, "_", cmd[count_args(cmd) - 1]), 1);
-			export_util = export_util_func(cmd[1]);
-			ft_export(env, export_util, ft_strchr(cmd[1], '=') + 1);
-			free(export_util);
-		}
-		return (1);
+		if (!ft_strchr(cmd[i], '='))
+			return (1);
+		export_util = export_util_func(cmd[i]);
+		ft_export(env, export_util, ft_strchr(cmd[i], '=') + 1);
+		free(export_util);
+		i++;
 	}
-	return (0);
+	return (1);
 }
 
 /**
@@ -103,17 +99,14 @@ void	execute_input(char ***env, char *input, int *exit_status)
 {
 	char	**cmds;
 	char	**cmd;
-	char	*parsed_input;
 	int		cmd_count;
 
-	parsed_input = preprocess_input(input, *env, exit_status);
-	if (!parsed_input)
-		return (free_args(cmd));
-	cmds = ft_split(parsed_input, ' ');
+	cmds = parse_input(input, *env, exit_status);
+	if (cmds == NULL || cmds[0] == NULL)
+		return ;
 	cmd = split_array(cmds, "<|>");
 	cmd_count = count_args(cmd);
 	free_args(cmds);
-	free(parsed_input);
 	if (ft_count_commands(cmd, cmd_count) == 1)
 	{
 		if (execute_ft_cmds(cmd, env))

@@ -8,7 +8,8 @@ FILES		=	ft_env/ft_env \
 				process_input/tokens_utils \
 				process_input/split_n_keep \
 				process_input/preprocess_input \
-				process_input/preprocess_count \
+				process_input/handles \
+				process_input/preprocess_utils \
 				main \
 				exec_input \
 				exec_utils \
