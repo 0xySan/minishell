@@ -7,8 +7,6 @@ FILES		=	ft_env/ft_env \
 				ft_cmds/ft_echo \
 				ft_cmds/ft_exit \
 				ft_cmds/ft_export \
-				process_input/tokens_utils \
-				process_input/split_n_keep \
 				process_input/preprocess_input \
 				process_input/handles \
 				process_input/preprocess_utils \

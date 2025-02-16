@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 08:17:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 10:40:42 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,6 @@ typedef struct s_cmd
 	int			output_fd;
 	pid_t		pid;
 }				t_cmd;
-
-typedef struct s_token_info
-{
-	int			total;
-	int			capacity;
-}				t_token_info;
-
 typedef struct s_pipeline_ctx
 {
 	t_cmd		*cmds;
@@ -52,24 +45,6 @@ typedef struct s_pipeline_ctx
 	char		**env;
 	int			prev_pipe;
 }				t_pipeline_ctx;
-
-typedef struct s_parser
-{
-	const char	*input;
-	size_t		i;
-	char		*result;
-	size_t		j;
-	int			in_single;
-	int			in_double;
-}				t_parser;
-
-typedef struct s_buffer
-{
-	char	*str;
-	size_t	len;
-	size_t	capacity;
-	char	**env;
-}				t_buffer;
 
 typedef struct s_buf
 {
@@ -142,18 +117,6 @@ void			append_char(t_buf *t, char c);
 void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
 int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
-// split_n_keep
-char			**split_string(const char *str, const char *delimSet,
-					int *out_size);
-char			**split_array(char **arr, const char *delimSet);
-// tokens_utils
-char			*alloc_token(const char *start, int len);
-int				add_token(char ***tokens, char *token, int *count,
-					int *capacity);
-void			free_tokens(char **tokens, int count);
-char			*get_token(const char **p, const char *delimSet);
-int				realloc_and_add_tokens(char ***res, t_token_info *info,
-					char **split, int split_size);
 // cmds_handler
 void			ft_execute(t_cmd *cmd, char **env);
 int				ft_count_commands(char **tokens, int num_tokens);
