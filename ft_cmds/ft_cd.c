@@ -6,7 +6,7 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:37:53 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 02:20:31 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_change_dir(char **cmd, char **env)
 
 	home = ft_getenv(env, "HOME");
 	oldpwd = ft_getenv(env, "OLDPWD");
-	if (!cmd[1])
+	if (!cmd[1] || !ft_strncmp(cmd[1], "--", 3))
 		chdir(home);
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
@@ -70,7 +70,7 @@ void	ft_change_dir(char **cmd, char **env)
 		check_if_accessible(cmd[1], env);
 }
 
-/**
+/**ft_
  * @brief Handles the cd built-in command.
  * @param cmd The array of arguments of the command.
  * @param env The environment.

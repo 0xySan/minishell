@@ -6,7 +6,7 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 01:13:41 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 01:54:26 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	read_lines(char *cwd, char ***env, int *exit_status)
 	input = readline(r_path);
 	if (input == 0 || (!strncmp(input, "exit", ft_strlen(input))
 			&& ft_strlen(input) == 4))
-		return (printf("Exiting 21sh...\n"), free(input), free(r_path), 1);
+		return (printf("0\n"), free(input), free(r_path), 1);
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
@@ -101,7 +101,6 @@ int	main(int argc, char **argv, char **env)
 	env = dup_all_env(env);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);
-	print_graffiti();
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)

@@ -6,7 +6,7 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/11 00:03:56 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 02:26:43 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,14 +125,14 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 	ctx.count = count;
 	ctx.env = env;
 	ctx.prev_pipe = STDIN_FILENO;
-	i = 0;
-	while (i < ctx.count)
-		execute_command(&ctx, i++);
+	i = -1;
+	while (++i < ctx.count)
+		execute_command(&ctx, i);
 	i = -1;
 	while (++i < ctx.count)
 		waitpid(-1, exit_status, 0);
-	i = 0;
-	while (i < count)
-		free(cmds[i++].args);
+	i = -1;
+	while (++i < count)
+		free(cmds[i].args);
 	free(cmds);
 }

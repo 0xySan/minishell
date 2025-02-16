@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/15 05:58:03 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 02:44:04 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	ft_execute(t_cmd *cmd, char **env)
 	}
 	if (actual_cmd)
 		execve(actual_cmd, cmd->args, env);
+	ft_putstr_fd(cmd->args[0], 2);
 	perror("21sh");
 	exit(127);
 }

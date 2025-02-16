@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   preprocess_input.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/15 06:43:13 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 02:19:08 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	process_char(t_state *s, t_buf *t, t_tokens *tok)
 	if (handle_double_quote(s) == 1)
 		return ;
 	if (s->input[s->i] == '~' && s->quote == 0)
-		return (insert_var_value(ft_getenv(tok->env, "HOME"), t, tok));
+		return (insert_var_value(getenv("HOME"), t, tok));
 	if (handle_error(s, t, tok) == 1)
 		return ;
 	if (handle_dollar(s, t, tok) == 1)

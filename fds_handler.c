@@ -6,7 +6,7 @@
 /*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/11 00:00:34 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 02:37:49 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,7 @@ static int	handle_here_doc(char *delimiter)
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 {
 	if (ft_strcmp(tokens[*i], "<") == 0)
-	{
 		cmd->input_fd = open_file(tokens[++(*i)], O_RDONLY, 0);
-		printf("tokens[*i] = %s\n", tokens[*i]);
-	}
 	else if (ft_strcmp(tokens[*i], ">") == 0)
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -76,8 +73,5 @@ void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (ft_strcmp(tokens[*i], "<<") == 0)
-	{
-		++(*i);
-		cmd->input_fd = handle_here_doc(tokens[*i]);
-	}
+		cmd->input_fd = handle_here_doc(tokens[++(*i)]);
 }

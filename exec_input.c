@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/15 06:19:44 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 02:23:08 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,12 @@ void	execute_input(char ***env, char *input, int *exit_status)
 	{
 		if (execute_ft_cmds(cmd, env))
 		{
-			ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
+			ft_change_env(*env, "_", cmd[cmd_count - 1]);
 			*exit_status = 0;
 			return (free_args(cmd));
 		}
 	}
-	ft_change_env(*env, "_", cmd[count_args(cmd) - 1]);
+	ft_change_env(*env, "_", cmd[cmd_count - 1]);
 	ft_parse_pipeline(cmd, cmd_count, *env, exit_status);
 	free_args(cmd);
 }
