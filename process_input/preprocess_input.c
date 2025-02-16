@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 08:17:27 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 11:35:04 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,21 @@ void	insert_var_value(char *value, t_buf *t, t_tokens *tok)
 
 void	expand_var(t_state *s, t_buf *t, t_tokens *tok)
 {
-	char	var_name[256];
+	char	*var_name;
 	char	*value;
+	int		i;
+	int		j;
 
-	extract_var_name(s, var_name);
+	i = 0;
+	while (s->input[s->i + i] && (isalnum(s->input[s->i + i]) || s->input[s->i + i] == '_'))
+		i++;
+	var_name = malloc(i + 1);
+	j = 0;
+	while (s->input[s->i] && (isalnum(s->input[s->i]) || s->input[s->i] == '_'))
+		var_name[j++] = s->input[s->i++];
+	var_name[j] = '\0';
 	value = ft_getenv(tok->env, var_name);
+	free(var_name);
 	insert_var_value(value, t, tok);
 }
 

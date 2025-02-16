@@ -6,25 +6,11 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 08:17:28 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 11:26:23 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	extract_var_name(t_state *s, char *var_name)
-{
-	int	j;
-
-	j = 0;
-	while (s->input[s->i] && (isalnum(s->input[s->i]) || s->input[s->i] == '_'))
-	{
-		if (j < 255)
-			var_name[j++] = s->input[s->i];
-		s->i++;
-	}
-	var_name[j] = '\0';
-}
 
 void	append_char(t_buf *t, char c)
 {

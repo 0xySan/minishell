@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 10:40:42 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 11:26:40 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ void			expand_var(t_state *s, t_buf *t, t_tokens *tok);
 void			process_char(t_state *s, t_buf *t, t_tokens *tok);
 char			**parse_input(const char *input, char **env);
 // prepocess_utils
-void			extract_var_name(t_state *s, char *var_name);
 void			append_char(t_buf *t, char c);
 void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
