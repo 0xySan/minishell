@@ -33,8 +33,7 @@ SRCS_FILE = ft_atoi.c \
 			ft_substr.c \
 			ft_tolower.c \
 			ft_toupper.c \
-			ft_realloc.c \
-			ft_putstr_fd.c
+			ft_realloc.c
 
 SRCS = $(addprefix ./,$(SRCS_FILE))
 
