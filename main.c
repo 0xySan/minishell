@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 01:54:26 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 03:01:29 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,13 @@ int	read_lines(char *cwd, char ***env, int *exit_status)
 	r_path = ft_strjoin(tmp_path, ": \e[m");
 	free(tmp_path);
 	input = readline(r_path);
-	if (input == 0 || (!strncmp(input, "exit", ft_strlen(input))
-			&& ft_strlen(input) == 4))
-		return (printf("0\n"), free(input), free(r_path), 1);
+	if (input == 0 || (!strncmp(input, "exit", 4)
+			&& ft_strlen(input) >= 4))
+	{
+		if (input != 0)
+			*exit_status = ft_atoi(input + 5);
+		return (printf("Exiting 21sh...\n"), free(input), free(r_path), 1);
+	}
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
@@ -110,5 +114,5 @@ int	main(int argc, char **argv, char **env)
 	}
 	rl_clear_history();
 	ft_free_env(env);
-	return (0);
+	return (exit_status);
 }
