@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:50:19 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 08:17:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include "ft_dprintf/ft_printf.h"
+
+extern int	g_exit_status;
 
 typedef struct s_cmd
 {
@@ -82,7 +84,6 @@ typedef struct s_tokens
 	int		count;
 	int		cap;
 	char	**env;
-	int		*exit_status;
 }				t_tokens;
 
 typedef struct s_state
@@ -94,13 +95,17 @@ typedef struct s_state
 
 // ft_CMDS
 // ft_cd
-void			check_if_accessible(char *path, char **env);
+void			check_if_accessible(char *path);
 char			*ft_get_current_dir(void);
 void			ft_change_dir(char **cmd, char **env);
 int				ft_cd(char **cmd, char **env);
 // ft_echo
 int				check_if_only_char(char *str, int start, char car);
 void			ft_echo(char **cmd);
+// ft_exit
+int				ft_exit(char *input);
+// ft_export
+int				execute_ft_cmds_export(char **cmd, char ***env);
 // ft_ENV
 // dup_env
 char			**dup_all_env(char **env);
@@ -130,12 +135,13 @@ int				handle_dollar(t_state *s, t_buf *t, t_tokens *tok);
 void			insert_var_value(char *value, t_buf *t, t_tokens *tok);
 void			expand_var(t_state *s, t_buf *t, t_tokens *tok);
 void			process_char(t_state *s, t_buf *t, t_tokens *tok);
-char			**parse_input(const char *input, char **env, int *exit_status);
+char			**parse_input(const char *input, char **env);
 // prepocess_utils
 void			extract_var_name(t_state *s, char *var_name);
 void			append_char(t_buf *t, char c);
 void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
+int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
 // split_n_keep
 char			**split_string(const char *str, const char *delimSet,
 					int *out_size);
@@ -158,7 +164,7 @@ void			execute_command(t_pipeline_ctx *ctx, int index);
 // exec_input
 int				execute_ft_cmds_export(char **cmd, char ***env);
 int				execute_ft_cmds(char **cmd, char ***env);
-void			execute_input(char ***env, char *input, int *exit_status);
+void			execute_input(char ***env, char *input);
 // exec_utils
 int				check_if_only_space(char *str);
 void			free_args(char **args);
@@ -169,7 +175,7 @@ void			ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
 // main
 void			print_graffiti(void);
 char			*get_relative_path(char *pwd, char **env);
-int				read_lines(char *cwd, char ***env, int *exit_status);
+int				read_lines(char *cwd, char ***env);
 int				main(int argc, char **argv, char **env);
 // pipes_handler
 int				ft_count_args(char **tokens, int num_tokens, int start);
@@ -177,8 +183,7 @@ int				ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens,
 					int start);
 void			setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
 void			cleanup_fds(t_cmd *cmd);
-void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
-					int *exit_status);
+void			ft_parse_pipeline(char **tokens, int num_tokens, char **env);
 // sighandler
 void			sigint_handler(int sig);
 void			sigquit_handler(int sig);
@@ -187,6 +192,6 @@ int				count_args(char **args);
 int				count_chars(char *str, char chars);
 void			copy_then_cat(char *dest, char *fstr, char *sstr);
 char			*dup_then_cat(char *src, char *sec_src);
-void			wait_for_children(t_pipeline_ctx *ctx);
+int				ft_stralnum(char *str);
 
 #endif

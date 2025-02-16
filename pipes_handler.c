@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:26:43 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 06:26:49 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,8 @@ void	cleanup_fds(t_cmd *cmd)
  * @param tokens Array of command and argument tokens.
  * @param num_tokens Size of tokens array.
  * @param env Environment variables.
- * @param exit_status Pointer to store exit status of last command.
  */
-void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
-	int *exit_status)
+void	ft_parse_pipeline(char **tokens, int num_tokens, char **env)
 {
 	t_cmd			*cmds;
 	int				count;
@@ -130,7 +128,7 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 		execute_command(&ctx, i);
 	i = -1;
 	while (++i < ctx.count)
-		waitpid(-1, exit_status, 0);
+		waitpid(-1, &g_exit_status, 0);
 	i = -1;
 	while (++i < count)
 		free(cmds[i].args);

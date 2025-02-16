@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:56:24 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/15 05:49:58 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 06:27:22 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,5 @@ void	ft_echo(char **cmd)
 		printf("%s", cmd[i]);
 	if (v == 0)
 		printf("\n");
+	g_exit_status = 0;
 }

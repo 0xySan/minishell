@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   preprocess_input.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:19:08 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 08:17:27 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,23 @@ void	expand_var(t_state *s, t_buf *t, t_tokens *tok)
 
 void	process_char(t_state *s, t_buf *t, t_tokens *tok)
 {
-	if (handle_space(s, t, tok) == 1)
+	if (handle_space(s, t, tok))
 		return ;
-	if (handle_single_quote(s) == 1)
+	if (handle_single_quote(s))
 		return ;
-	if (handle_double_quote(s) == 1)
+	if (handle_double_quote(s))
+		return ;
+	if (handle_special_chars(s, t, tok))
 		return ;
 	if (s->input[s->i] == '~' && s->quote == 0)
-		return (insert_var_value(getenv("HOME"), t, tok));
-	if (handle_error(s, t, tok) == 1)
+	{
+		if (!ft_getenv(tok->env, "HOME"))
+			return (insert_var_value(getenv("HOME"), t, tok));
+		return (insert_var_value(ft_getenv(tok->env, "HOME"), t, tok));
+	}
+	if (handle_error(s, t, tok))
 		return ;
-	if (handle_dollar(s, t, tok) == 1)
+	if (handle_dollar(s, t, tok))
 		return ;
 	append_char(t, s->input[s->i]);
 }
@@ -81,7 +87,7 @@ void	parse_loop(const char *in, t_buf *t, t_tokens *tok)
 	}
 }
 
-char	**parse_input(const char *input, char **env, int *exit_status)
+char	**parse_input(const char *input, char **env)
 {
 	t_tokens	tokens;
 	t_buf		t;
@@ -90,7 +96,6 @@ char	**parse_input(const char *input, char **env, int *exit_status)
 	tokens.cap = 10;
 	tokens.arr = malloc(tokens.cap * sizeof(char *));
 	tokens.env = env;
-	tokens.exit_status = exit_status;
 	t.cap = strlen(input) + 1;
 	t.len = 0;
 	t.buf = malloc(t.cap);

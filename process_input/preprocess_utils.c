@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 03:12:53 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 08:17:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,33 @@ void	plus_token(t_tokens *tok, char *token)
 	}
 	tok->arr[tok->count] = token;
 	tok->count++;
+}
+
+int	handle_special_chars(t_state *s, t_buf *t, t_tokens *tok)
+{
+	char	*token;
+	char	op[3];
+
+	op[0] = 0;
+	if (s->quote == 0 && (s->input[s->i] == '|' || s->input[s->i] == '<'
+			|| s->input[s->i] == '>'))
+	{
+		if (t->len > 0)
+		{
+			token = ft_strdup(t->buf);
+			plus_token(tok, token);
+			t->len = 0;
+			t->buf[0] = '\0';
+		}
+		op[0] = s->input[s->i];
+		op[1] = '\0';
+		if (s->input[s->i + 1] && s->input[s->i + 1] == s->input[s->i])
+		{
+			op[1] = s->input[++s->i];
+			op[2] = '\0';
+		}
+		plus_token(tok, ft_strdup(op));
+		return (1);
+	}
+	return (0);
 }

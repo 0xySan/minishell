@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 15:51:08 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/11 00:06:17 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 06:39:51 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,17 @@ char	*dup_then_cat(char *src, char *sec_src)
 	return (dest);
 }
 
-/**
- * @brief Wait for all children of a pipeline context to finish.
- * @param ctx The pipeline context.
- */
-void	wait_for_children(t_pipeline_ctx *ctx)
+int	ft_stralnum(char *str)
 {
 	int	i;
-	int	status;
 
 	i = 0;
-	while (i < ctx->count)
-		waitpid(ctx->cmds[i++].pid, &status, 0);
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]) || str[i] == '_')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
 }

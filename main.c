@@ -6,11 +6,13 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 04:43:53 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 06:42:23 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_exit_status;
 
 /**
  * Print a stylized ASCII art graffiti to the console.
@@ -56,7 +58,7 @@ char	*get_relative_path(char *pwd, char **env)
  * @param exit_status The exit status of the last executed command.
  * @return 1 if the user wants to exit the shell, else 0.
  */
-int	read_lines(char *cwd, char ***env, int *exit_status)
+int	read_lines(char *cwd, char ***env)
 {
 	char	*input;
 	char	*tmp_path;
@@ -70,14 +72,13 @@ int	read_lines(char *cwd, char ***env, int *exit_status)
 	if (input == 0 || (!strncmp(input, "exit", 4)
 			&& ft_strlen(input) >= 4))
 	{
-		if (input != 0)
-			*exit_status = ft_atoi(input + 5);
-		return (printf("Exiting 21sh...\n"), free(input), free(r_path), 1);
+		free(r_path);
+		return (ft_exit(input));
 	}
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		execute_input(env, input, exit_status);
+		execute_input(env, input);
 		free(input);
 	}
 	free(r_path);
@@ -96,13 +97,12 @@ int	read_lines(char *cwd, char ***env, int *exit_status)
 int	main(int argc, char **argv, char **env)
 {
 	char	cwd[PATH_MAX];
-	int		exit_status;
 
 	(void)argc;
 	(void)argv;
 	printf("\033[H\033[J");
 	print_graffiti();
-	exit_status = 0;
+	g_exit_status = 0;
 	env = dup_all_env(env);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);
@@ -110,10 +110,10 @@ int	main(int argc, char **argv, char **env)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
 			exit(1);
-		if (read_lines(cwd, &env, &exit_status))
+		if (read_lines(cwd, &env))
 			break ;
 	}
 	rl_clear_history();
 	ft_free_env(env);
-	return (exit_status);
+	return (g_exit_status);
 }

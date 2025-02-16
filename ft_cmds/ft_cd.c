@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:20:31 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/16 06:36:04 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,23 @@
 /**
  * @brief Change to the directory if the path is accessible.
  * @param path Directory path to check.
- * @param env Environment variables.
  */
-void	check_if_accessible(char *path, char **env)
+void	check_if_accessible(char *path)
 {
 	struct stat	statbuf;
 
 	stat(path, &statbuf);
 	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
+	{
 		chdir(path);
+		g_exit_status = 0;
+		return ;
+	}
+	if (access(path, F_OK) == -1)
+		dprintf(2, "cd: no such file or directory: %s\n", path);
 	else
-		perror("cd");
+		dprintf(2, "cd: not a directory: %s\n", path);
+	g_exit_status = 1 << 8;
 }
 
 /**
@@ -60,14 +66,24 @@ void	ft_change_dir(char **cmd, char **env)
 	home = ft_getenv(env, "HOME");
 	oldpwd = ft_getenv(env, "OLDPWD");
 	if (!cmd[1] || !ft_strncmp(cmd[1], "--", 3))
-		chdir(home);
+	{
+		if (!home)
+		{
+			ft_dprintf(2, "21sh: cd: HOME not set\n");
+			g_exit_status = 1 << 8;
+			return ;
+		}
+		check_if_accessible(home);
+		g_exit_status = 0;
+	}
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
 		chdir(oldpwd);
 		printf("%s\n", oldpwd);
+		g_exit_status = 0;
 	}
 	else
-		check_if_accessible(cmd[1], env);
+		check_if_accessible(cmd[1]);
 }
 
 /**ft_
