@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/15 06:43:30 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 03:12:53 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,3 @@ void	plus_token(t_tokens *tok, char *token)
 	tok->arr[tok->count] = token;
 	tok->count++;
 }
-
