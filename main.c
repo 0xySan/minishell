@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 03:01:29 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/16 04:43:53 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,9 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	exit_status = 0;
 	printf("\033[H\033[J");
+	print_graffiti();
+	exit_status = 0;
 	env = dup_all_env(env);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, sigquit_handler);
