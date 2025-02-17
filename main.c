@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:42:23 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/17 22:31:23 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,14 @@ int	read_lines(char *cwd, char ***env)
 {
 	char	*input;
 	char	*tmp_path;
+	char	*t_path;
 	char	*r_path;
 
 	tmp_path = get_relative_path(cwd, *env);
-	printf("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m");
-	r_path = ft_strjoin(tmp_path, ": \e[m");
+	t_path = ft_strjoin(tmp_path, ": \e[m");
+	r_path = ft_strjoin("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", t_path);
 	free(tmp_path);
+	free(t_path);
 	input = readline(r_path);
 	if (input == 0 || (!strncmp(input, "exit", 4)
 			&& ft_strlen(input) >= 4))

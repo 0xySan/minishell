@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sighandler.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:44:57 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 07:53:51 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/17 22:33:13 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 void	sigint_handler(int sig)
 {
 	(void)sig;
-	printf("\e[1m\x1B[31m\n");
+	printf("\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
@@ -39,7 +39,6 @@ void	sigint_handler(int sig)
 void	sigquit_handler(int sig)
 {
 	(void)sig;
-	printf("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m");
 	rl_on_new_line();
 	rl_redisplay();
 }
