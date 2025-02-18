@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fds_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:37:49 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/18 02:56:35 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static int	handle_here_doc(char *delimiter)
 	int		pipe_fd[2];
 
 	pipe(pipe_fd);
+	if (!delimiter)
+		return (pipe_fd[0]);
 	while (1)
 	{
 		line = readline("> ");
