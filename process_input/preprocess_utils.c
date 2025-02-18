@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 03:02:22 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 05:26:58 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	handle_special_chars(t_state *s, t_buf *t, t_tokens *tok)
 		if (!tmp)
 			return (-1);
 		plus_token(tok, tmp);
+		s->i--;
 		return (1);
 	}
 	return (0);
