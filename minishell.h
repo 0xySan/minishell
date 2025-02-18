@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:23:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 09:42:18 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void			ft_free_env(char **env);
 char			**realloc_tab(char ***env);
 void			ft_show_export(char **env);
 void			ft_export(char ***env, char *old_env, char *new_env);
-void			ft_unset(char **env, char *rev_env);
+void			ft_unset(char **env, char **rev_env);
 // f_sort_array
 void			copy_array(char **dest, char **src);
 void			swap(char **a, char **b);

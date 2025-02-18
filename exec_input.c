@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:26:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 09:42:06 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	execute_ft_cmds(char **cmd, char ***env)
 	if (ft_cd(cmd, env))
 		return (1);
 	if (!ft_strncmp(cmd[0], "unset", 6))
-		return (ft_unset(*env, cmd[1]), 1);
+		return (ft_unset(*env, cmd), 1);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
 		current_pwd = ft_get_current_dir();

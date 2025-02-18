@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:18:19 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 09:41:49 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,7 @@ void	ft_export(char ***env, char *old_env, char *new_env)
 	(*env)[i + 1] = NULL;
 }
 
-/**
- * @brief Remove an environment variable from the environment array.
- * @param env The environment variables.
- * @param rev_env The name of the variable to remove.
- */
-void	ft_unset(char **env, char *rev_env)
+void	ft_unset_helper(char **env, char *rev_env)
 {
 	int		i;
 	char	*test;
@@ -99,4 +94,22 @@ void	ft_unset(char **env, char *rev_env)
 	free(env[i]);
 	free(test);
 	env[i] = NULL;
+}
+
+/**
+ * @brief Remove an environment variable from the environment array.
+ * @param env The environment variables.
+ * @param rev_env The name of the variable to remove.
+ */
+void	ft_unset(char **env, char **rev_env)
+{
+	int		i;
+	int		args;
+
+	i = 0;
+	while (rev_env[i])
+	{
+		ft_unset_helper(env, rev_env[i]);
+		i++;
+	}
 }
