@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 09:41:49 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 10:29:22 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_export(char ***env, char *old_env, char *new_env)
 {
 	int	i;
 
-	if (old_env && !ft_stralnum(old_env))
+	if (old_env && (!ft_stralnum(old_env) || !ft_isalpha(old_env[0])))
 		return ;
 	if (!old_env && !new_env)
 		return (ft_show_export(*env));
