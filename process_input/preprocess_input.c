@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:07:53 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 09:51:01 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ void	expand_var(t_state *s, t_buf *t, t_tokens *tok)
 	while (s->input[s->i + i] && (isalnum(s->input[s->i + i])
 			|| s->input[s->i + i] == '_'))
 		i++;
+	if (i == 0)
+	{
+		insert_var_value("$", t, tok);
+		return ;
+	}
 	var_name = malloc(i + 1);
 	if (!var_name)
 		return ;
