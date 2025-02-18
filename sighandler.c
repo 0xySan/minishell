@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sighandler.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:44:57 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/17 22:33:13 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/18 05:57:17 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@ void	sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+	g_exit_status = 130 << 8;
+}
+
+void	sigint_handler_2(int sig)
+{
+	(void)sig;
+	rl_redisplay();
+	kill(-1, SIGINT);
 	g_exit_status = 130 << 8;
 }
 

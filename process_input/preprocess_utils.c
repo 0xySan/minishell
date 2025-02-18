@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 05:26:58 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 08:08:12 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int	handle_special_chars(t_state *s, t_buf *t, t_tokens *tok)
 	int		start;
 	int		op_len;
 
-	if (s->quote == 0 && (s->input[s->i] == '|' ||
-		s->input[s->i] == '<' || s->input[s->i] == '>'))
+	if (s->quote == 0 && (s->input[s->i] == '|'
+			|| s->input[s->i] == '<' || s->input[s->i] == '>'))
 	{
 		if (t->len > 0)
 		{

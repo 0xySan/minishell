@@ -6,11 +6,25 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:41:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:54:40 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 08:13:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	check_overflow(const char *str)
+{
+	char		*endptr;
+	long long	num;
+
+	num = ft_strtoll(str, &endptr, 10);
+	errno = 0;
+	if (endptr == str)
+		return (0);
+	if (errno == ERANGE || num >= LLONG_MAX || num < LLONG_MIN)
+		return (1);
+	return (0);
+}
 
 int	ft_alnum_exit(char **exit_input, char *input)
 {
@@ -19,7 +33,7 @@ int	ft_alnum_exit(char **exit_input, char *input)
 	i = 0;
 	while (exit_input[1][i])
 	{
-		if (ft_isalpha(exit_input[1][i]))
+		if (ft_isalpha(exit_input[1][i]) || check_overflow(exit_input[1]))
 		{
 			ft_dprintf(2, "21sh: exit: %s: numeric argument required\n",
 				exit_input[1]);
@@ -33,7 +47,7 @@ int	ft_alnum_exit(char **exit_input, char *input)
 	return (0);
 }
 
-int	ft_exit(char *input)
+int	ft_exit(char *input, char **env)
 {
 	char	**exit_input;
 	int		args;
@@ -42,7 +56,7 @@ int	ft_exit(char *input)
 	if (!input)
 		return (1);
 	add_history(input);
-	exit_input = ft_split(input, ' ');
+	exit_input = parse_input(input, env);
 	args = count_args(exit_input);
 	if (!exit_input[1])
 		return (free(input), free_args(exit_input), 1);

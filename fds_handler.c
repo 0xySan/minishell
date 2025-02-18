@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 02:56:35 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 05:51:19 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static int	handle_here_doc(char *delimiter)
 	int		pipe_fd[2];
 
 	pipe(pipe_fd);
+	signal(SIGINT, sigint_handler_2);
 	if (!delimiter)
 		return (pipe_fd[0]);
 	while (1)

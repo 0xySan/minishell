@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/17 22:31:23 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/18 08:26:18 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ char	*get_relative_path(char *pwd, char **env)
 	char	*home;
 	size_t	home_len;
 	size_t	pwd_len;
+	char	*t_path;
+	char	*r_path;
 
 	home = ft_getenv(env, "HOME");
 	if (!home)
@@ -48,7 +50,13 @@ char	*get_relative_path(char *pwd, char **env)
 	pwd_len = ft_strlen(pwd);
 	if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
 		return (ft_strdup(pwd));
-	return (ft_strjoin("~", pwd + home_len));
+	t_path = ft_strjoin("~", pwd + home_len);
+	r_path = ft_strjoin(t_path, ": \e[m");
+	free(t_path);
+	t_path = NULL;
+	t_path = ft_strjoin("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", r_path);
+	free(r_path);
+	return (t_path);
 }
 
 /**
@@ -61,29 +69,24 @@ char	*get_relative_path(char *pwd, char **env)
 int	read_lines(char *cwd, char ***env)
 {
 	char	*input;
-	char	*tmp_path;
-	char	*t_path;
-	char	*r_path;
+	char	*rev_path;
 
-	tmp_path = get_relative_path(cwd, *env);
-	t_path = ft_strjoin(tmp_path, ": \e[m");
-	r_path = ft_strjoin("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", t_path);
-	free(tmp_path);
-	free(t_path);
-	input = readline(r_path);
+	rev_path = get_relative_path(cwd, *env);
+	input = readline(rev_path);
 	if (input == 0 || (!strncmp(input, "exit", 4)
 			&& ft_strlen(input) >= 4))
 	{
-		free(r_path);
-		return (ft_exit(input));
+		free(rev_path);
+		return (ft_exit(input, *env));
 	}
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		execute_input(env, input);
+		if (execute_input(env, input, cwd) == 1)
+			return (ft_exit(input, *env));
 		free(input);
 	}
-	free(r_path);
+	free(rev_path);
 	return (0);
 }
 

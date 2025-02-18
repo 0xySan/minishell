@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:36:04 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 05:34:32 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	ft_change_dir(char **cmd, char **env)
  * If no path is given, changes to $HOME. If '-', changes to
  * $OLDPWD and prints it.
  */
-int	ft_cd(char **cmd, char **env)
+int	ft_cd(char **cmd, char ***env)
 {
 	char	*current_pwd;
 
@@ -103,13 +103,13 @@ int	ft_cd(char **cmd, char **env)
 		return (0);
 	if (count_args(cmd) > 2)
 		return (printf("cd: too many arguments\n"), 1);
-	current_pwd = ft_getenv(env, "PWD");
-	ft_change_dir(cmd, env);
-	ft_change_env(env, "OLDPWD", current_pwd);
+	current_pwd = ft_getenv(*env, "PWD");
+	ft_change_dir(cmd, *env);
+	ft_export(env, "OLDPWD", current_pwd);
 	current_pwd = ft_get_current_dir();
 	if (current_pwd)
 	{
-		ft_change_env(env, "PWD", current_pwd);
+		ft_change_env(*env, "PWD", current_pwd);
 		free(current_pwd);
 	}
 	return (1);

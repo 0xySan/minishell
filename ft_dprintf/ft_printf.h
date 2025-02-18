@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 11:45:26 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:53:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 07:15:51 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdarg.h>
-
-# define INT_MAX 2147483647
-# define INT_MIN -2147483648
+# include <limits.h>
 
 int		ft_putstr_fd(char *str, int fd);
 int		ft_count_unsigned(unsigned int nb);

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 11:45:26 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:49:47 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 08:04:50 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-
-# define INT_MAX 2147483647
-# define INT_MIN -2147483648
+# include <limits.h>
+# include <errno.h>
 
 int				ft_atoi(const char *nptr);
 void			ft_bzero(void *s, size_t n);
@@ -55,5 +54,6 @@ char			*ft_itoa(int num);
 int				ft_toupper(int c);
 int				ft_tolower(int c);
 void			*ft_realloc(void *ptr, size_t size);
+long long		ft_strtoll(const char *nptr, char **endptr, int base);
 
 #endif

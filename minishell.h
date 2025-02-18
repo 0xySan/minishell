@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 11:26:40 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 08:23:36 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <linux/limits.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -73,12 +74,12 @@ typedef struct s_state
 void			check_if_accessible(char *path);
 char			*ft_get_current_dir(void);
 void			ft_change_dir(char **cmd, char **env);
-int				ft_cd(char **cmd, char **env);
+int				ft_cd(char **cmd, char ***env);
 // ft_echo
 int				check_if_only_char(char *str, int start, char car);
 void			ft_echo(char **cmd);
 // ft_exit
-int				ft_exit(char *input);
+int				ft_exit(char *input, char **env);
 // ft_export
 int				execute_ft_cmds_export(char **cmd, char ***env);
 // ft_ENV
@@ -126,7 +127,7 @@ void			execute_command(t_pipeline_ctx *ctx, int index);
 // exec_input
 int				execute_ft_cmds_export(char **cmd, char ***env);
 int				execute_ft_cmds(char **cmd, char ***env);
-void			execute_input(char ***env, char *input);
+int				execute_input(char ***env, char *input, char *cwd);
 // exec_utils
 int				check_if_only_space(char *str);
 void			free_args(char **args);
@@ -155,5 +156,6 @@ int				count_chars(char *str, char chars);
 void			copy_then_cat(char *dest, char *fstr, char *sstr);
 char			*dup_then_cat(char *src, char *sec_src);
 int				ft_stralnum(char *str);
+void			sigint_handler_2(int sig);
 
 #endif

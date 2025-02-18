@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 02:54:25 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 08:10:38 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	ft_execute(t_cmd *cmd, char **env)
 		else
 			actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
 	}
+	else
+		exit(0);
 	if (actual_cmd)
 		execve(actual_cmd, cmd->args, env);
 	ft_dprintf(2, "21sh: command not found : %s\n", cmd->args[0]);
