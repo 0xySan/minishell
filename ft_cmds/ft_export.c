@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:40:25 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 06:44:20 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/18 09:47:00 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	check_exportalnum(char **cmd, char ***env)
 	if (!ft_stralnum(export_util))
 	{
 		g_exit_status = 1 << 8;
-		dprintf(2, "export: not valid in this context: %s\n", export_util);
+		dprintf(2, "21sh: export: `%s\': not a valid identifier\n", cmd[1]);
 	}
 	else
 		g_exit_status = 0;
