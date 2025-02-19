@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 16:18:28 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 17:19:40 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,14 @@ int	execute_input(char ***env, char *input, char *cwd, t_free *free_value)
 	int		cmd_count;
 	int		exit_c;
 
-	exit_c = 0;
 	cmd = parse_input(input, *env);
 	free_value->env = env;
 	free_value->parsed_input = cmd;
 	if (cmd == NULL || cmd[0] == NULL)
 		return (0);
+	if ((cmd[0][0] == '<' || cmd[0][0] == '>' || cmd[0][0] == '|') && !cmd[1])
+		return (g_exit_status = 1 << 8, dprintf(2, "21sh: parse error\n"),
+			free_args(cmd), 0);
 	cmd_count = count_args(cmd);
 	if (ft_count_commands(cmd, cmd_count) == 1)
 	{

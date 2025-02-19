@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 16:53:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 17:23:26 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 		cmds[cmd_index].input_fd = STDIN_FILENO;
 		cmds[cmd_index].output_fd = STDOUT_FILENO;
 		i = ft_process_one_command(tokens, num_tokens, i, &cmds[cmd_index]);
+		if (ft_strcmp(tokens[i - 1], "|") == 0 && !tokens[i])
+			return (ft_dprintf(2, "21sh: empty pipe\n"), NULL);
 		cmd_index++;
 	}
 	return (cmds);
