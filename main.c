@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:26:18 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:14:41 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ int	read_lines(char *cwd, char ***env)
 {
 	char	*input;
 	char	*rev_path;
+	t_free	free_value;
 
 	rev_path = get_relative_path(cwd, *env);
+	free_value.relative_path = rev_path;
 	input = readline(rev_path);
 	if (input == 0 || (!strncmp(input, "exit", 4)
 			&& ft_strlen(input) >= 4))
@@ -82,7 +84,7 @@ int	read_lines(char *cwd, char ***env)
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		if (execute_input(env, input, cwd) == 1)
+		if (execute_input(env, input, cwd, &free_value) == 1)
 			return (ft_exit(input, *env));
 		free(input);
 	}

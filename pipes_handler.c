@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:26:49 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:15:52 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	cleanup_fds(t_cmd *cmd)
  * @param num_tokens Size of tokens array.
  * @param env Environment variables.
  */
-void	ft_parse_pipeline(char **tokens, int num_tokens, char **env)
+void	ft_parse_pipeline(char **tokens, int num_tokens, char **env, t_free *free_value)
 {
 	t_cmd			*cmds;
 	int				count;
@@ -125,7 +125,7 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env)
 	ctx.prev_pipe = STDIN_FILENO;
 	i = -1;
 	while (++i < ctx.count)
-		execute_command(&ctx, i);
+		execute_command(&ctx, i, free_value);
 	i = -1;
 	while (++i < ctx.count)
 		waitpid(-1, &g_exit_status, 0);

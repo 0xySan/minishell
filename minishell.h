@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 10:33:58 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:42:44 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,15 @@ typedef struct s_state
 	int			quote;
 }				t_state;
 
+typedef struct s_free
+{
+    char        **parsed_input;
+    char        ***env;
+    char        *relative_path;
+    t_cmd       *cmds;      // pointer to the cmds array
+    int         cmd_count;  // number of commands allocated
+} t_free;
+
 // ft_CMDS
 // ft_cd
 void			check_if_accessible(char *path);
@@ -118,16 +127,16 @@ void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
 int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
 // cmds_handler
-void			ft_execute(t_cmd *cmd, char **env);
+void			ft_execute(t_cmd *cmd, char **env, t_free *free_value, int index);
 int				ft_count_commands(char **tokens, int num_tokens);
 int				ft_process_one_command(char **tokens, int num_tokens, int start,
 					t_cmd *cmd);
 t_cmd			*ft_parse_commands(char **tokens, int num_tokens);
-void			execute_command(t_pipeline_ctx *ctx, int index);
+void			execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value);
 // exec_input
 int				execute_ft_cmds_export(char **cmd, char ***env);
 int				execute_ft_cmds(char **cmd, char ***env);
-int				execute_input(char ***env, char *input, char *cwd);
+int				execute_input(char ***env, char *input, char *cwd, t_free *free_value);
 // exec_utils
 int				check_if_only_space(char *str);
 void			free_args(char **args);
@@ -146,7 +155,7 @@ int				ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens,
 					int start);
 void			setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
 void			cleanup_fds(t_cmd *cmd);
-void			ft_parse_pipeline(char **tokens, int num_tokens, char **env);
+void			ft_parse_pipeline(char **tokens, int num_tokens, char **env, t_free *free_value);
 // sighandler
 void			sigint_handler(int sig);
 void			sigquit_handler(int sig);
@@ -157,5 +166,6 @@ void			copy_then_cat(char *dest, char *fstr, char *sstr);
 char			*dup_then_cat(char *src, char *sec_src);
 int				ft_stralnum(char *str);
 void			sigint_handler_2(int sig);
+
 
 #endif

@@ -6,11 +6,19 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 14:46:29 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:53:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_before_exit(t_cmd *cmd, t_free *free_value, int exit_code, int index)
+{
+	free_args(free_value->parsed_input);
+	free_args(*(free_value->env));
+	free(free_value->relative_path);
+	exit(exit_code);
+}
 
 /**
  * @brief Executes a command with redirection and built-in support.
@@ -19,23 +27,24 @@
  * @param cmd t_cmd structure with command and arguments.
  * @param env Environment variables array.
  */
-void	ft_execute(t_cmd *cmd, char **env)
+void	ft_execute(t_cmd *cmd, char **env, t_free *free_value, int index)
 {
 	char	*actual_cmd;
 
 	actual_cmd = NULL;
 	if (cmd->input_fd == -1)
 	{
-		close(cmd->output_fd);
+		if (cmd->output_fd != -1)
+			close(cmd->output_fd);
 		close(1);
-		exit(1);
+		free_before_exit(cmd, free_value, 1, index);
 	}
-	if (cmd->input_fd != STDIN_FILENO)
+	if (cmd->input_fd != STDIN_FILENO && cmd->input_fd != -1)
 	{
 		dup2(cmd->input_fd, STDIN_FILENO);
 		close(cmd->input_fd);
 	}
-	if (cmd->output_fd != STDOUT_FILENO)
+	if (cmd->output_fd != STDOUT_FILENO && cmd->output_fd != -1)
 	{
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close(cmd->output_fd);
@@ -43,16 +52,16 @@ void	ft_execute(t_cmd *cmd, char **env)
 	if (cmd->args && cmd->args[0])
 	{
 		if (execute_ft_cmds(cmd->args, &env))
-			exit(0);
+			free_before_exit(cmd, free_value, 0, index);
 		else
 			actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
 	}
 	else
-		exit(0);
+		free_before_exit(cmd, free_value, 0, index);
 	if (actual_cmd)
 		execve(actual_cmd, cmd->args, env);
 	ft_dprintf(2, "21sh: command not found : %s\n", cmd->args[0]);
-	exit(127);
+	free_before_exit(cmd, free_value, 127, index);
 }
 
 /**
@@ -140,11 +149,11 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
  * @param ctx: Pipeline context.
  * @param index: Index of the command to be executed.
  */
-void	execute_command(t_pipeline_ctx *ctx, int index)
+void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value)
 {
-	int		pipe_fds[2];
-	pid_t	pid;
-	int		use_pipe;
+	int     pipe_fds[2];
+	pid_t   pid;
+	int     use_pipe;
 
 	use_pipe = 0;
 	if (index < ctx->count - 1 && ctx->cmds[index].output_fd == STDOUT_FILENO)
@@ -159,7 +168,10 @@ void	execute_command(t_pipeline_ctx *ctx, int index)
 	{
 		if (index > 0 && ctx->cmds[index].input_fd == STDIN_FILENO)
 			ctx->cmds[index].input_fd = ctx->prev_pipe;
-		ft_execute(&ctx->cmds[index], ctx->env);
+		if (use_pipe)
+			close(pipe_fds[0]);
+		ft_execute(&ctx->cmds[index], ctx->env, free_value, index);
+		exit(EXIT_FAILURE);
 	}
 	else if (pid < 0)
 		exit(EXIT_FAILURE);

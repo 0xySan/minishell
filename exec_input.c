@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 09:42:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:18:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	execute_ft_cmds(char **cmd, char ***env)
  * @param input The command line to execute.
  * Processes input, splits into commands, executes.
  */
-int	execute_input(char ***env, char *input, char *cwd)
+int	execute_input(char ***env, char *input, char *cwd, t_free *free_value)
 {
 	char	**cmd;
 	int		cmd_count;
@@ -60,6 +60,8 @@ int	execute_input(char ***env, char *input, char *cwd)
 
 	exit_c = 0;
 	cmd = parse_input(input, *env);
+	free_value->env = env;
+	free_value->parsed_input = cmd;
 	if (cmd == NULL || cmd[0] == NULL)
 		return (0);
 	cmd_count = count_args(cmd);
@@ -72,7 +74,7 @@ int	execute_input(char ***env, char *input, char *cwd)
 		else if (exit_c == 2)
 			return (free_args(cmd), 1);
 	}
-	ft_parse_pipeline(cmd, cmd_count, *env);
+	ft_parse_pipeline(cmd, cmd_count, *env, free_value);
 	free_args(cmd);
 	return (0);
 }
