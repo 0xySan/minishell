@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:10:38 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 14:46:29 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ void	ft_execute(t_cmd *cmd, char **env)
 	char	*actual_cmd;
 
 	actual_cmd = NULL;
+	if (cmd->input_fd == -1)
+	{
+		close(cmd->output_fd);
+		close(1);
+		exit(1);
+	}
 	if (cmd->input_fd != STDIN_FILENO)
 	{
 		dup2(cmd->input_fd, STDIN_FILENO);
@@ -138,21 +144,28 @@ void	execute_command(t_pipeline_ctx *ctx, int index)
 {
 	int		pipe_fds[2];
 	pid_t	pid;
+	int		use_pipe;
 
-	if (index < ctx->count - 1)
-		setup_pipe(ctx, index, pipe_fds);
+	use_pipe = 0;
+	if (index < ctx->count - 1 && ctx->cmds[index].output_fd == STDOUT_FILENO)
+	{
+		if (pipe(pipe_fds) == -1)
+			exit(EXIT_FAILURE);
+		ctx->cmds[index].output_fd = pipe_fds[1];
+		use_pipe = 1;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
-		if (index > 0)
+		if (index > 0 && ctx->cmds[index].input_fd == STDIN_FILENO)
 			ctx->cmds[index].input_fd = ctx->prev_pipe;
 		ft_execute(&ctx->cmds[index], ctx->env);
 	}
 	else if (pid < 0)
 		exit(EXIT_FAILURE);
-	if (index > 0)
+	if (index > 0 && ctx->prev_pipe != STDIN_FILENO)
 		close(ctx->prev_pipe);
-	if (index < ctx->count - 1)
+	if (use_pipe)
 	{
 		close(pipe_fds[1]);
 		ctx->prev_pipe = pipe_fds[0];

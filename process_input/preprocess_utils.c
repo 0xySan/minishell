@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:08:12 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 14:45:38 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	append_char(t_buf *t, char c)
 	if (t->len + 1 >= t->cap)
 	{
 		t->cap = t->cap * 2;
-		t->buf = ft_realloc(t->buf, t->cap);
+		t->buf = ft_realloc(t->buf, 10, t->cap);
 	}
 	t->buf[t->len] = c;
 	t->len++;
@@ -41,7 +41,8 @@ void	plus_token(t_tokens *tok, char *token)
 	if (tok->count >= tok->cap)
 	{
 		tok->cap = tok->cap * 2;
-		tok->arr = ft_realloc(tok->arr, tok->cap * sizeof(char *));
+		tok->arr = ft_realloc(tok->arr, 10 * sizeof(char *),
+				tok->cap * sizeof(char *));
 	}
 	tok->arr[tok->count] = token;
 	tok->count++;

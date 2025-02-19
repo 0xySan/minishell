@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 05:51:19 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/19 14:48:56 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ static int	open_file(char *path, int flags, int mode)
 
 	fd = open(path, flags, mode);
 	if (fd < 0)
-		fd = open("/dev/null", flags, mode);
+	{
+		ft_dprintf(2, "21sh: no such file or directory: %s\n", path);
+		fd = -1;
+	}
 	return (fd);
 }
 
@@ -34,15 +37,14 @@ static int	open_file(char *path, int flags, int mode)
  * @param delimiter The string that signifies the end of input.
  * @return File descriptor for the read end of the pipe containing the input.
  */
-static int	handle_here_doc(char *delimiter)
+static int	handle_here_doc(t_cmd *cmd, char *delimiter)
 {
 	char	*line;
 	int		pipe_fd[2];
 
 	pipe(pipe_fd);
-	signal(SIGINT, sigint_handler_2);
-	if (!delimiter)
-		return (pipe_fd[0]);
+	if (!delimiter && cmd->input_fd != -1)
+		return (cmd->input_fd = pipe_fd[0], close(pipe_fd[1]));
 	while (1)
 	{
 		line = readline("> ");
@@ -51,12 +53,14 @@ static int	handle_here_doc(char *delimiter)
 			free(line);
 			break ;
 		}
-		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
+		ft_dprintf(pipe_fd[1], "%s\n", line);
 		free(line);
 	}
 	close(pipe_fd[1]);
-	return (pipe_fd[0]);
+	if (cmd->input_fd == -1)
+		return (close(pipe_fd[0]));
+	cmd->input_fd = pipe_fd[0];
+	return (0);
 }
 
 /**
@@ -67,14 +71,28 @@ static int	handle_here_doc(char *delimiter)
  */
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 {
+	if (ft_strcmp(tokens[*i], "<<") == 0)
+		handle_here_doc(cmd, tokens[++(*i)]);
+	if (cmd->input_fd == -1 || !tokens[(*i + 1)])
+		return ;
 	if (ft_strcmp(tokens[*i], "<") == 0)
+	{
+		if (cmd->input_fd != STDIN_FILENO)
+			close(cmd->input_fd);
 		cmd->input_fd = open_file(tokens[++(*i)], O_RDONLY, 0);
+	}
 	else if (ft_strcmp(tokens[*i], ">") == 0)
+	{
+		if (cmd->output_fd != STDOUT_FILENO)
+			close(cmd->output_fd);
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	}
 	else if (ft_strcmp(tokens[*i], ">>") == 0)
+	{
+		if (cmd->output_fd != STDOUT_FILENO)
+			close(cmd->output_fd);
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else if (ft_strcmp(tokens[*i], "<<") == 0)
-		cmd->input_fd = handle_here_doc(tokens[++(*i)]);
+	}
 }
