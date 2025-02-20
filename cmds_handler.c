@@ -6,17 +6,32 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 17:23:26 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 19:28:05 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_before_exit(t_cmd *cmd, t_free *free_value, int exit_code, int index)
+void free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code)
 {
+	int i;
+
+	i = 0;
 	free_args(free_value->parsed_input);
 	free_args(*(free_value->env));
 	free(free_value->relative_path);
+	while (i < ctx->count)
+	{
+		free(ctx->cmds[i].args);
+		if (ctx->cmds[i].input_fd != STDIN_FILENO && ctx->cmds[i].input_fd != -1)
+			close(ctx->cmds[i].input_fd);
+		if (ctx->cmds[i].output_fd != STDOUT_FILENO && ctx->cmds[i].output_fd != -1)
+			close(ctx->cmds[i].output_fd);
+		if (ctx->prev_pipe != STDIN_FILENO && ctx->prev_pipe != -1)
+			close(ctx->prev_pipe);
+		i++;
+	}
+	free(ctx->cmds);
 	exit(exit_code);
 }
 
@@ -27,41 +42,37 @@ void	free_before_exit(t_cmd *cmd, t_free *free_value, int exit_code, int index)
  * @param cmd t_cmd structure with command and arguments.
  * @param env Environment variables array.
  */
-void	ft_execute(t_cmd *cmd, char **env, t_free *free_value, int index)
+void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index, int pipe_fds[2])
 {
 	char	*actual_cmd;
+	int		i;
 
+	(void)pipe_fds;
+	i = 0;
 	actual_cmd = NULL;
-	if (cmd->input_fd == -1)
+	if (ctx->cmds[index].input_fd != STDIN_FILENO && ctx->cmds[index].input_fd != -1)
 	{
-		if (cmd->output_fd != -1)
-			close(cmd->output_fd);
-		close(1);
-		free_before_exit(cmd, free_value, 1, index);
+		dup2(ctx->cmds[index].input_fd, STDIN_FILENO);
+		close(ctx->cmds[index].input_fd);
 	}
-	if (cmd->input_fd != STDIN_FILENO && cmd->input_fd != -1)
+	if (ctx->cmds[index].output_fd != STDOUT_FILENO && ctx->cmds[index].output_fd != -1)
 	{
-		dup2(cmd->input_fd, STDIN_FILENO);
-		close(cmd->input_fd);
+		dup2(ctx->cmds[index].output_fd, STDOUT_FILENO);
+		close(ctx->cmds[index].output_fd);
 	}
-	if (cmd->output_fd != STDOUT_FILENO && cmd->output_fd != -1)
+	if (ctx->cmds[index].args && ctx->cmds[index].args[0])
 	{
-		dup2(cmd->output_fd, STDOUT_FILENO);
-		close(cmd->output_fd);
-	}
-	if (cmd->args && cmd->args[0])
-	{
-		if (execute_ft_cmds(cmd->args, &env))
-			free_before_exit(cmd, free_value, 0, index);
+		if (execute_ft_cmds(ctx->cmds[index].args, &ctx->env))
+			free_before_exit(ctx, free_value, 0);
 		else
-			actual_cmd = get_cmd_path(cmd->args[0], ft_getenv(env, "PATH"));
+			actual_cmd = get_cmd_path(ctx->cmds[index].args[0], ft_getenv(ctx->env, "PATH"));
 	}
 	else
-		free_before_exit(cmd, free_value, 0, index);
+		free_before_exit(ctx, free_value, 0);
 	if (actual_cmd)
-		execve(actual_cmd, cmd->args, env);
-	ft_dprintf(2, "21sh: command not found : %s\n", cmd->args[0]);
-	free_before_exit(cmd, free_value, 127, index);
+		execve(actual_cmd, ctx->cmds[index].args, ctx->env);
+	ft_dprintf(2, "21sh: command not found : %s\n", ctx->cmds[index].args[0]);
+	free_before_exit(ctx, free_value, 127);
 }
 
 /**
@@ -137,6 +148,7 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
 	{
 		cmds[cmd_index].input_fd = STDIN_FILENO;
 		cmds[cmd_index].output_fd = STDOUT_FILENO;
+		cmds[cmd_index].count = cmd_count;
 		i = ft_process_one_command(tokens, num_tokens, i, &cmds[cmd_index]);
 		if (ft_strcmp(tokens[i - 1], "|") == 0 && !tokens[i])
 			return (ft_dprintf(2, "21sh: empty pipe\n"), NULL);
@@ -153,36 +165,47 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens)
  */
 void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value)
 {
-	int     pipe_fds[2];
-	pid_t   pid;
-	int     use_pipe;
+	int		pipe_fds[2];
+	pid_t	pid;
+	int		use_pipe;
 
 	use_pipe = 0;
-	if (index < ctx->count - 1 && ctx->cmds[index].output_fd == STDOUT_FILENO)
-	{
-		if (pipe(pipe_fds) == -1)
-			exit(EXIT_FAILURE);
-		ctx->cmds[index].output_fd = pipe_fds[1];
-		use_pipe = 1;
-	}
-	pid = fork();
-	if (pid == 0)
-	{
-		if (index > 0 && ctx->cmds[index].input_fd == STDIN_FILENO)
-			ctx->cmds[index].input_fd = ctx->prev_pipe;
-		if (use_pipe)
-			close(pipe_fds[0]);
-		ft_execute(&ctx->cmds[index], ctx->env, free_value, index);
-		exit(EXIT_FAILURE);
-	}
-	else if (pid < 0)
-		exit(EXIT_FAILURE);
-	if (index > 0 && ctx->prev_pipe != STDIN_FILENO)
-		close(ctx->prev_pipe);
-	if (use_pipe)
-	{
-		close(pipe_fds[1]);
-		ctx->prev_pipe = pipe_fds[0];
-	}
+    if (index < ctx->count - 1 && ctx->cmds[index].output_fd == STDOUT_FILENO)
+    {
+        if (pipe(pipe_fds) == -1)
+            exit(EXIT_FAILURE);
+        ctx->cmds[index].output_fd = pipe_fds[1];
+        use_pipe = 1;
+    }
+    pid = fork();
+    ctx->cmds[index].pid = pid;
+    if (pid == 0)
+    {
+        if (index > 0 && ctx->cmds[index].input_fd == STDIN_FILENO)
+            ctx->cmds[index].input_fd = ctx->prev_pipe;
+        if (use_pipe)
+            close(pipe_fds[0]);
+		for (int i = 0; i < ctx->count; i++)
+        {
+			if (i != index && i > index - 1)
+			{
+				if (ctx->cmds[i].input_fd != STDIN_FILENO && ctx->cmds[i].input_fd != -1)
+					close(ctx->cmds[i].input_fd);
+				if (ctx->cmds[i].output_fd != STDOUT_FILENO && ctx->cmds[i].output_fd != -1)
+					close(ctx->cmds[i].output_fd);
+			}
+        }
+        ft_execute(ctx, free_value, index, pipe_fds);
+        exit(EXIT_FAILURE);
+    }
+    else if (pid < 0)
+        exit(EXIT_FAILURE);
+    if (index > 0 && ctx->prev_pipe != STDIN_FILENO && ctx->prev_pipe != -1)
+        close(ctx->prev_pipe);
+    if (use_pipe)
+    {
+        close(pipe_fds[1]);
+        ctx->prev_pipe = pipe_fds[0];
+    }
 	cleanup_fds(&ctx->cmds[index]);
 }

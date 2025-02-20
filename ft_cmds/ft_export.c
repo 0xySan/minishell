@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:40:25 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 10:28:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 15:39:07 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*export_util_func(char *word)
 	return (r_value);
 }
 
-void	check_exportalnum(char **cmd, char ***env)
+void	check_exportalnum(char **cmd)
 {
 	char	*export_util;
 
@@ -64,12 +64,11 @@ int	execute_ft_cmds_export(char **cmd, char ***env)
 {
 	char	*export_util;
 	int		i;
-	char	*test;
 
 	i = 1;
 	if (!cmd[i])
 		return (ft_export(env, NULL, NULL), 1);
-	check_exportalnum(cmd, env);
+	check_exportalnum(cmd);
 	while (cmd[i])
 	{
 		if (!ft_strchr(cmd[i++], '='))

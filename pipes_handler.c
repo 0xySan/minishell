@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 17:14:35 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 17:28:07 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ void	setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2])
  */
 void	cleanup_fds(t_cmd *cmd)
 {
-	if (cmd->input_fd != STDIN_FILENO)
+	if (cmd->input_fd != STDIN_FILENO && cmd->input_fd != -1)
 		close(cmd->input_fd);
-	if (cmd->output_fd != STDOUT_FILENO)
+	if (cmd->output_fd != STDOUT_FILENO && cmd->output_fd != -1)
 		close(cmd->output_fd);
 }
 
@@ -130,7 +130,7 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env, t_free *free_v
 		execute_command(&ctx, i, free_value);
 	i = -1;
 	while (++i < ctx.count)
-		waitpid(-1, &g_exit_status, 0);
+		waitpid(ctx.cmds[i].pid, &g_exit_status, 0);
 	i = -1;
 	while (++i < count)
 		free(cmds[i].args);

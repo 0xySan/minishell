@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 16:42:44 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 18:10:29 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_cmd
 	char		**args;
 	int			input_fd;
 	int			output_fd;
+	int			count;
 	pid_t		pid;
 }				t_cmd;
 typedef struct s_pipeline_ctx
@@ -127,7 +128,7 @@ void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
 int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
 // cmds_handler
-void			ft_execute(t_cmd *cmd, char **env, t_free *free_value, int index);
+void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index, int pipe_fds[2]);
 int				ft_count_commands(char **tokens, int num_tokens);
 int				ft_process_one_command(char **tokens, int num_tokens, int start,
 					t_cmd *cmd);
@@ -136,7 +137,7 @@ void			execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value);
 // exec_input
 int				execute_ft_cmds_export(char **cmd, char ***env);
 int				execute_ft_cmds(char **cmd, char ***env);
-int				execute_input(char ***env, char *input, char *cwd, t_free *free_value);
+int				execute_input(char ***env, char *input, t_free *free_value);
 // exec_utils
 int				check_if_only_space(char *str);
 void			free_args(char **args);
@@ -166,6 +167,7 @@ void			copy_then_cat(char *dest, char *fstr, char *sstr);
 char			*dup_then_cat(char *src, char *sec_src);
 int				ft_stralnum(char *str);
 void			sigint_handler_2(int sig);
+char			*ft_strjoin_join(const char *s1, const char *s2, const char *s3);
 
 
 #endif

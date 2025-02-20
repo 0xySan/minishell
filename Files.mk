@@ -17,4 +17,5 @@ FILES		=	ft_env/ft_env \
 				utils \
 				cmds_handler \
 				fds_handler \
-				pipes_handler
+				pipes_handler \
+				utils2

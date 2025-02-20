@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 15:51:08 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:39:51 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 15:39:57 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	copy_then_cat(char *dest, char *fstr, char *sstr)
 char	*dup_then_cat(char *src, char *sec_src)
 {
 	char	*dest;
-	int		len;
 	int		start;
 
 	if (!src)

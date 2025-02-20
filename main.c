@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 16:14:41 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 16:51:37 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,17 @@ char	*get_relative_path(char *pwd, char **env)
 
 	home = ft_getenv(env, "HOME");
 	if (!home)
-		return (ft_strdup(pwd));
+		return (ft_strjoin_join("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", pwd,
+				": \e[m"));
 	home_len = ft_strlen(home);
 	pwd_len = ft_strlen(pwd);
 	if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
-		return (ft_strdup(pwd));
-	t_path = ft_strjoin("~", pwd + home_len);
-	r_path = ft_strjoin(t_path, ": \e[m");
+		return (ft_strjoin_join("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", pwd,
+				": \e[m"));
+	t_path = ft_strjoin_join("~", pwd + home_len, ": \e[m");
+	r_path = ft_strjoin("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", t_path);
 	free(t_path);
-	t_path = NULL;
-	t_path = ft_strjoin("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", r_path);
-	free(r_path);
-	return (t_path);
+	return (r_path);
 }
 
 /**
@@ -84,7 +83,7 @@ int	read_lines(char *cwd, char ***env)
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		if (execute_input(env, input, cwd, &free_value) == 1)
+		if (execute_input(env, input, &free_value) == 1)
 			return (ft_exit(input, *env));
 		free(input);
 	}

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 17:19:40 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 15:39:22 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	execute_ft_cmds(char **cmd, char ***env)
  * @param input The command line to execute.
  * Processes input, splits into commands, executes.
  */
-int	execute_input(char ***env, char *input, char *cwd, t_free *free_value)
+int	execute_input(char ***env, char *input, t_free *free_value)
 {
 	char	**cmd;
 	int		cmd_count;

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:41:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 08:13:28 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 15:38:33 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	ft_exit(char *input, char **env)
 {
 	char	**exit_input;
 	int		args;
-	char	*itoa_result;
 
 	if (!input)
 		return (1);

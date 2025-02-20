@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 16:44:45 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/20 16:24:05 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,20 @@ void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 		return ;
 	if (ft_strcmp(tokens[*i], "<") == 0)
 	{
-		if (cmd->input_fd != STDIN_FILENO)
+		if (cmd->input_fd != STDIN_FILENO && cmd->input_fd != -1)
 			close(cmd->input_fd);
 		cmd->input_fd = open_file(tokens[++(*i)], O_RDONLY, 0);
 	}
 	else if (ft_strcmp(tokens[*i], ">") == 0)
 	{
-		if (cmd->output_fd != STDOUT_FILENO)
+		if (cmd->output_fd != STDOUT_FILENO && cmd->output_fd != -1)
 			close(cmd->output_fd);
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	}
 	else if (ft_strcmp(tokens[*i], ">>") == 0)
 	{
-		if (cmd->output_fd != STDOUT_FILENO)
+		if (cmd->output_fd != STDOUT_FILENO && cmd->output_fd != -1)
 			close(cmd->output_fd);
 		cmd->output_fd = open_file(tokens[++(*i)],
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
