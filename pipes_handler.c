@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 17:28:07 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 00:29:17 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ void	cleanup_fds(t_cmd *cmd)
  * @param num_tokens Size of tokens array.
  * @param env Environment variables.
  */
-void	ft_parse_pipeline(char **tokens, int num_tokens, char **env, t_free *free_value)
+void	ft_parse_pipeline(char **tokens, int num_tokens,
+	char **env, t_free *free_value)
 {
 	t_cmd			*cmds;
 	int				count;

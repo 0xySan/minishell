@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 18:10:29 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 00:33:41 by hdelacou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "ft_dprintf/ft_printf.h"
 # include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
-# include <linux/limits.h>
 # include <limits.h>
+# include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -28,9 +29,8 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include "ft_dprintf/ft_printf.h"
 
-extern int	g_exit_status;
+extern int		g_exit_status;
 
 typedef struct s_cmd
 {
@@ -50,17 +50,17 @@ typedef struct s_pipeline_ctx
 
 typedef struct s_buf
 {
-	char	*buf;
-	int		len;
-	int		cap;
+	char		*buf;
+	int			len;
+	int			cap;
 }				t_buf;
 
 typedef struct s_tokens
 {
-	char	**arr;
-	int		count;
-	int		cap;
-	char	**env;
+	char		**arr;
+	int			count;
+	int			cap;
+	char		**env;
 }				t_tokens;
 
 typedef struct s_state
@@ -72,12 +72,12 @@ typedef struct s_state
 
 typedef struct s_free
 {
-    char        **parsed_input;
-    char        ***env;
-    char        *relative_path;
-    t_cmd       *cmds;      // pointer to the cmds array
-    int         cmd_count;  // number of commands allocated
-} t_free;
+	char		**parsed_input;
+	char		***env;
+	char		*relative_path;
+	t_cmd		*cmds;
+	int			cmd_count;
+}				t_free;
 
 // ft_CMDS
 // ft_cd
@@ -128,12 +128,14 @@ void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
 int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
 // cmds_handler
-void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index, int pipe_fds[2]);
+void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
+					int pipe_fds[2]);
 int				ft_count_commands(char **tokens, int num_tokens);
 int				ft_process_one_command(char **tokens, int num_tokens, int start,
 					t_cmd *cmd);
 t_cmd			*ft_parse_commands(char **tokens, int num_tokens);
-void			execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value);
+void			execute_command(t_pipeline_ctx *ctx, int index,
+					t_free *free_value);
 // exec_input
 int				execute_ft_cmds_export(char **cmd, char ***env);
 int				execute_ft_cmds(char **cmd, char ***env);
@@ -156,7 +158,8 @@ int				ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens,
 					int start);
 void			setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
 void			cleanup_fds(t_cmd *cmd);
-void			ft_parse_pipeline(char **tokens, int num_tokens, char **env, t_free *free_value);
+void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
+					t_free *free_value);
 // sighandler
 void			sigint_handler(int sig);
 void			sigquit_handler(int sig);
@@ -167,7 +170,7 @@ void			copy_then_cat(char *dest, char *fstr, char *sstr);
 char			*dup_then_cat(char *src, char *sec_src);
 int				ft_stralnum(char *str);
 void			sigint_handler_2(int sig);
-char			*ft_strjoin_join(const char *s1, const char *s2, const char *s3);
-
+char			*ft_strjoin_join(const char *s1, const char *s2,
+					const char *s3);
 
 #endif
