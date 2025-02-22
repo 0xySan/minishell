@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 08:17:52 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 16:25:27 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,14 @@ typedef struct s_free
 	int			cmd_count;
 }				t_free;
 
+typedef struct s_pid_struct
+{
+	int		index;
+	int		pipe_fds[2];
+	int		use_pipe;
+	pid_t	pid;
+}				t_pid_struct;
+
 // ft_CMDS
 // ft_cd
 void			check_if_accessible(char *path);
@@ -127,10 +135,13 @@ void			append_char(t_buf *t, char c);
 void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
 int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
-void			free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code);
+void			free_before_exit(t_pipeline_ctx *ctx, t_free *free_value,
+					int exit_code, t_pid_struct *new_pid);
 // cmds_handler
+t_pid_struct	*handle_new_pid(int index, int *pipe_fds, int use_pipe,
+					pid_t pid);
 void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
-					int pipe_fds[2]);
+					t_pid_struct *new_pid);
 int				ft_count_commands(char **tokens, int num_tokens);
 int				ft_process_one_command(char **tokens, int num_tokens, int start,
 					t_cmd *cmd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 00:32:02 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/22 16:24:56 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
  * @param free_value Structure containing pointers to allocated memory to free.
  * @param exit_code Status code to exit with.
  */
-void	free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code)
+void	free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code,
+	t_pid_struct *new_pid)
 {
 	int	i;
 
@@ -29,16 +30,9 @@ void	free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code)
 	while (i < ctx->count)
 	{
 		free(ctx->cmds[i].args);
-		if (ctx->cmds[i].input_fd != STDIN_FILENO
-			&& ctx->cmds[i].input_fd != -1)
-			close(ctx->cmds[i].input_fd);
-		if (ctx->cmds[i].output_fd != STDOUT_FILENO
-			&& ctx->cmds[i].output_fd != -1)
-			close(ctx->cmds[i].output_fd);
-		if (ctx->prev_pipe != STDIN_FILENO && ctx->prev_pipe != -1)
-			close(ctx->prev_pipe);
 		i++;
 	}
+	free(new_pid);
 	free(ctx->cmds);
 	exit(exit_code);
 }
@@ -89,6 +83,22 @@ int	ft_process_one_command(char **tokens, int num_tokens, int start, t_cmd *cmd)
 	if (i < num_tokens && ft_strcmp(tokens[i], "|") == 0)
 		i++;
 	return (i);
+}
+
+t_pid_struct	*handle_new_pid(int index, int *pipe_fds, int use_pipe,
+	pid_t pid)
+{
+	t_pid_struct	*new_pid;
+
+	new_pid = malloc(sizeof(t_pid_struct));
+	if (!new_pid)
+		exit(EXIT_FAILURE);
+	new_pid->index = index;
+	new_pid->pipe_fds[0] = pipe_fds[0];
+	new_pid->pipe_fds[1] = pipe_fds[1];
+	new_pid->use_pipe = use_pipe;
+	new_pid->pid = pid;
+	return (new_pid);
 }
 
 /**
