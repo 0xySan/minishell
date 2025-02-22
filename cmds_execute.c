@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds_execute.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/22 00:30:07 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/22 08:38:21 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	close_fds(t_pipeline_ctx *ctx, int index)
 	i = 0;
 	while (i < ctx->count)
 	{
-		if (i != index)
+		if (i != index && i > ctx->count)
 		{
 			if (ctx->cmds[i].input_fd != STDIN_FILENO
 				&& ctx->cmds[i].input_fd != -1)
@@ -63,12 +63,22 @@ void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value)
 	ctx->cmds[index].pid = pid;
 	if (pid == 0)
 	{
+		if (ctx->cmds[index].input_fd != STDIN_FILENO && ctx->cmds[index].input_fd != -1)
+			close(ctx->prev_pipe);
+		for (int i = index + 1; i < ctx->count; i++)
+		{
+			if (index < ctx->count - 1)
+			{
+				if (ctx->cmds[i].input_fd != STDIN_FILENO && ctx->cmds[i].input_fd != -1)
+					close(ctx->cmds[i].input_fd);
+				if (ctx->cmds[i].output_fd != STDOUT_FILENO && ctx->cmds[i].output_fd != -1)
+					close(ctx->cmds[i].output_fd);
+			}
+		}
 		if (index > 0 && ctx->cmds[index].input_fd == STDIN_FILENO)
 			ctx->cmds[index].input_fd = ctx->prev_pipe;
 		if (use_pipe)
 			close(pipe_fds[0]);
-		if (ctx->prev_pipe != STDIN_FILENO && ctx->prev_pipe != -1)
-			close(ctx->prev_pipe);
 		close_fds(ctx, index);
 		ft_execute(ctx, free_value, index, pipe_fds);
 		exit(EXIT_FAILURE);
@@ -78,12 +88,7 @@ void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value)
 	if (index > 0 && ctx->prev_pipe != STDIN_FILENO && ctx->prev_pipe != -1)
 		close(ctx->prev_pipe);
 	if (use_pipe)
-	{
-		close(pipe_fds[1]);
 		ctx->prev_pipe = pipe_fds[0];
-	}
-	else
-		ctx->prev_pipe = -1;
 	cleanup_fds(&ctx->cmds[index]);
 }
 
@@ -98,10 +103,8 @@ void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
 		int pipe_fds[2])
 {
 	char	*actual_cmd;
-	int		i;
 
 	(void)pipe_fds;
-	i = 0;
 	actual_cmd = NULL;
 	if (ctx->cmds[index].input_fd != STDIN_FILENO
 		&& ctx->cmds[index].input_fd != -1)

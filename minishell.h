@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 00:33:41 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/22 08:17:52 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ void			append_char(t_buf *t, char c);
 void			append_str(t_buf *t, const char *s);
 void			plus_token(t_tokens *tok, char *token);
 int				handle_special_chars(t_state *s, t_buf *t, t_tokens *tok);
+void			free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code);
 // cmds_handler
 void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
 					int pipe_fds[2]);
