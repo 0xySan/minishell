@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 16:25:27 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:24:25 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_cmd
 	int			count;
 	pid_t		pid;
 }				t_cmd;
+
 typedef struct s_pipeline_ctx
 {
 	t_cmd		*cmds;

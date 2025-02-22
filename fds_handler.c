@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 16:24:05 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 17:51:40 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,12 @@ static int	handle_here_doc(t_cmd *cmd, char *delimiter)
 	while (1)
 	{
 		line = readline("> ");
+		if (line == NULL)
+		{
+			dprintf(2, "21sh: warning: here-document %s `%s\')\n",
+				"delimited by end-of-file (wanted", delimiter);
+			break ;
+		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);

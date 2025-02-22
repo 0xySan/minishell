@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:41:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 15:38:33 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:27:06 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@ int	ft_alnum_exit(char **exit_input, char *input)
 	int		i;
 
 	i = 0;
+	if (exit_input[1][0] == '-' && exit_input[1][1] == '\0')
+	{
+		ft_dprintf(2, "21sh: exit: %s: numeric argument required\n",
+			exit_input[1]);
+		g_exit_status = 2;
+		free(input);
+		return (free_args(exit_input), 1);
+	}
 	while (exit_input[1][i])
 	{
 		if (ft_isalpha(exit_input[1][i]) || check_overflow(exit_input[1]))

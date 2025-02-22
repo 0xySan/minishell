@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:32:17 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 08:17:33 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:30:02 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	handle_space(t_state *s, t_buf *t, t_tokens *tok)
 	char	*token;
 
 	c = s->input[s->i];
-	if (s->quote == 0 && c == ' ')
+	if (s->quote == 0 && (c == ' ' || c == '\t'))
 	{
 		if (t->len > 0)
 		{

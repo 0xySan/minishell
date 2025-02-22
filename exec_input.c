@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 15:39:22 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:51:05 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,27 @@ int	execute_ft_cmds(char **cmd, char ***env)
 	return (0);
 }
 
+int	syntax_error(char **cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i + 1])
+	{
+		if (cmd[i][0] == '<' && cmd[i + 1][0] == '<')
+			return (g_exit_status = 2 << 8,
+				dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
+		if (cmd[i][0] == '>' && cmd[i + 1][0] == '>')
+			return (g_exit_status = 2 << 8,
+				dprintf(2, "21sh: syntax error near unexpected tokenr\n"), 1);
+		if (cmd[i][0] == '|' && cmd[i + 1][0] == '|')
+			return (g_exit_status = 2 << 8,
+				dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
+		i++;
+	}
+	return (0);
+}
+
 /**
  * Execute a single command line.
  * @param env The environment variables.
@@ -63,9 +84,8 @@ int	execute_input(char ***env, char *input, t_free *free_value)
 	free_value->parsed_input = cmd;
 	if (cmd == NULL || cmd[0] == NULL)
 		return (0);
-	if ((cmd[0][0] == '<' || cmd[0][0] == '>' || cmd[0][0] == '|') && !cmd[1])
-		return (g_exit_status = 1 << 8, dprintf(2, "21sh: parse error\n"),
-			free_args(cmd), 0);
+	if (syntax_error(cmd))
+		return (free_args(cmd), 0);
 	cmd_count = count_args(cmd);
 	if (ft_count_commands(cmd, cmd_count) == 1)
 	{
