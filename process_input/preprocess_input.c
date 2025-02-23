@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 03:44:26 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:43:42 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	process_char(t_state *s, t_buf *t, t_tokens *tok, int *exit_code)
 	append_char(t, s->input[s->i]);
 }
 
-void	parse_loop(const char *in, t_buf *t, t_tokens *tok, int *exit_code)
+int	parse_loop(const char *in, t_buf *t, t_tokens *tok, int *exit_code)
 {
 	t_state	s;
 	char	*token;
@@ -103,6 +103,13 @@ void	parse_loop(const char *in, t_buf *t, t_tokens *tok, int *exit_code)
 		token = strdup(t->buf);
 		plus_token(tok, token);
 	}
+	if (s.quote != 0)
+	{
+		ft_putstr_fd("minishell: syntax error\n", STDERR_FILENO);
+		*exit_code = 2;
+		return (1);
+	}
+	return (0);
 }
 
 char	**parse_input(const char *input, char **env, int *exit_code)
@@ -118,7 +125,8 @@ char	**parse_input(const char *input, char **env, int *exit_code)
 	t.len = 0;
 	t.buf = malloc(t.cap);
 	t.buf[0] = '\0';
-	parse_loop(input, &t, &tokens, exit_code);
+	if (parse_loop(input, &t, &tokens, exit_code))
+		return (free_args(tokens.arr), NULL);
 	free(t.buf);
 	tokens.arr[tokens.count] = NULL;
 	return (tokens.arr);
