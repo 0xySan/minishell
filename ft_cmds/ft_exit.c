@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:41:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 18:27:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:46:06 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_overflow(const char *str)
 	return (0);
 }
 
-int	ft_alnum_exit(char **exit_input, char *input)
+int	ft_alnum_exit(char **exit_input, char *input, int *exit_code)
 {
 	int		i;
 
@@ -35,7 +35,7 @@ int	ft_alnum_exit(char **exit_input, char *input)
 	{
 		ft_dprintf(2, "21sh: exit: %s: numeric argument required\n",
 			exit_input[1]);
-		g_exit_status = 2;
+		*exit_code = 2;
 		free(input);
 		return (free_args(exit_input), 1);
 	}
@@ -45,7 +45,7 @@ int	ft_alnum_exit(char **exit_input, char *input)
 		{
 			ft_dprintf(2, "21sh: exit: %s: numeric argument required\n",
 				exit_input[1]);
-			g_exit_status = 2;
+			*exit_code = 2;
 			free(input);
 			free_args(exit_input);
 			return (1);
@@ -55,7 +55,7 @@ int	ft_alnum_exit(char **exit_input, char *input)
 	return (0);
 }
 
-int	ft_exit(char *input, char **env)
+int	ft_exit(char *input, char **env, int *exit_code)
 {
 	char	**exit_input;
 	int		args;
@@ -63,21 +63,21 @@ int	ft_exit(char *input, char **env)
 	if (!input)
 		return (1);
 	add_history(input);
-	exit_input = parse_input(input, env);
+	exit_input = parse_input(input, env, exit_code);
 	args = count_args(exit_input);
 	if (!exit_input[1])
 		return (free(input), free_args(exit_input), 1);
-	if (ft_alnum_exit(exit_input, input))
+	if (ft_alnum_exit(exit_input, input, exit_code))
 		return (1);
 	if (args > 2)
 	{
 		ft_dprintf(2, "21sh: exit too many arguments\n");
-		g_exit_status = 1 << 8;
+		*exit_code = 1 << 8;
 		free(input);
 		free_args(exit_input);
 		return (0);
 	}
-	g_exit_status = ft_atoi(exit_input[1]);
+	*exit_code = ft_atoi(exit_input[1]);
 	free(input);
 	free_args(exit_input);
 	return (1);

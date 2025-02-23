@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 18:24:25 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 01:07:01 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-extern int		g_exit_status;
+extern volatile sig_atomic_t	g_signal;
 
 typedef struct s_cmd
 {
@@ -38,6 +38,8 @@ typedef struct s_cmd
 	int			input_fd;
 	int			output_fd;
 	int			count;
+	char		**env;
+	int			*exit_code;
 	pid_t		pid;
 }				t_cmd;
 
@@ -78,6 +80,7 @@ typedef struct s_free
 	char		*relative_path;
 	t_cmd		*cmds;
 	int			cmd_count;
+	int			*exit_code;
 }				t_free;
 
 typedef struct s_pid_struct
@@ -90,17 +93,17 @@ typedef struct s_pid_struct
 
 // ft_CMDS
 // ft_cd
-void			check_if_accessible(char *path);
+void			check_if_accessible(char *path, int *exit_code);
 char			*ft_get_current_dir(void);
-void			ft_change_dir(char **cmd, char **env);
-int				ft_cd(char **cmd, char ***env);
+void			ft_change_dir(char **cmd, char **env, int *exit_code);
+int				ft_cd(char **cmd, char ***env, int *exit_code);
 // ft_echo
 int				check_if_only_char(char *str, int start, char car);
-void			ft_echo(char **cmd);
+void			ft_echo(char **cmd, int *exit_code);
 // ft_exit
-int				ft_exit(char *input, char **env);
+int				ft_exit(char *input, char **env, int *exit_code);
 // ft_export
-int				execute_ft_cmds_export(char **cmd, char ***env);
+int				execute_ft_cmds_export(char **cmd, char ***env, int *exit_code);
 // ft_ENV
 // dup_env
 char			**dup_all_env(char **env);
@@ -108,13 +111,13 @@ char			**dup_all_env(char **env);
 void			ft_change_env(char **env, char *old_env, char *new_env);
 // ft_env
 char			*ft_getenv(char **env, char *search_env);
-void			ft_show_env(char **env);
+void			ft_show_env(char **env, int *exit_code);
 void			ft_free_env(char **env);
 // ft_export_n_unset
 char			**realloc_tab(char ***env);
 void			ft_show_export(char **env);
 void			ft_export(char ***env, char *old_env, char *new_env);
-void			ft_unset(char **env, char **rev_env);
+void			ft_unset(char **env, char **rev_env, int *exit_code);
 // f_sort_array
 void			copy_array(char **dest, char **src);
 void			swap(char **a, char **b);
@@ -124,13 +127,15 @@ void			sort_strings(char **array);
 int				handle_double_quote(t_state *s);
 int				handle_single_quote(t_state *s);
 int				handle_space(t_state *s, t_buf *t, t_tokens *tok);
-int				handle_error(t_state *s, t_buf *t, t_tokens *tok);
+int				handle_error(t_state *s, t_buf *t, t_tokens *tok,
+					int *exit_code);
 int				handle_dollar(t_state *s, t_buf *t, t_tokens *tok);
 // preprocess_input
 void			insert_var_value(char *value, t_buf *t, t_tokens *tok);
 void			expand_var(t_state *s, t_buf *t, t_tokens *tok);
-void			process_char(t_state *s, t_buf *t, t_tokens *tok);
-char			**parse_input(const char *input, char **env);
+void			process_char(t_state *s, t_buf *t, t_tokens *tok,
+					int *exit_code);
+char			**parse_input(const char *input, char **env, int *exit_code);
 // prepocess_utils
 void			append_char(t_buf *t, char c);
 void			append_str(t_buf *t, const char *s);
@@ -146,13 +151,15 @@ void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
 int				ft_count_commands(char **tokens, int num_tokens);
 int				ft_process_one_command(char **tokens, int num_tokens, int start,
 					t_cmd *cmd);
-t_cmd			*ft_parse_commands(char **tokens, int num_tokens);
+t_cmd			*ft_parse_commands(char **tokens, int num_tokens, char **env,
+					int *exit_code);
 void			execute_command(t_pipeline_ctx *ctx, int index,
-					t_free *free_value);
+					t_free *free_value, int safe_stdin);
 // exec_input
-int				execute_ft_cmds_export(char **cmd, char ***env);
-int				execute_ft_cmds(char **cmd, char ***env);
-int				execute_input(char ***env, char *input, t_free *free_value);
+int				execute_ft_cmds_export(char **cmd, char ***env, int *exit_code);
+int				execute_ft_cmds(char **cmd, char ***env, int *exit_code);
+int				execute_input(char ***env, char *input, t_free *free_value,
+					int *exit_code);
 // exec_utils
 int				check_if_only_space(char *str);
 void			free_args(char **args);
@@ -163,7 +170,7 @@ void			ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
 // main
 void			print_graffiti(void);
 char			*get_relative_path(char *pwd, char **env);
-int				read_lines(char *cwd, char ***env);
+int				read_lines(char *cwd, char ***env, int *exit_code);
 int				main(int argc, char **argv, char **env);
 // pipes_handler
 int				ft_count_args(char **tokens, int num_tokens, int start);
@@ -175,14 +182,14 @@ void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 					t_free *free_value);
 // sighandler
 void			sigint_handler(int sig);
-void			sigquit_handler(int sig);
+void			setup_signals(int mode);
+int				wait_ignore(pid_t pid);
 // utils
 int				count_args(char **args);
 int				count_chars(char *str, char chars);
 void			copy_then_cat(char *dest, char *fstr, char *sstr);
 char			*dup_then_cat(char *src, char *sec_src);
 int				ft_stralnum(char *str);
-void			sigint_handler_2(int sig);
 char			*ft_strjoin_join(const char *s1, const char *s2,
 					const char *s3);
 

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 14:37:56 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:36:41 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	expand_var(t_state *s, t_buf *t, t_tokens *tok)
 	insert_var_value(value, t, tok);
 }
 
-void	process_char(t_state *s, t_buf *t, t_tokens *tok)
+void	process_char(t_state *s, t_buf *t, t_tokens *tok, int *exit_code)
 {
 	if (handle_space(s, t, tok))
 		return ;
@@ -78,14 +78,14 @@ void	process_char(t_state *s, t_buf *t, t_tokens *tok)
 			return (insert_var_value(getenv("HOME"), t, tok));
 		return (insert_var_value(ft_getenv(tok->env, "HOME"), t, tok));
 	}
-	if (handle_error(s, t, tok))
+	if (handle_error(s, t, tok, exit_code))
 		return ;
 	if (handle_dollar(s, t, tok))
 		return ;
 	append_char(t, s->input[s->i]);
 }
 
-void	parse_loop(const char *in, t_buf *t, t_tokens *tok)
+void	parse_loop(const char *in, t_buf *t, t_tokens *tok, int *exit_code)
 {
 	t_state	s;
 	char	*token;
@@ -95,7 +95,7 @@ void	parse_loop(const char *in, t_buf *t, t_tokens *tok)
 	s.quote = 0;
 	while (s.input[s.i])
 	{
-		process_char(&s, t, tok);
+		process_char(&s, t, tok, exit_code);
 		s.i++;
 	}
 	if (t->len > 0)
@@ -105,7 +105,7 @@ void	parse_loop(const char *in, t_buf *t, t_tokens *tok)
 	}
 }
 
-char	**parse_input(const char *input, char **env)
+char	**parse_input(const char *input, char **env, int *exit_code)
 {
 	t_tokens	tokens;
 	t_buf		t;
@@ -118,7 +118,7 @@ char	**parse_input(const char *input, char **env)
 	t.len = 0;
 	t.buf = malloc(t.cap);
 	t.buf[0] = '\0';
-	parse_loop(input, &t, &tokens);
+	parse_loop(input, &t, &tokens, exit_code);
 	free(t.buf);
 	tokens.arr[tokens.count] = NULL;
 	return (tokens.arr);

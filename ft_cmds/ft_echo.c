@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:56:24 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/16 06:27:22 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:44:13 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	check_if_only_char(char *str, int start, char car)
  * @param cmd: A 2D array of strings, where the first element is the command name
  * "echo", and the rest of the elements are the command arguments.
  */
-void	ft_echo(char **cmd)
+void	ft_echo(char **cmd, int *exit_code)
 {
 	int	i;
 	int	v;
@@ -63,5 +63,5 @@ void	ft_echo(char **cmd)
 		printf("%s", cmd[i]);
 	if (v == 0)
 		printf("\n");
-	g_exit_status = 0;
+	*exit_code = 0;
 }

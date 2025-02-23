@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:40:51 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/23 00:44:39 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,12 @@ char	*ft_getenv(char **env, char *search_env)
  * @brief Prints all environment variables in given environment.
  * @param env The environment variables.
  */
-void	ft_show_env(char **env)
+void	ft_show_env(char **env, int *exit_code)
 {
 	int	i;
 
 	i = 0;
+	*exit_code = 0;
 	while (env[i])
 	{
 		printf("%s\n", env[i]);

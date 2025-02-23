@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 15:38:22 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:43:49 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,11 +101,12 @@ void	ft_unset_helper(char **env, char *rev_env)
  * @param env The environment variables.
  * @param rev_env The name of the variable to remove.
  */
-void	ft_unset(char **env, char **rev_env)
+void	ft_unset(char **env, char **rev_env, int *exit_code)
 {
 	int		i;
 
 	i = 0;
+	*exit_code = 0;
 	while (rev_env[i])
 	{
 		ft_unset_helper(env, rev_env[i]);

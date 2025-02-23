@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/18 05:34:32 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:42:56 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * @brief Change to the directory if the path is accessible.
  * @param path Directory path to check.
  */
-void	check_if_accessible(char *path)
+void	check_if_accessible(char *path, int *exit_code)
 {
 	struct stat	statbuf;
 
@@ -24,14 +24,14 @@ void	check_if_accessible(char *path)
 	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
 	{
 		chdir(path);
-		g_exit_status = 0;
+		*exit_code = 0;
 		return ;
 	}
 	if (access(path, F_OK) == -1)
 		dprintf(2, "cd: no such file or directory: %s\n", path);
 	else
 		dprintf(2, "cd: not a directory: %s\n", path);
-	g_exit_status = 1 << 8;
+	*exit_code = 1 << 8;
 }
 
 /**
@@ -58,7 +58,7 @@ char	*ft_get_current_dir(void)
  * @param cmd The array of command arguments.
  * @param env The environment variables.
  */
-void	ft_change_dir(char **cmd, char **env)
+void	ft_change_dir(char **cmd, char **env, int *exit_code)
 {
 	char	*oldpwd;
 	char	*home;
@@ -70,20 +70,20 @@ void	ft_change_dir(char **cmd, char **env)
 		if (!home)
 		{
 			ft_dprintf(2, "21sh: cd: HOME not set\n");
-			g_exit_status = 1 << 8;
+			*exit_code = 1 << 8;
 			return ;
 		}
-		check_if_accessible(home);
-		g_exit_status = 0;
+		check_if_accessible(home, exit_code);
+		*exit_code = 0;
 	}
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
 		chdir(oldpwd);
 		printf("%s\n", oldpwd);
-		g_exit_status = 0;
+		*exit_code = 0;
 	}
 	else
-		check_if_accessible(cmd[1]);
+		check_if_accessible(cmd[1], exit_code);
 }
 
 /**ft_
@@ -95,7 +95,7 @@ void	ft_change_dir(char **cmd, char **env)
  * If no path is given, changes to $HOME. If '-', changes to
  * $OLDPWD and prints it.
  */
-int	ft_cd(char **cmd, char ***env)
+int	ft_cd(char **cmd, char ***env, int *exit_code)
 {
 	char	*current_pwd;
 
@@ -104,7 +104,7 @@ int	ft_cd(char **cmd, char ***env)
 	if (count_args(cmd) > 2)
 		return (printf("cd: too many arguments\n"), 1);
 	current_pwd = ft_getenv(*env, "PWD");
-	ft_change_dir(cmd, *env);
+	ft_change_dir(cmd, *env, exit_code);
 	ft_export(env, "OLDPWD", current_pwd);
 	current_pwd = ft_get_current_dir();
 	if (current_pwd)

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:32:17 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/22 18:30:02 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:36:42 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	handle_dollar(t_state *s, t_buf *t, t_tokens *tok)
 	return (0);
 }
 
-int	handle_error(t_state *s, t_buf *t, t_tokens *tok)
+int	handle_error(t_state *s, t_buf *t, t_tokens *tok, int *exit_code)
 {
 	char	*itoa_result;
 
@@ -33,7 +33,7 @@ int	handle_error(t_state *s, t_buf *t, t_tokens *tok)
 		s->i++;
 		if (s->quote == 1)
 			return (insert_var_value("$?", t, tok), 1);
-		itoa_result = ft_itoa(WEXITSTATUS(g_exit_status));
+		itoa_result = ft_itoa(WEXITSTATUS(*exit_code));
 		insert_var_value(itoa_result, t, tok);
 		free(itoa_result);
 		return (1);

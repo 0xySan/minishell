@@ -6,13 +6,11 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 16:51:37 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:40:11 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	g_exit_status;
 
 /**
  * Print a stylized ASCII art graffiti to the console.
@@ -58,6 +56,20 @@ char	*get_relative_path(char *pwd, char **env)
 	return (r_path);
 }
 
+void	sigcode(int *exit_code)
+{
+	if (g_signal == SIGINT)
+	{
+		g_signal = 0;
+		*exit_code = 130 << 8;
+	}
+	if (g_signal == SIGQUIT)
+	{
+		g_signal = 0;
+		*exit_code = 131 << 8;
+	}
+}
+
 /**
  * Reads user input and executes it.
  * @param cwd The current working directory.
@@ -65,26 +77,29 @@ char	*get_relative_path(char *pwd, char **env)
  * @param exit_status The exit status of the last executed command.
  * @return 1 if the user wants to exit the shell, else 0.
  */
-int	read_lines(char *cwd, char ***env)
+int	read_lines(char *cwd, char ***env, int *exit_code)
 {
 	char	*input;
 	char	*rev_path;
 	t_free	free_value;
 
+	setup_signals(1);
 	rev_path = get_relative_path(cwd, *env);
 	free_value.relative_path = rev_path;
+	free_value.exit_code = exit_code;
 	input = readline(rev_path);
+	sigcode(exit_code);
 	if (input == 0 || (!strncmp(input, "exit", 4)
 			&& ft_strlen(input) >= 4))
 	{
 		free(rev_path);
-		return (ft_exit(input, *env));
+		return (ft_exit(input, *env, exit_code));
 	}
 	if (input && check_if_only_space(input))
 	{
 		add_history(input);
-		if (execute_input(env, input, &free_value) == 1)
-			return (ft_exit(input, *env));
+		if (execute_input(env, input, &free_value, exit_code) == 1)
+			return (ft_exit(input, *env, exit_code));
 		free(input);
 	}
 	free(rev_path);
@@ -103,23 +118,22 @@ int	read_lines(char *cwd, char ***env)
 int	main(int argc, char **argv, char **env)
 {
 	char	cwd[PATH_MAX];
+	int		exit_code;
 
 	(void)argc;
 	(void)argv;
 	printf("\033[H\033[J");
 	print_graffiti();
-	g_exit_status = 0;
+	exit_code = 0;
 	env = dup_all_env(env);
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, sigquit_handler);
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
 			exit(1);
-		if (read_lines(cwd, &env))
+		if (read_lines(cwd, &env, &exit_code))
 			break ;
 	}
 	rl_clear_history();
 	ft_free_env(env);
-	return (g_exit_status);
+	return (exit_code);
 }

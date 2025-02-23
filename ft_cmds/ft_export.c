@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:40:25 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/20 15:39:07 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 00:45:23 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*export_util_func(char *word)
 	return (r_value);
 }
 
-void	check_exportalnum(char **cmd)
+void	check_exportalnum(char **cmd, int *exit_code)
 {
 	char	*export_util;
 
@@ -44,11 +44,11 @@ void	check_exportalnum(char **cmd)
 		export_util = ft_strdup(cmd[1]);
 	if (!ft_stralnum(export_util) || !ft_isalpha(cmd[1][0]))
 	{
-		g_exit_status = 1 << 8;
+		*exit_code = 1 << 8;
 		dprintf(2, "21sh: export: `%s\': not a valid identifier\n", cmd[1]);
 	}
 	else
-		g_exit_status = 0;
+		*exit_code = 0;
 	free(export_util);
 }
 
@@ -60,7 +60,7 @@ void	check_exportalnum(char **cmd)
  * Handles the export command. Prints current environment if no args provided;
  * adds variables to environment if args are given.
  */
-int	execute_ft_cmds_export(char **cmd, char ***env)
+int	execute_ft_cmds_export(char **cmd, char ***env, int *exit_code)
 {
 	char	*export_util;
 	int		i;
@@ -68,7 +68,7 @@ int	execute_ft_cmds_export(char **cmd, char ***env)
 	i = 1;
 	if (!cmd[i])
 		return (ft_export(env, NULL, NULL), 1);
-	check_exportalnum(cmd);
+	check_exportalnum(cmd, exit_code);
 	while (cmd[i])
 	{
 		if (!ft_strchr(cmd[i++], '='))
