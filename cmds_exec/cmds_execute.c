@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/23 06:11:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 06:14:44 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
 	}
 	else if (new_pid->pid < 0)
 		exit(EXIT_FAILURE);
-	if (new_pid->use_pipe && ctx->cmds[new_pid->index].input_fd != STDIN_FILENO)
+	if (new_pid->use_pipe && ctx->cmds[new_pid->index].input_fd == -1)
 		close(new_pid->pipe_fds[0]);
 	wait_ignore(new_pid->pid, free_value->exit_code);
 }
