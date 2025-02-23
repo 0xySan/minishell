@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 00:36:41 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 03:44:26 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	process_char(t_state *s, t_buf *t, t_tokens *tok, int *exit_code)
 {
 	if (handle_space(s, t, tok))
 		return ;
-	if (handle_single_quote(s))
+	if (handle_single_quote(s, tok))
 		return ;
-	if (handle_double_quote(s))
+	if (handle_double_quote(s, tok))
 		return ;
 	if (handle_special_chars(s, t, tok))
 		return ;

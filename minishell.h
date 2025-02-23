@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 02:10:00 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:34:31 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ void			swap(char **a, char **b);
 void			sort_strings(char **array);
 // FT_PROCESS_INPUT
 // handles
-int				handle_double_quote(t_state *s);
-int				handle_single_quote(t_state *s);
+int				handle_double_quote(t_state *s, t_tokens *to);
+int				handle_single_quote(t_state *s, t_tokens *to);
 int				handle_space(t_state *s, t_buf *t, t_tokens *tok);
 int				handle_error(t_state *s, t_buf *t, t_tokens *tok,
 					int *exit_code);
@@ -160,6 +160,7 @@ int				execute_ft_cmds_export(char **cmd, char ***env, int *exit_code);
 int				execute_ft_cmds(char **cmd, char ***env, int *exit_code);
 int				execute_input(char ***env, char *input, t_free *free_value,
 					int *exit_code);
+int				handle_sigint(t_cmd	*cmds);
 // exec_utils
 int				check_if_only_space(char *str);
 void			free_args(char **args);
@@ -182,7 +183,7 @@ void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 // sighandler
 void			sigint_handler(int sig);
 void			setup_signals(int mode);
-int				wait_ignore(pid_t pid);
+int				wait_ignore(pid_t pid, int *exit_code);
 // utils
 void			edit_lvl(char **env);
 int				count_args(char **args);

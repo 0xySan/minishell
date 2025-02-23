@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:20:33 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:00:51 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,7 @@ static int	process_here_doc_loop(int *pipe_fd, t_cmd *cmd, char *delimiter,
 		i = 0;
 		parsed_input = parse_input(line, cmd->env, exit_code);
 		while (parsed_input[i] != NULL)
-		{
 			ft_dprintf(pipe_fd[1], "%s ", parsed_input[i++]);
-		}
 		ft_dprintf(pipe_fd[1], "\n");
 		free_args(parsed_input);
 		free(line);
@@ -94,6 +92,8 @@ static int	handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code)
 	int		pipe_fd[2];
 	int		ret;
 
+	if (cmd->input_fd != STDIN_FILENO && cmd->input_fd != -1)
+		close(cmd->input_fd);
 	setup_signals(2);
 	pipe(pipe_fd);
 	if (delimiter == NULL && cmd->input_fd != -1)

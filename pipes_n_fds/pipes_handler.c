@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:20:39 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:11:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,11 @@ void	cleanup_fds(t_cmd *cmd)
 		close(cmd->output_fd);
 }
 
-void	cleanup_pipeline(t_cmd *cmds, int count, int safe_stdin)
+void	cleanup_pipeline(t_cmd *cmds, int count, int safe_stdin, int *exit_code)
 {
 	int	i;
-	int	exit_code;
 
-	i = -1;
-	while (++i < count)
-		waitpid(cmds[i].pid, &exit_code, WUNTRACED);
+	(void)exit_code;
 	i = -1;
 	while (++i < count)
 		free(cmds[i].args);
@@ -119,7 +116,6 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 	int				i;
 
 	i = -1;
-	g_signal = 0;
 	count = ft_count_commands(tokens, num_tokens);
 	safe_stdin = dup(STDIN_FILENO);
 	cmds = ft_parse_commands(tokens, num_tokens, env, free_value->exit_code);
@@ -135,5 +131,5 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 	ctx.prev_pipe = STDIN_FILENO;
 	while (++i < ctx.count)
 		execute_command(&ctx, i, free_value, safe_stdin);
-	cleanup_pipeline(ctx.cmds, ctx.count, safe_stdin);
+	cleanup_pipeline(ctx.cmds, ctx.count, safe_stdin, free_value->exit_code);
 }

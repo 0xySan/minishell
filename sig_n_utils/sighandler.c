@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:44:57 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:20:44 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:25:18 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,18 @@ void	wait_pid_ignore_signals(pid_t pid, int *exit_code)
 	sigaction(SIGQUIT, &old_sigquit, NULL);
 }
 
-int	wait_ignore(pid_t pid)
+int	wait_ignore(pid_t pid, int *exit_code)
 {
-	int	exit_code;
-
-	wait_pid_ignore_signals(pid, &exit_code);
-	if (WIFSIGNALED(exit_code))
+	wait_pid_ignore_signals(pid, exit_code);
+	if (WIFSIGNALED(*exit_code))
 	{
-		g_signal = WTERMSIG(exit_code);
+		g_signal = WTERMSIG(*exit_code);
 		if (g_signal == SIGQUIT)
-			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			ft_dprintf(2, "Quit (core dumped)\n");
 		else if (g_signal == SIGINT)
-			ft_putstr_fd("\n", STDERR_FILENO);
+			ft_dprintf(2, "\n");
 	}
-	if (WIFEXITED(exit_code))
-		return (WEXITSTATUS(exit_code));
+	if (WIFEXITED(*exit_code))
+		return (WEXITSTATUS(*exit_code));
 	return (128 + g_signal);
 }

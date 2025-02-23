@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:46:49 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 02:10:47 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:35:30 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	edit_lvl(char **env)
 	char	*lvl;
 	int		i;
 	int		lvl_int;
-	char 	*itoa_value;
+	char	*itoa_value;
 
 	lvl = ft_getenv(env, "SHLVL");
 	if (!lvl)

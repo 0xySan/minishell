@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/23 01:17:05 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:37:08 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
 	}
 	else if (new_pid->pid < 0)
 		exit(EXIT_FAILURE);
-	wait_ignore(new_pid->pid);
+	wait_ignore(new_pid->pid, free_value->exit_code);
 }
 
 /**
@@ -140,6 +140,8 @@ void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
 		free_before_exit(ctx, free_value, 0, new_pid);
 	if (actual_cmd)
 		execve(actual_cmd, ctx->cmds[index].args, ctx->env);
-	ft_dprintf(2, "21sh: command not found : %s\n", ctx->cmds[index].args[0]);
+	ft_dprintf(2, "21sh: command not found : '%s'\n", ctx->cmds[index].args[0]);
+	g_signal = 127;
+	free(actual_cmd);
 	free_before_exit(ctx, free_value, 127, new_pid);
 }

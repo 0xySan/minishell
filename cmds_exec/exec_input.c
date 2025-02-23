@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:17:17 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:34:44 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,17 @@ int	execute_input(char ***env, char *input, t_free *free_value, int *exit_code)
 	}
 	ft_parse_pipeline(cmd, cmd_count, *env, free_value);
 	free_args(cmd);
+	return (0);
+}
+
+int	handle_sigint(t_cmd	*cmds)
+{
+	if (g_signal == SIGINT)
+	{
+		if (cmds->args)
+			free(cmds->args);
+		free(cmds);
+		return (1);
+	}
 	return (0);
 }

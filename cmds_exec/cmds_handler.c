@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:17:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 04:36:08 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens, char **env,
 	cmd_index = -1;
 	while (i < num_tokens && ++cmd_index < cmd_count)
 	{
-		if (g_signal == SIGINT)
-			return (free(cmds), NULL);
+		if (handle_sigint(cmds))
+			return (NULL);
 		cmds[cmd_index].input_fd = STDIN_FILENO;
 		cmds[cmd_index].output_fd = STDOUT_FILENO;
 		cmds[cmd_index].count = cmd_count;

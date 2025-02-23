@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:32:17 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 00:36:42 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 03:44:44 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,20 @@ int	handle_space(t_state *s, t_buf *t, t_tokens *tok)
 	return (0);
 }
 
-int	handle_single_quote(t_state *s)
+int	handle_single_quote(t_state *s, t_tokens *tok)
 {
 	char	c;
 
 	c = s->input[s->i];
 	if (c == '\'' && s->quote != 2)
 	{
-		if (s->quote == 1)
+		if (s->input[s->i + 1] && s->input[s->i + 1] == '\'')
+		{
+			plus_token(tok, ft_strdup("\0"));
+			s->i++;
+			s->quote = 0;
+		}
+		else if (s->quote == 1)
 			s->quote = 0;
 		else
 			s->quote = 1;
@@ -77,14 +83,20 @@ int	handle_single_quote(t_state *s)
 	return (0);
 }
 
-int	handle_double_quote(t_state *s)
+int	handle_double_quote(t_state *s, t_tokens *tok)
 {
 	char	c;
 
 	c = s->input[s->i];
 	if (c == '"' && s->quote != 1)
 	{
-		if (s->quote == 2)
+		if (s->input[s->i + 1] && s->input[s->i + 1] == '"')
+		{
+			plus_token(tok, ft_strdup("\0"));
+			s->i++;
+			s->quote = 0;
+		}
+		else if (s->quote == 2)
 			s->quote = 0;
 		else
 			s->quote = 2;
