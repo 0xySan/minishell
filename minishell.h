@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:34:31 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 05:51:04 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void			free_before_exit(t_pipeline_ctx *ctx, t_free *free_value,
 // cmds_handler
 t_pid_struct	*handle_new_pid(int index, int *pipe_fds, int use_pipe,
 					pid_t pid);
-void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
+void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value,
 					t_pid_struct *new_pid);
 int				ft_count_commands(char **tokens, int num_tokens);
 int				ft_process_one_command(char **tokens, int num_tokens, int start,

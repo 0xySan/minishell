@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:36:08 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 06:12:12 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	ft_process_one_command(char **tokens, int num_tokens, int start, t_cmd *cmd)
 	int	i;
 
 	arg_count = ft_count_args(tokens, num_tokens, start);
-	cmd->args = malloc((arg_count + 1) * sizeof(char *));
+	cmd->args = malloc((arg_count * 2 + 1) * sizeof(char *));
 	if (!cmd->args)
 		exit(EXIT_FAILURE);
 	i = ft_fill_args(cmd, tokens, num_tokens, start);

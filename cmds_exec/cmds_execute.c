@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/23 04:37:08 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 06:11:11 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,13 @@ void	handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
 			ctx->cmds[new_pid->index].input_fd = ctx->prev_pipe;
 		if (new_pid->use_pipe)
 			close(new_pid->pipe_fds[0]);
-		ft_execute(ctx, free_value, new_pid->index, new_pid);
+		ft_execute(ctx, free_value, new_pid);
 		exit(EXIT_FAILURE);
 	}
 	else if (new_pid->pid < 0)
 		exit(EXIT_FAILURE);
+	if (new_pid->use_pipe && ctx->cmds[new_pid->index].input_fd != STDIN_FILENO)
+		close(new_pid->pipe_fds[0]);
 	wait_ignore(new_pid->pid, free_value->exit_code);
 }
 
@@ -97,19 +99,31 @@ void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value,
 	cleanup_fds(&ctx->cmds[index]);
 }
 
-void	handle_dup2(t_pipeline_ctx *ctx, int index)
+void	handle_dup2(t_pipeline_ctx *ctx, t_free *free_value,
+	t_pid_struct *new_pid)
 {
-	if (ctx->cmds[index].input_fd != STDIN_FILENO
-		&& ctx->cmds[index].input_fd != -1)
+	if (ctx->cmds[new_pid->index].input_fd == -1
+		|| ctx->cmds[new_pid->index].output_fd == -1)
 	{
-		dup2(ctx->cmds[index].input_fd, STDIN_FILENO);
-		close(ctx->cmds[index].input_fd);
+		if (ctx->cmds[new_pid->index].output_fd != STDOUT_FILENO
+			&& ctx->cmds[new_pid->index].output_fd != -1)
+			close(ctx->cmds[new_pid->index].output_fd);
+		if (ctx->cmds[new_pid->index].input_fd != STDIN_FILENO
+			&& ctx->cmds[new_pid->index].input_fd != -1)
+			close(ctx->cmds[new_pid->index].input_fd);
+		free_before_exit(ctx, free_value, 1, new_pid);
 	}
-	if (ctx->cmds[index].output_fd != STDOUT_FILENO
-		&& ctx->cmds[index].output_fd != -1)
+	if (ctx->cmds[new_pid->index].input_fd != STDIN_FILENO
+		&& ctx->cmds[new_pid->index].input_fd != -1)
 	{
-		dup2(ctx->cmds[index].output_fd, STDOUT_FILENO);
-		close(ctx->cmds[index].output_fd);
+		dup2(ctx->cmds[new_pid->index].input_fd, STDIN_FILENO);
+		close(ctx->cmds[new_pid->index].input_fd);
+	}
+	if (ctx->cmds[new_pid->index].output_fd != STDOUT_FILENO
+		&& ctx->cmds[new_pid->index].output_fd != -1)
+	{
+		dup2(ctx->cmds[new_pid->index].output_fd, STDOUT_FILENO);
+		close(ctx->cmds[new_pid->index].output_fd);
 	}
 }
 
@@ -120,27 +134,28 @@ void	handle_dup2(t_pipeline_ctx *ctx, int index)
  * @param cmd t_cmd structure with command and arguments.
  * @param env Environment variables array.
  */
-void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value, int index,
+void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value,
 	t_pid_struct *new_pid)
 {
 	char	*actual_cmd;
 
 	actual_cmd = NULL;
-	handle_dup2(ctx, index);
-	if (ctx->cmds[index].args && ctx->cmds[index].args[0])
+	handle_dup2(ctx, free_value, new_pid);
+	if (ctx->cmds[new_pid->index].args && ctx->cmds[new_pid->index].args[0])
 	{
-		if (execute_ft_cmds(ctx->cmds[index].args, &ctx->env,
+		if (execute_ft_cmds(ctx->cmds[new_pid->index].args, &ctx->env,
 				free_value->exit_code))
 			free_before_exit(ctx, free_value, 0, new_pid);
 		else
-			actual_cmd = get_cmd_path(ctx->cmds[index].args[0],
+			actual_cmd = get_cmd_path(ctx->cmds[new_pid->index].args[0],
 					ft_getenv(ctx->env, "PATH"));
 	}
 	else
 		free_before_exit(ctx, free_value, 0, new_pid);
 	if (actual_cmd)
-		execve(actual_cmd, ctx->cmds[index].args, ctx->env);
-	ft_dprintf(2, "21sh: command not found : '%s'\n", ctx->cmds[index].args[0]);
+		execve(actual_cmd, ctx->cmds[new_pid->index].args, ctx->env);
+	ft_dprintf(2, "21sh: command not found : '%s'\n",
+		ctx->cmds[new_pid->index].args[0]);
 	g_signal = 127;
 	free(actual_cmd);
 	free_before_exit(ctx, free_value, 127, new_pid);
