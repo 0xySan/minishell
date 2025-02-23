@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 00:40:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 02:10:18 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ int	main(int argc, char **argv, char **env)
 	print_graffiti();
 	exit_code = 0;
 	env = dup_all_env(env);
+	edit_lvl(env);
 	while (1)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)

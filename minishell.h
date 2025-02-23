@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:07:01 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 02:10:00 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ int				main(int argc, char **argv, char **env);
 int				ft_count_args(char **tokens, int num_tokens, int start);
 int				ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens,
 					int start);
-void			setup_pipe(t_pipeline_ctx *ctx, int index, int pipe_fds[2]);
 void			cleanup_fds(t_cmd *cmd);
 void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 					t_free *free_value);
@@ -185,6 +184,7 @@ void			sigint_handler(int sig);
 void			setup_signals(int mode);
 int				wait_ignore(pid_t pid);
 // utils
+void			edit_lvl(char **env);
 int				count_args(char **args);
 int				count_chars(char *str, char chars);
 void			copy_then_cat(char *dest, char *fstr, char *sstr);
