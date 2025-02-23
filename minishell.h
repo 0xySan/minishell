@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 05:51:04 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 06:22:59 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,5 +193,6 @@ char			*dup_then_cat(char *src, char *sec_src);
 int				ft_stralnum(char *str);
 char			*ft_strjoin_join(const char *s1, const char *s2,
 					const char *s3);
+void			print_ifpath_ornot(char *path);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/23 06:14:44 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 06:23:48 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,7 @@ void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value,
 		free_before_exit(ctx, free_value, 0, new_pid);
 	if (actual_cmd)
 		execve(actual_cmd, ctx->cmds[new_pid->index].args, ctx->env);
-	ft_dprintf(2, "21sh: command not found : '%s'\n",
-		ctx->cmds[new_pid->index].args[0]);
-	g_signal = 127;
+	print_ifpath_ornot(ctx->cmds[new_pid->index].args[0]);
 	free(actual_cmd);
 	free_before_exit(ctx, free_value, 127, new_pid);
 }

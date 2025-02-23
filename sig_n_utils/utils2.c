@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:46:49 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:35:30 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/23 06:26:25 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,20 @@ void	edit_lvl(char **env)
 	itoa_value = ft_itoa(lvl_int);
 	ft_change_env(env, "SHLVL", itoa_value);
 	free(itoa_value);
+}
+
+void	print_ifpath_ornot(char *path)
+{
+	struct stat	statbuf;
+
+	stat(path, &statbuf);
+	if (access(path, F_OK) != -1 && S_ISDIR(statbuf.st_mode))
+	{
+		ft_dprintf(2, "21sh: %s: Is a directory\n", path);
+		return ;
+	}
+	if (count_chars(path, '/') > 0)
+		ft_dprintf(2, "21sh: %s: No such file or directory\n", path);
+	else
+		ft_dprintf(2, "21sh: command not found: '%s'\n", path);
 }
