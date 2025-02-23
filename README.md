@@ -1,4 +1,4 @@
-![coverage](https://img.shields.io/badge/coverage-40%25-yellow)
+![coverage](https://img.shields.io/badge/coverage-101%25-299617)
 ![version](https://img.shields.io/badge/version-0.2.34-blue)
 
 # minishell
