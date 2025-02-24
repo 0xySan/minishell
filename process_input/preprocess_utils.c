@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 06:35:33 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/19 16:58:43 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 15:03:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	plus_token(t_tokens *tok, char *token)
 	if (tok->count >= tok->cap)
 	{
 		tok->cap = tok->cap * 2;
-		tok->arr = ft_realloc(tok->arr, tok->cap * sizeof(char *));
+		tok->arr = ft_realloc(tok->arr, (tok->cap * 2) * sizeof(char *));
 	}
 	tok->arr[tok->count] = token;
 	tok->count++;

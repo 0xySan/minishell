@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:34:44 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 15:04:39 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,23 @@ int	syntax_error(char **cmd, int *exit_code)
 	i = 0;
 	while (cmd[i + 1])
 	{
-		if (cmd[i][0] == '<' && cmd[i + 1][0] == '<')
+		if (cmd[i][0] == '<' && (cmd[i + 1][0] == '<' || cmd[i + 1][0] == '>'
+			|| !cmd[i + 1]))
 			return (*exit_code = 2 << 8,
-				dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
-		if (cmd[i][0] == '>' && cmd[i + 1][0] == '>')
+				ft_dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
+		if (cmd[i][0] == '>' && (cmd[i + 1][0] == '<' || cmd[i + 1][0] == '>'
+			|| !cmd[i + 1]))
 			return (*exit_code = 2 << 8,
-				dprintf(2, "21sh: syntax error near unexpected tokenr\n"), 1);
-		if (cmd[i][0] == '|' && cmd[i + 1][0] == '|')
+				ft_dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
+		if (cmd[i][0] == '|' && (cmd[i + 1][0] == '|' || !cmd[i + 1]))
 			return (*exit_code = 2 << 8,
-				dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
+				ft_dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
 		i++;
 	}
+	if (cmd[i] && (cmd[i][0] == '<' || cmd[i][0] == '>' || cmd[i][0] == '|')
+		&& !cmd[i + 1])
+		return (*exit_code = 2 << 8,
+			ft_dprintf(2, "21sh: syntax error near unexpected token\n"), 1);
 	return (0);
 }
 

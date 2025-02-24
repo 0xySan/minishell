@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:55:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:43:42 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 15:01:28 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ char	**parse_input(const char *input, char **env, int *exit_code)
 
 	tokens.count = 0;
 	tokens.cap = 10;
-	tokens.arr = ft_calloc(tokens.cap, sizeof(char *));
+	tokens.arr = ft_calloc((tokens.cap * 2), sizeof(char *));
 	tokens.env = env;
 	t.cap = strlen(input) + 1;
 	t.len = 0;
