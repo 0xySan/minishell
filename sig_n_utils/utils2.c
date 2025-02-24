@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:46:49 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 19:34:30 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:39:39 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,20 @@ void	print_ifpath_ornot(char *path)
 		ft_dprintf(2, "21sh: %s: No such file or directory\n", path);
 	else
 		ft_dprintf(2, "21sh: command not found: '%s'\n", path);
+}
+
+int	ft_count_first_commands(char **tokens, int num_tokens)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 1;
+	while (i < num_tokens)
+	{
+		if (ft_strcmp(tokens[i], "|") == 0  || ft_strcmp(tokens[i], ">") == 0 | ft_strcmp(tokens[i], ">>") == 0)
+			count++;
+		i++;
+	}
+	return (count);
 }

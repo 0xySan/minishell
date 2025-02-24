@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 19:06:39 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:41:14 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	execute_input(char ***env, char *input, t_free *free_value, int *exit_code)
 	if (syntax_error(cmd, exit_code))
 		return (free_args(cmd), 0);
 	cmd_count = count_args(cmd);
-	if (ft_count_commands(cmd, cmd_count) == 1)
+	if (ft_count_first_commands(cmd, cmd_count) == 1)
 	{
 		ft_change_env(*env, "_", cmd[cmd_count - 1]);
 		exit_c = execute_ft_cmds(cmd, env, exit_code);

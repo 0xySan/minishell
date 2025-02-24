@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 06:22:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:39:56 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,5 +194,6 @@ int				ft_stralnum(char *str);
 char			*ft_strjoin_join(const char *s1, const char *s2,
 					const char *s3);
 void			print_ifpath_ornot(char *path);
+int				ft_count_first_commands(char **tokens, int num_tokens);
 
 #endif

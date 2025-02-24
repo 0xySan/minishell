@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 18:43:11 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:42:06 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_count_commands(char **tokens, int num_tokens)
 	count = 1;
 	while (i < num_tokens)
 	{
-		if (ft_strcmp(tokens[i], "|") == 0 || ft_strcmp(tokens[i], ">") == 0 | ft_strcmp(tokens[i], ">>") == 0)
+		if (ft_strcmp(tokens[i], "|") == 0)
 			count++;
 		i++;
 	}
