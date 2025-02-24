@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 00:42:56 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 19:10:14 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ void	ft_change_dir(char **cmd, char **env, int *exit_code)
 	}
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
+		if (!oldpwd)
+		{
+			ft_dprintf(2, "21sh: cd: OLDPWD not set\n");
+			*exit_code = 1 << 8;
+			return ;
+		}
 		chdir(oldpwd);
 		printf("%s\n", oldpwd);
 		*exit_code = 0;

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 15:13:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 19:23:57 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,11 @@ static int	process_here_doc_loop(int *pipe_fd, t_cmd *cmd, char *delimiter,
 	int *exit_code)
 {
 	char	*line;
-	char	**parsed_input;
 	int		i;
 	int		ret;
 
+	(void)exit_code;
+	(void)cmd;
 	while (1)
 	{
 		line = readline("> ");
@@ -77,11 +78,8 @@ static int	process_here_doc_loop(int *pipe_fd, t_cmd *cmd, char *delimiter,
 		if (ret == -1)
 			return (-1);
 		i = 0;
-		parsed_input = parse_input(line, cmd->env, exit_code);
-		while (parsed_input[i] != NULL)
-			ft_dprintf(pipe_fd[1], "%s ", parsed_input[i++]);
+		ft_dprintf(pipe_fd[1], "%s\n", line);
 		ft_dprintf(pipe_fd[1], "\n");
-		free_args(parsed_input);
 		free(line);
 	}
 	return (0);

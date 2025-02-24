@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:26:50 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 18:57:36 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,7 @@ int	main(int argc, char **argv, char **env)
 	edit_lvl(env);
 	while (1)
 	{
-		if (getcwd(cwd, sizeof(cwd)) == NULL)
-			exit(1);
+		getcwd(cwd, sizeof(cwd));
 		if (read_lines(cwd, &env, &exit_code))
 			break ;
 	}
