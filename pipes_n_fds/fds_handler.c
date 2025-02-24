@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:00:51 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 15:13:06 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ static int	handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code)
 	int		pipe_fd[2];
 	int		ret;
 
+	if (g_signal == SIGINT)
+		return (0);
 	if (cmd->input_fd != STDIN_FILENO && cmd->input_fd != -1)
 		close(cmd->input_fd);
 	setup_signals(2);
@@ -107,10 +109,7 @@ static int	handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code)
 		return (-1);
 	close(pipe_fd[1]);
 	if (cmd->input_fd == -1)
-	{
-		close(pipe_fd[0]);
 		return (close(pipe_fd[0]));
-	}
 	cmd->input_fd = pipe_fd[0];
 	return (0);
 }
