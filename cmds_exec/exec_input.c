@@ -6,11 +6,29 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 22:41:14 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:49:57 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_pwd(char **env, int *exit_code)
+{
+	char	*current_pwd;
+
+	current_pwd = ft_getenv(env, "PWD");
+	if (!current_pwd)
+	{
+		current_pwd = ft_get_current_dir();
+		ft_dprintf(1, "%s\n", current_pwd);
+		if (current_pwd)
+			free(current_pwd);
+	}
+	else
+		ft_dprintf(1, "%s\n", current_pwd);
+	*exit_code = 0;
+	return (1);
+}
 
 /**
  * @brief Execute a built-in command.
@@ -20,27 +38,12 @@
  */
 int	execute_ft_cmds(char **cmd, char ***env, int *exit_code)
 {
-	char	*current_pwd;
-
 	if (ft_cd(cmd, env, exit_code))
 		return (1);
 	if (!ft_strncmp(cmd[0], "unset", 6))
 		return (ft_unset(*env, cmd, exit_code), 1);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
-	{
-		current_pwd = ft_getenv(*env, "PWD");
-		if (!current_pwd)
-		{
-			current_pwd = ft_get_current_dir();
-			ft_dprintf(1, "%s\n", current_pwd);
-			if (current_pwd)
-				free(current_pwd);
-		}
-		else
-			ft_dprintf(1, "%s\n", current_pwd);
-		*exit_code = 0;
-		return (1);
-	}
+		return (ft_pwd(*env, exit_code));
 	if (!ft_strncmp(cmd[0], "echo", 5))
 		return (ft_echo(cmd, exit_code), 1);
 	if (!ft_strncmp(cmd[0], "env", 4))

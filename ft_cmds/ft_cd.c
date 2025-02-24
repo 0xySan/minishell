@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 19:10:14 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:48:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,20 @@ char	*ft_get_current_dir(void)
 	return (cwd);
 }
 
+int	old_pwd_case(char *oldpwd, int *exit_code)
+{
+	if (!oldpwd)
+	{
+		ft_dprintf(2, "21sh: cd: OLDPWD not set\n");
+		*exit_code = 1 << 8;
+		return (1);
+	}
+	chdir(oldpwd);
+	printf("%s\n", oldpwd);
+	*exit_code = 0;
+	return (0);
+}
+
 /**
  * @brief Changes the current working directory.
  * @param cmd The array of command arguments.
@@ -78,15 +92,8 @@ void	ft_change_dir(char **cmd, char **env, int *exit_code)
 	}
 	else if (cmd[1][0] == '-' && ft_strlen(cmd[1]) == 1)
 	{
-		if (!oldpwd)
-		{
-			ft_dprintf(2, "21sh: cd: OLDPWD not set\n");
-			*exit_code = 1 << 8;
+		if (old_pwd_case(oldpwd, exit_code))
 			return ;
-		}
-		chdir(oldpwd);
-		printf("%s\n", oldpwd);
-		*exit_code = 0;
 	}
 	else
 		check_if_accessible(cmd[1], exit_code);

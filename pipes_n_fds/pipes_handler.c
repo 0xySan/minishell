@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 18:38:29 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 22:46:58 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,8 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 	count = ft_count_commands(tokens, num_tokens);
 	safe_stdin = dup(STDIN_FILENO);
 	cmds = ft_parse_commands(tokens, num_tokens, env, free_value->exit_code);
-	if (cmds == NULL)
-	{
-		dup2(safe_stdin, STDIN_FILENO);
-		close(safe_stdin);
+	if (cmds_null_case(cmds, safe_stdin))
 		return ;
-	}
 	ctx.cmds = cmds;
 	ctx.count = count;
 	ctx.env = env;
