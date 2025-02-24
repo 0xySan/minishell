@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:11:28 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/24 18:38:29 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,5 +131,8 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 	ctx.prev_pipe = STDIN_FILENO;
 	while (++i < ctx.count)
 		execute_command(&ctx, i, free_value, safe_stdin);
+	i = -1;
+	while (++i < ctx.count)
+		wait_ignore(ctx.cmds[i].pid, free_value->exit_code);
 	cleanup_pipeline(ctx.cmds, ctx.count, safe_stdin, free_value->exit_code);
 }
