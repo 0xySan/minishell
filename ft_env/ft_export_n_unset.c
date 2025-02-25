@@ -6,17 +6,12 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 00:43:49 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:55:50 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * @brief Reallocates memory for a new environment variable.
- * @param env The pointer to the environment variable array.
- * @return The reallocated environment variable array.
- */
 char	**realloc_tab(char ***env)
 {
 	char	**n_tab;
@@ -43,12 +38,6 @@ void	ft_show_export(char **env)
 	free(sorted);
 }
 
-/**
- * @brief Adds/modifies an environment variable.
- * @param env Pointer to the environment array.
- * @param old_env Variable name to update/add.
- * @param new_env New value for the variable.
- */
 void	ft_export(char ***env, char *old_env, char *new_env)
 {
 	int	i;
@@ -96,11 +85,6 @@ void	ft_unset_helper(char **env, char *rev_env)
 	env[i] = NULL;
 }
 
-/**
- * @brief Remove an environment variable from the environment array.
- * @param env The environment variables.
- * @param rev_env The name of the variable to remove.
- */
 void	ft_unset(char **env, char **rev_env, int *exit_code)
 {
 	int		i;

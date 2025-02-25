@@ -6,20 +6,13 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 02:54:35 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 19:23:57 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:23:35 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * @brief Opens a file, or /dev/null on failure.
- * @param path The path of the file to open.
- * @param flags The flags used to open the file (e.g., O_RDONLY).
- * @param mode The mode to use if a new file is created.
- * @return File descriptor on success, or /dev/null on failure.
- */
-static int	open_file(char *path, int flags, int mode)
+int	open_file(char *path, int flags, int mode)
 {
 	int	fd;
 
@@ -32,7 +25,7 @@ static int	open_file(char *path, int flags, int mode)
 	return (fd);
 }
 
-static int	process_null(char *line, int *pipe_fd, char *delimiter)
+int	process_null(char *line, int *pipe_fd, char *delimiter)
 {
 	if (line == NULL)
 	{
@@ -55,20 +48,11 @@ static int	process_null(char *line, int *pipe_fd, char *delimiter)
 	return (1);
 }
 
-/**
- * @brief Reads lines until 'delimiter' is entered, returning a pipe's read end.
- * @param delimiter The string that signifies the end of input.
- * @return File descriptor for the read end of the pipe containing the input.
- */
-static int	process_here_doc_loop(int *pipe_fd, t_cmd *cmd, char *delimiter,
-	int *exit_code)
+int	process_here_doc_loop(int *pipe_fd, char *delimiter)
 {
 	char	*line;
-	int		i;
 	int		ret;
 
-	(void)exit_code;
-	(void)cmd;
 	while (1)
 	{
 		line = readline("> ");
@@ -77,15 +61,13 @@ static int	process_here_doc_loop(int *pipe_fd, t_cmd *cmd, char *delimiter,
 			break ;
 		if (ret == -1)
 			return (-1);
-		i = 0;
 		ft_dprintf(pipe_fd[1], "%s\n", line);
-		ft_dprintf(pipe_fd[1], "\n");
 		free(line);
 	}
 	return (0);
 }
 
-static int	handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code)
+int	handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code)
 {
 	int		pipe_fd[2];
 	int		ret;
@@ -112,12 +94,6 @@ static int	handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code)
 	return (0);
 }
 
-/**
- * @brief Parses redirections in a command.
- * @param cmd The command to which to assign the file descriptors.
- * @param tokens The array of string tokens representing the command.
- * @param i The index of the current token in the tokens array.
- */
 void	ft_parse_redirection(t_cmd *cmd, char **tokens, int *i)
 {
 	if (ft_strcmp(tokens[*i], "<<") == 0)

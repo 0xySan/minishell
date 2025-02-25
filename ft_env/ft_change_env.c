@@ -3,22 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_change_env.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdelacou <hdelacou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:33:54 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/10 23:40:07 by hdelacou         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:53:19 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * Change an environment variable's value.
- * @param env Array of environment variables.
- * @param old_env Name of the variable to change.
- * @param new_env New value for the variable.
- * If variable not found, does nothing.
- */
 void	ft_change_env(char **env, char *old_env, char *new_env)
 {
 	int		i;

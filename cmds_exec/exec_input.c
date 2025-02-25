@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 22:49:57 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:43:59 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,6 @@ int	ft_pwd(char **env, int *exit_code)
 	return (1);
 }
 
-/**
- * @brief Execute a built-in command.
- * @param cmd The array of command arguments.
- * @param env The environment variables.
- * @return 1 if the command is recognized and executed, 0 otherwise.
- */
 int	execute_ft_cmds(char **cmd, char ***env, int *exit_code)
 {
 	if (ft_cd(cmd, env, exit_code))
@@ -82,12 +76,6 @@ int	syntax_error(char **cmd, int *exit_code)
 	return (0);
 }
 
-/**
- * Execute a single command line.
- * @param env The environment variables.
- * @param input The command line to execute.
- * Processes input, splits into commands, executes.
- */
 int	execute_input(char ***env, char *input, t_free *free_value, int *exit_code)
 {
 	char	**cmd;

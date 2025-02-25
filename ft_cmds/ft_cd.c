@@ -6,16 +6,12 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:45:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 22:48:15 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:46:15 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * @brief Change to the directory if the path is accessible.
- * @param path Directory path to check.
- */
 void	check_if_accessible(char *path, int *exit_code)
 {
 	struct stat	statbuf;
@@ -34,10 +30,6 @@ void	check_if_accessible(char *path, int *exit_code)
 	*exit_code = 1 << 8;
 }
 
-/**
- * @brief Retrieves the current working directory.
- * @return Current working directory or NULL on error.
- */
 char	*ft_get_current_dir(void)
 {
 	char	*cwd;
@@ -67,11 +59,6 @@ int	old_pwd_case(char *oldpwd, int *exit_code)
 	return (0);
 }
 
-/**
- * @brief Changes the current working directory.
- * @param cmd The array of command arguments.
- * @param env The environment variables.
- */
 void	ft_change_dir(char **cmd, char **env, int *exit_code)
 {
 	char	*oldpwd;
@@ -99,15 +86,6 @@ void	ft_change_dir(char **cmd, char **env, int *exit_code)
 		check_if_accessible(cmd[1], exit_code);
 }
 
-/**ft_
- * @brief Handles the cd built-in command.
- * @param cmd The array of arguments of the command.
- * @param env The environment.
- * @return 1 if the command is recognized and executed, 0 otherwise.
- * Changes the current directory to the given path.
- * If no path is given, changes to $HOME. If '-', changes to
- * $OLDPWD and prints it.
- */
 int	ft_cd(char **cmd, char ***env, int *exit_code)
 {
 	char	*current_pwd;

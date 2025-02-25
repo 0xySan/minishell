@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:40:25 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 00:45:23 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:42:31 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,6 @@ void	check_exportalnum(char **cmd, int *exit_code)
 	free(export_util);
 }
 
-/**
- * @brief Execute the export command.
- * @param cmd The array of command arguments.
- * @param env The environment variables.
- * @return 1 if the command is recognized and executed, 0 otherwise.
- * Handles the export command. Prints current environment if no args provided;
- * adds variables to environment if args are given.
- */
 int	execute_ft_cmds_export(char **cmd, char ***env, int *exit_code)
 {
 	char	*export_util;

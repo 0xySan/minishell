@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:44:57 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 04:25:18 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 13:31:03 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	wait_pid_ignore_signals(pid_t pid, int *exit_code)
 	sigaction(SIGQUIT, &old_sigquit, NULL);
 }
 
-int	wait_ignore(pid_t pid, int *exit_code)
+void	wait_ignore(pid_t pid, int *exit_code)
 {
 	wait_pid_ignore_signals(pid, exit_code);
 	if (WIFSIGNALED(*exit_code))
@@ -84,7 +84,4 @@ int	wait_ignore(pid_t pid, int *exit_code)
 		else if (g_signal == SIGINT)
 			ft_dprintf(2, "\n");
 	}
-	if (WIFEXITED(*exit_code))
-		return (WEXITSTATUS(*exit_code));
-	return (128 + g_signal);
 }

@@ -6,20 +6,13 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/24 18:42:08 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:37:48 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * @brief Close all file descriptors in a pipeline context,
- * except for the one at a given command index.
- * @param ctx Pipeline context.
- * @param index Index of the command whose
- * file descriptors should not be closed.
- */
-static void	close_fds(t_pipeline_ctx *ctx, int index)
+void	close_fds(t_pipeline_ctx *ctx, int index)
 {
 	int	i;
 
@@ -63,12 +56,6 @@ void	handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
 		close(new_pid->pipe_fds[0]);
 }
 
-/**
- * Execute a command in a pipeline context.
- * Sets up pipes, forks, executes the command and handles FDs.
- * @param ctx: Pipeline context.
- * @param index: Index of the command to be executed.
- */
 void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value,
 	int safe_stdin)
 {
@@ -126,13 +113,6 @@ void	handle_dup2(t_pipeline_ctx *ctx, t_free *free_value,
 	}
 }
 
-/**
- * @brief Executes a command with redirection and built-in support.
- * Handles redirection, tries to execute as built-in, then searches in PATH.
- * If execution fails, prints an error message and exits with status 127.
- * @param cmd t_cmd structure with command and arguments.
- * @param env Environment variables array.
- */
 void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value,
 	t_pid_struct *new_pid)
 {

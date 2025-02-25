@@ -6,17 +6,12 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 15:51:08 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/23 01:20:47 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 13:34:05 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * @brief Counts the number of command arguments in the given array.
- * @param args Array of string arguments.
- * @return The number of command arguments in the array.
- */
 int	count_args(char **args)
 {
 	int	i;
@@ -27,12 +22,6 @@ int	count_args(char **args)
 	return (i);
 }
 
-/**
- * @brief Counts the occurrences of a specific character in a string.
- * @param str The string in which to count occurrences of the character.
- * @param chars The character to count within the string.
- * @return The number of times the character appears in the string.
- */
 int	count_chars(char *str, char chars)
 {
 	int	i;
@@ -49,24 +38,12 @@ int	count_chars(char *str, char chars)
 	return (j);
 }
 
-/**
- * @brief Copies then appends strings.
- * @param dest The destination string which will be modified.
- * @param fstr The string to copy into the destination.
- * @param sstr The string to append to the destination.
- */
 void	copy_then_cat(char *dest, char *fstr, char *sstr)
 {
 	ft_strcpy(dest, fstr);
 	ft_strcat(dest, sstr);
 }
 
-/**
- * Duplicate src and concat sec_src to it.
- * @param src Source string to duplicate.
- * @param sec_src String to append.
- * @return New string or NULL if error.
- */
 char	*dup_then_cat(char *src, char *sec_src)
 {
 	char	*dest;

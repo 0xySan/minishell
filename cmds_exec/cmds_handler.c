@@ -6,18 +6,12 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 22:42:06 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:34:12 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/**
- * @brief Frees all allocated memory and exits with a given status code.
- * @param ctx Pipeline context with allocated memory for the commands.
- * @param free_value Structure containing pointers to allocated memory to free.
- * @param exit_code Status code to exit with.
- */
 void	free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code,
 	t_pid_struct *new_pid)
 {
@@ -37,13 +31,6 @@ void	free_before_exit(t_pipeline_ctx *ctx, t_free *free_value, int exit_code,
 	exit(exit_code);
 }
 
-/**
- * @brief Counts the number of commands in the given tokens.
- * Counts commands in tokens by counting "|" tokens.
- * @param tokens Array of string tokens representing the commands and arguments.
- * @param num_tokens Number of tokens in the tokens array.
- * @return The number of commands in the tokens array.
- */
 int	ft_count_commands(char **tokens, int num_tokens)
 {
 	int	i;
@@ -60,16 +47,6 @@ int	ft_count_commands(char **tokens, int num_tokens)
 	return (count);
 }
 
-/**
- * @brief Process one command by filling the args field of the given t_cmd.
- * Processes one command by filling the args field of the given t_cmd.
- * @param tokens Array of string tokens representing the commands and arguments.
- * @param num_tokens Number of tokens in the tokens array.
- * @param start Starting index in the tokens array for the command.
- * @param cmd Pointer to a t_cmd structure to be filled.
- * @return The index of the next token after the command, or num_tokens if the
- * command is the last one.
- */
 int	ft_process_one_command(char **tokens, int num_tokens, int start, t_cmd *cmd)
 {
 	int	arg_count;
@@ -101,13 +78,6 @@ t_pid_struct	*handle_new_pid(int index, int *pipe_fds, int use_pipe,
 	return (new_pid);
 }
 
-/**
- * @brief Parses the given tokens into an array of command structures.
- * Parses tokens into an array of command structures.
- * @param tokens Array of string tokens representing the commands and arguments.
- * @param num_tokens Number of tokens in the tokens array.
- * @return Pointer to an array of t_cmd structures representing parsed commands.
- */
 t_cmd	*ft_parse_commands(char **tokens, int num_tokens, char **env,
 	int *exit_code)
 {

@@ -6,15 +6,12 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/24 18:57:36 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/25 13:40:45 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * Print a stylized ASCII art graffiti to the console.
- */
 void	print_graffiti(void)
 {
 	printf("\x1B[35m    __                    __         __   \x1B[33m___  __");
@@ -27,12 +24,6 @@ void	print_graffiti(void)
 	printf("/____/_/ \x1B[36m/____/_/ /_/  (_)   \n\n");
 }
 
-/**
- * Get the relative path by replacing the home directory with '~'.
- * @param pwd The current working directory.
- * @param env The environment variables.
- * @return A newly allocated string with the relative path or original `pwd`.
- */
 char	*get_relative_path(char *pwd, char **env)
 {
 	char	*home;
@@ -70,13 +61,6 @@ void	sigcode(int *exit_code)
 	}
 }
 
-/**
- * Reads user input and executes it.
- * @param cwd The current working directory.
- * @param env The environment variables.
- * @param exit_status The exit status of the last executed command.
- * @return 1 if the user wants to exit the shell, else 0.
- */
 int	read_lines(char *cwd, char ***env, int *exit_code)
 {
 	char	*input;
@@ -106,15 +90,6 @@ int	read_lines(char *cwd, char ***env, int *exit_code)
 	return (0);
 }
 
-/**
- * Main entry point of the program.
- * @param argc The number of command line arguments.
- * @param argv The command line arguments.
- * @param env The environment variables.
- * @return 0 on success, 1 if an error occurred.
- * Main entry point. Initializes shell,
- * reads user input in a loop until exit.
- */
 int	main(int argc, char **argv, char **env)
 {
 	char	cwd[PATH_MAX];
