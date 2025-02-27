@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:40:25 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:42:31 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 15:23:02 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,11 @@ int	execute_ft_cmds_export(char **cmd, char ***env, int *exit_code)
 	check_exportalnum(cmd, exit_code);
 	while (cmd[i])
 	{
-		if (!ft_strchr(cmd[i++], '='))
+		if (!ft_strchr(cmd[i], '='))
+		{
+			ft_export(env, cmd[i++], NULL);
 			continue ;
-		i--;
+		}
 		export_util = export_util_func(cmd[i]);
 		if (ft_strlen(export_util) == 0)
 		{
@@ -73,9 +75,8 @@ int	execute_ft_cmds_export(char **cmd, char ***env, int *exit_code)
 			i++;
 			continue ;
 		}
-		ft_export(env, export_util, ft_strchr(cmd[i], '=') + 1);
+		ft_export(env, export_util, ft_strchr(cmd[i++], '=') + 1);
 		free(export_util);
-		i++;
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:50:52 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:43:59 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 17:15:43 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,22 @@ int	execute_input(char ***env, char *input, t_free *free_value, int *exit_code)
 	return (0);
 }
 
-int	handle_sigint(t_cmd	*cmds)
+int	handle_sigint(t_cmd	*cmds, int cmd_index)
 {
-	if (g_signal == SIGINT)
+	int	i;
+
+	i = 0;
+	if (g_signal != SIGINT)
+		return (0);
+	while (i <= cmd_index)
 	{
-		if (cmds->args)
-			free(cmds->args);
-		free(cmds);
-		return (1);
+		free(cmds[i].args);
+		if (cmds[i].output_fd != STDOUT_FILENO && cmds[i].output_fd != -1)
+			close(cmds[i].output_fd);
+		if (cmds[i].input_fd != STDIN_FILENO && cmds[i].input_fd != -1)
+			close(cmds[i].input_fd);
+		i++;
 	}
-	return (0);
+	free(cmds);
+	return (1);
 }

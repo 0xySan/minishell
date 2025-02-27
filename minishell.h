@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 16:10:18 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 17:15:25 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,9 @@ void			ft_execute(t_pipeline_ctx *ctx, t_free *free_value,
  * @param ctx: Pipeline context.
  * @param index: Index of the command to be executed.
  * @param free_value: Structure containing resources to be freed before exit.
- * @param safe_stdin: The file descriptor to use for standard input.
  */
 void			execute_command(t_pipeline_ctx *ctx, int index,
-					t_free *free_value, int safe_stdin);
+					t_free *free_value);
 /**
  * @brief
  * 
@@ -148,10 +147,9 @@ void			handle_dup2(t_pipeline_ctx *ctx, t_free *free_value,
  * @param free_value: Pointer to a structure used for freeing resources.
  * @param new_pid: Pointer to a structure containing the new PID and related
  * information.
- * @param safe_stdin: File descriptor for the safe standard input.
  */
 void			handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
-					t_pid_struct *new_pid, int safe_stdin);
+					t_pid_struct *new_pid);
 /**
  * @brief Close all file descriptors in a pipeline context,
  * except for the one at a given command index.
@@ -257,7 +255,7 @@ int				execute_input(char ***env, char *input, t_free *free_value,
  * 
  * @return 1 if the signal is SIGINT and memory is freed, 0 otherwise.
  */
-int				handle_sigint(t_cmd	*cmds);
+int				handle_sigint(t_cmd	*cmds, int cmd_index);
 // exec_utils
 /**
  * Check if a string contains only space characters.
@@ -423,6 +421,7 @@ void			ft_show_env(char **env, int *exit_code);
  * @param env The environment variables to free.
  */
 void			ft_free_env(char **env);
+char			*ft_spe_getenv(char **env, char *search_env);
 // ft_export_n_unset
 /**
  * @brief Reallocates memory for a new environment variable.
@@ -499,20 +498,13 @@ void			sort_strings(char **array);
  */
 void			ft_parse_redirection(t_cmd *cmd, char **tokens, int *i);
 /**
- * @brief Reads lines until 'delimiter' is entered or Ctrl + C is used.
- * @param delimiter The string that signifies the end of input.
- * @param pipe_fd The file descriptor of the pipe.
- * @return -1 if Ctrl + C was used otherwise 0.
- */
-int				process_here_doc_loop(int *pipe_fd, char *delimiter);
-/**
  * @brief Handles the here document input.
  * @param cmd The command to handle.
  * @param delimiter The string that signifies the end of input.
  * @param exit_code The exit code of the command.
  * @return 0 if the here document was handled successfully, otherwise -1.
  */
-int				handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code);
+int				handle_here_doc(char *delimiter, int fd);
 /**
  * @brief Processes the null command.
  * @param line The line to process.
@@ -520,7 +512,7 @@ int				handle_here_doc(t_cmd *cmd, char *delimiter, int *exit_code);
  * @param delimiter The string that signifies the end of input.
  * @return 0 if the delimeter was tiped, -1 if Ctrl otherwise 1.
  */
-int				process_null(char *line, int *pipe_fd, char *delimiter);
+int				process_null(char *line, char *delimiter);
 /**
  * @brief Opens a file, or /dev/null on failure.
  * @param path The path of the file to open.
@@ -552,10 +544,9 @@ int				ft_fill_args(t_cmd *cmd, char **tokens, int num_tokens,
  * @brief Parse and execute a pipeline of commands.
  * @param tokens Array of command and argument tokens.
  * @param num_tokens Size of tokens array.
- * @param safe_stdin The file descriptor to use for standard input.
  * @param exit_code The exit status of the last executed command.
  */
-void			cleanup_pipeline(t_cmd *cmds, int count, int safe_stdin,
+void			cleanup_pipeline(t_cmd *cmds, int count,
 					int *exit_code);
 /**
  * @brief Closes non-standard file descriptors for a command.
@@ -570,6 +561,9 @@ void			cleanup_fds(t_cmd *cmd);
  */
 void			ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 					t_free *free_value);
+// handle_heredoc
+int				handle_here_doc_tokens(char **tokens);
+void			close_here_doc(int index);
 
 //////////////// FT_PROCESS_INPUT
 // handles
@@ -859,14 +853,6 @@ void			print_ifpath_ornot(char *path);
  * @return The number of commands in the pipeline.
  */
 int				ft_count_first_commands(char **tokens, int num_tokens);
-/**
- * @brief if cmds is NULL case dup2 the safe_stdin to standard input and
- * close safe_stdin.
- * @param cmds Array of command and argument tokens.
- * @param safe_stdin The file descriptor to use for standard input.
- * @return Return 1 if cmds is NULL otherwise returns 0.
- */
-int				cmds_null_case(t_cmd *cmds, int safe_stdin);
 /**
  * @brief edit the SHLVL env variable
  * @param env the env variable

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 20:06:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:53:48 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 15:15:59 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,23 @@ char	*ft_getenv(char **env, char *search_env)
 	return (free(test), NULL);
 }
 
+char	*ft_spe_getenv(char **env, char *search_env)
+{
+	int		i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], search_env, ft_strlen(search_env)))
+		{
+			if (env[i][ft_strlen(search_env)] == '\0')
+				return (search_env);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 void	ft_show_env(char **env, int *exit_code)
 {
 	int	i;
@@ -44,7 +61,8 @@ void	ft_show_env(char **env, int *exit_code)
 	*exit_code = 0;
 	while (env[i])
 	{
-		printf("%s\n", env[i]);
+		if (ft_strchr(env[i], '='))
+			printf("%s\n", env[i]);
 		i++;
 	}
 }

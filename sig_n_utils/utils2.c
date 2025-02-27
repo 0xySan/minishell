@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:46:49 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 13:48:54 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 16:51:23 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,4 @@ int	ft_count_first_commands(char **tokens, int num_tokens)
 		i++;
 	}
 	return (count);
-}
-
-int	cmds_null_case(t_cmd *cmds, int safe_stdin)
-{
-	if (cmds == NULL)
-	{
-		dup2(safe_stdin, STDIN_FILENO);
-		close(safe_stdin);
-		return (1);
-	}
-	return (0);
 }

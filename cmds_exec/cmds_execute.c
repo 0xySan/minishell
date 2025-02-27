@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/25 15:37:48 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 16:51:17 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,10 @@ void	close_fds(t_pipeline_ctx *ctx, int index)
 }
 
 void	handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
-	t_pid_struct *new_pid, int safe_stdin)
+	t_pid_struct *new_pid)
 {
 	if (new_pid->pid == 0)
 	{
-		close(safe_stdin);
 		if (ctx->cmds[new_pid->index].input_fd != STDIN_FILENO
 			&& ctx->cmds[new_pid->index].input_fd != -1)
 			close(ctx->prev_pipe);
@@ -56,8 +55,7 @@ void	handle_pid(t_pipeline_ctx *ctx, t_free *free_value,
 		close(new_pid->pipe_fds[0]);
 }
 
-void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value,
-	int safe_stdin)
+void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value)
 {
 	int				pipe_fds[2];
 	pid_t			pid;
@@ -76,7 +74,7 @@ void	execute_command(t_pipeline_ctx *ctx, int index, t_free *free_value,
 	pid = fork();
 	ctx->cmds[index].pid = pid;
 	new_pid = handle_new_pid(index, pipe_fds, use_pipe, pid);
-	handle_pid(ctx, free_value, new_pid, safe_stdin);
+	handle_pid(ctx, free_value, new_pid);
 	free(new_pid);
 	if (index > 0 && ctx->prev_pipe != STDIN_FILENO && ctx->prev_pipe != -1)
 		close(ctx->prev_pipe);

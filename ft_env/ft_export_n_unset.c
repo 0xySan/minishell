@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:35:19 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:55:50 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 15:22:17 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_show_export(char **env)
 	sort_strings(sorted);
 	i = 0;
 	while (sorted[i])
-		printf("export %s\n", sorted[i++]);
+		printf("declare -x %s\n", sorted[i++]);
 	free(sorted);
 }
 
@@ -46,8 +46,18 @@ void	ft_export(char ***env, char *old_env, char *new_env)
 		return ;
 	if (!old_env && !new_env)
 		return (ft_show_export(*env));
-	if (ft_getenv(*env, old_env))
+	if ((ft_getenv(*env, old_env) && !new_env) || ft_spe_getenv(*env, old_env))
+		return ;
+	if (ft_getenv(*env, old_env) && new_env)
 		return (ft_change_env(*env, old_env, new_env));
+	if (old_env && !new_env)
+	{
+		i = count_args(*env);
+		*env = realloc_tab(env);
+		(*env)[i] = ft_strdup(old_env);
+		(*env)[i + 1] = NULL;
+		return ;
+	}
 	i = count_args(*env);
 	*env = realloc_tab(env);
 	(*env)[i] = malloc(1 * (ft_strlen(old_env) + ft_strlen(new_env) + 2));

@@ -13,6 +13,7 @@ FILES		=	cmds_exec/exec_input \
 				ft_env/ft_sort_array \
 				pipes_n_fds/fds_handler \
 				pipes_n_fds/pipes_handler \
+				pipes_n_fds/handle_heredoc \
 				process_input/preprocess_input \
 				process_input/handles \
 				process_input/preprocess_utils \

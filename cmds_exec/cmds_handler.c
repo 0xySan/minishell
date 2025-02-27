@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 00:50:50 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:34:12 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 16:23:13 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,20 +88,18 @@ t_cmd	*ft_parse_commands(char **tokens, int num_tokens, char **env,
 
 	cmd_count = ft_count_commands(tokens, num_tokens);
 	cmds = malloc(cmd_count * sizeof(t_cmd));
-	if (!cmds)
-		exit(EXIT_FAILURE);
 	i = 0;
 	cmd_index = -1;
 	while (i < num_tokens && ++cmd_index < cmd_count)
 	{
-		if (handle_sigint(cmds))
-			return (NULL);
 		cmds[cmd_index].input_fd = STDIN_FILENO;
 		cmds[cmd_index].output_fd = STDOUT_FILENO;
 		cmds[cmd_index].count = cmd_count;
 		cmds[cmd_index].env = env;
 		cmds[cmd_index].exit_code = exit_code;
 		i = ft_process_one_command(tokens, num_tokens, i, &cmds[cmd_index]);
+		if (handle_sigint(cmds, cmd_index))
+			return (NULL);
 		if (ft_strcmp(tokens[i - 1], "|") == 0 && !tokens[i])
 			return (ft_dprintf(2, "21sh: empty pipe\n"), NULL);
 	}

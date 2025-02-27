@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 03:28:55 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:19:46 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 17:14:24 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	cleanup_fds(t_cmd *cmd)
 		close(cmd->output_fd);
 }
 
-void	cleanup_pipeline(t_cmd *cmds, int count, int safe_stdin, int *exit_code)
+void	cleanup_pipeline(t_cmd *cmds, int count, int *exit_code)
 {
 	int	i;
 
@@ -77,8 +77,6 @@ void	cleanup_pipeline(t_cmd *cmds, int count, int safe_stdin, int *exit_code)
 	while (++i < count)
 		free(cmds[i].args);
 	free(cmds);
-	dup2(safe_stdin, STDIN_FILENO);
-	close(safe_stdin);
 }
 
 void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
@@ -86,24 +84,25 @@ void	ft_parse_pipeline(char **tokens, int num_tokens, char **env,
 {
 	t_cmd			*cmds;
 	int				count;
-	int				safe_stdin;
 	t_pipeline_ctx	ctx;
 	int				i;
+	int				ret;
 
-	i = -1;
 	count = ft_count_commands(tokens, num_tokens);
-	safe_stdin = dup(STDIN_FILENO);
-	cmds = ft_parse_commands(tokens, num_tokens, env, free_value->exit_code);
-	if (cmds_null_case(cmds, safe_stdin))
+	ret = handle_here_doc_tokens(tokens);
+	if (ret == -1)
 		return ;
+	cmds = ft_parse_commands(tokens, num_tokens, env, free_value->exit_code);
 	ctx.cmds = cmds;
 	ctx.count = count;
 	ctx.env = env;
 	ctx.prev_pipe = STDIN_FILENO;
+	i = -1;
 	while (++i < ctx.count)
-		execute_command(&ctx, i, free_value, safe_stdin);
+		execute_command(&ctx, i, free_value);
 	i = -1;
 	while (++i < ctx.count)
 		wait_ignore(ctx.cmds[i].pid, free_value->exit_code);
-	cleanup_pipeline(ctx.cmds, ctx.count, safe_stdin, free_value->exit_code);
+	cleanup_pipeline(ctx.cmds, ctx.count, free_value->exit_code);
+	close_here_doc(ret);
 }
