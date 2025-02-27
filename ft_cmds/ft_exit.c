@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 06:41:59 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 15:52:37 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 17:37:58 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	ft_exit(char *input, char **env, int *exit_code)
 	int		args;
 
 	if (!input)
-		return (1);
+		return (*exit_code = WEXITSTATUS(*exit_code), 1);
 	add_history(input);
 	exit_input = parse_input(input, env, exit_code);
 	args = count_args(exit_input);
