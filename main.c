@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 16:18:53 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/25 13:40:45 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/02/27 17:33:51 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ char	*get_relative_path(char *pwd, char **env)
 
 	home = ft_getenv(env, "HOME");
 	if (!home)
-		return (ft_strjoin_join("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", pwd,
-				": \e[m"));
+		return (ft_strjoin_join("\001\033\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m",
+				pwd, ": \e[m"));
 	home_len = ft_strlen(home);
 	pwd_len = ft_strlen(pwd);
 	if (home_len > pwd_len || ft_strncmp(home, pwd, home_len) != 0)
-		return (ft_strjoin_join("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", pwd,
-				": \e[m"));
+		return (ft_strjoin_join("\001\033\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m",
+				pwd, ": \e[m"));
 	t_path = ft_strjoin_join("~", pwd + home_len, ": \e[m");
-	r_path = ft_strjoin("\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", t_path);
+	r_path = ft_strjoin("\001\033\e[1m\x1B[33mMINISHELL \e[1m\x1B[31m", t_path);
 	free(t_path);
 	return (r_path);
 }
