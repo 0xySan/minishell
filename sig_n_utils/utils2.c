@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:46:49 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/27 16:51:23 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/03/02 19:09:55 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,15 @@ int	ft_count_first_commands(char **tokens, int num_tokens)
 		i++;
 	}
 	return (count);
+}
+
+void	handle_errno(t_pipeline_ctx *ctx, t_free *free_value,
+	t_pid_struct *new_pid)
+{
+	if (errno == ENOSPC)
+	{
+		ft_dprintf(2, "echo: write error: no space left on device\n");
+		free_before_exit(ctx, free_value, 1, new_pid);
+	}
+	free_before_exit(ctx, free_value, 0, new_pid);
 }

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 00:16:52 by hdelacou          #+#    #+#             */
-/*   Updated: 2025/02/27 16:51:17 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/03/02 19:09:45 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	ft_execute(t_pipeline_ctx *ctx, t_free *free_value,
 	{
 		if (execute_ft_cmds(ctx->cmds[new_pid->index].args, &ctx->env,
 				free_value->exit_code))
-			free_before_exit(ctx, free_value, 0, new_pid);
+			handle_errno(ctx, free_value, new_pid);
 		else
 			actual_cmd = get_cmd_path(ctx->cmds[new_pid->index].args[0],
 					ft_getenv(ctx->env, "PATH"));

@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:28:07 by etaquet           #+#    #+#             */
-/*   Updated: 2025/02/27 17:15:25 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/03/02 19:10:22 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -858,6 +858,8 @@ int				ft_count_first_commands(char **tokens, int num_tokens);
  * @param env the env variable
  */
 void			edit_lvl(char **env);
+void			handle_errno(t_pipeline_ctx *ctx, t_free *free_value,
+					t_pid_struct *new_pid);
 
 //////////////// MAIN
 /**
